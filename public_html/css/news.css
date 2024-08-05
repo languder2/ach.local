@@ -1,0 +1,115 @@
+/* news */
+.post{
+    outline:                    0;
+    background-color:           #FFFFFF;
+    padding:                    1rem 1rem;
+    border-radius:              1rem;
+}
+.news-photo-box{
+    position: relative !important;
+    border-radius: 10px;
+}
+.date-post-box{
+    position: absolute !important;
+    top: -23px;
+    left: 47px;
+    background-color: #FFFFFF;
+    padding: 3px 10px;
+    font-size: 14px;
+    border-radius: 15px;
+}
+.news-photo-box img{
+    width: 100%;
+    object-fit: cover;
+}
+.descrip-post{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.descrip-post h6{
+    max-height: 40px;
+    overflow: hidden;
+}
+.descrip-post p{
+    font-size: 14px;
+    max-height: 65px;
+    overflow: hidden;
+}
+.under-descrip{
+    margin-top: 5px;
+    display: flex;
+    justify-content: space-between;
+}
+.under-descrip .post-tags a{
+    display: block;
+    border: 1px solid #c10f1a;
+    border-radius: 15px;
+    padding: 0px 5px;
+    text-decoration: none;
+    color: #515151;
+}
+.under-descrip .rubric-post a{
+    color: #c10f1a;
+    transition: .3s linear;
+}
+.under-descrip .rubric-post a:hover{
+    color: #660000;
+}/* news */
+.post{
+    outline:                    0;
+    background-color:           #FFFFFF;
+    padding:                    1rem 1rem;
+    border-radius:              1rem;
+}
+.news-photo-box{
+    position: relative !important;
+    border-radius: 10px;
+}
+.date-post-box{
+    position: absolute !important;
+    top: -23px;
+    left: 47px;
+    background-color: #FFFFFF;
+    padding: 3px 10px;
+    font-size: 14px;
+    border-radius: 15px;
+}
+.news-photo-box img{
+    width: 100%;
+    object-fit: cover;
+}
+.descrip-post{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.descrip-post h6{
+    max-height: 40px;
+    overflow: hidden;
+}
+.descrip-post p{
+    font-size: 14px;
+    max-height: 65px;
+    overflow: hidden;
+}
+.under-descrip{
+    margin-top: 5px;
+    display: flex;
+    justify-content: space-between;
+}
+.under-descrip .post-tags a{
+    display: block;
+    border: 1px solid #c10f1a;
+    border-radius: 15px;
+    padding: 0px 5px;
+    text-decoration: none;
+    color: #515151;
+}
+.under-descrip .rubric-post a{
+    color: #c10f1a;
+    transition: .3s linear;
+}
+.under-descrip .rubric-post a:hover{
+    color: #660000;
+}

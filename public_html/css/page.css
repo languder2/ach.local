@@ -1,0 +1,67 @@
+/* html */
+*{
+    line-height:                1.5 !important;
+}
+/* body */
+body{
+    background-color:           #F1F1F1;
+    min-height:                 100vh;
+    margin:                     0;
+}
+/* header */
+header{
+    position:                   sticky;
+    top:                        0;
+    z-index:                    100;
+    background-color:           darkred;
+}
+.logo{
+    display:                    block;
+    outline:                    0;
+}
+.logo svg{
+    margin:                     1rem 0;
+    height:                     4rem;
+    transition:                 all .2s ease-in-out;
+}
+.logo:focus svg,
+.logo:hover svg{
+    filter:                     drop-shadow(0px 0px 1px #ffffff90);
+    transform:                  scale(1.1) translate(0px,0px);
+}
+.btn-account{
+    display:                    block;
+    color:                      #191919;
+    padding:                    0.75rem 1.5rem;
+    border:                     solid 2px white;
+    background-color:           #e5eaef;
+    margin:                     calc(1.75rem - 6px) 0;
+    box-shadow:                 0 0 3px 0 white,
+                                -1px -1px 0 3px darkred inset;
+    border-radius:              .75rem;
+    text-decoration:            none;
+    font-weight:                bold;
+    text-transform:             uppercase;
+    transition:                 all .2s ease-in-out;
+    outline:                    0;
+}
+.btn-account:focus,
+.btn-account:hover{
+    transform:                  scale(1.02);
+    background-color:           white;
+    color:                      darkred;
+}
+.btn-account:active{
+    box-shadow:                 0 0 0 4px darkred inset;
+    color:                      darkred;
+}
+/* footer */
+footer{
+    background-color:           darkred;
+    color:                      white;
+}
+/* page content */
+section.page-content{
+    display:                    block;
+    min-height:                 calc(100vh - 6rem - 3.25rem);
+}

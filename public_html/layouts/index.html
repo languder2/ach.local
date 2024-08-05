@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Личный кабинет</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+</head>
+<body>
+<header>
+    <nav class="navbar  navbar-light">
+        <div class="container-lg">
+            <div class="col-12">
+                <div class="row row-cols-2 align-items-center">
+                    <div class="col-6">
+                        <div class="row row-cols-3 align-items-center">
+                            <div class="btn-toggle-box col-3 col-sm-3 col-md-2 col-lg-2">
+                                <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo3" aria-controls="navbarTogglerDemo3" aria-expanded="false" aria-label="Toggle navigation">
+                                    <span class="bi bi-list"></span>
+                                </button>
+                            </div>
+                            <div class="logo-box col-4 col-sm-4 col-md-3 col-lg-3">
+                                <a class="navbar-brand" href="#"><img src="img/white-logo.png" alt=""></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="row row-cols-2 row-cols-sm-2 row-cols-md-2 row-cols-lg-3 align-items-center justify-content-end">
+                            <div class="col col-md-6 col-lg-6 search-box">
+                                <form action="">
+                                    <div class="input-group input-search">
+                                        <input type="search" placeholder="Поиск" aria-describedby="button-addon4" class="form-control bg-none border-0">
+                                        <div class="input-group-prepend d-flex">
+                                            <button id="button-addon4" type="button" class="btn btn-link text-info"><i class="bi bi-search"></i></button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="col-2 col-md-2 col-lg-1 bell d-flex justify-content-end">
+                                <a href="#"></a><i class="bi bi-bell"></i></a>
+                            </div>
+                            <div class="lk-div col">
+                                <div class="lk-box">
+                                    <div class="lk">
+                                        <span>Личный кабинет</span>
+                                    </div>
+                                </div>
+                                <div class="dropdown-menu" style="display: none;">
+                                    <a href="#" class="dropdown-item">Профиль</a>
+                                    <a href="#" class="dropdown-item">Настройки</a>
+                                    <a href="#" class="dropdown-item">Выход</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="collapse navbar-collapse collapse" id="navbarTogglerDemo3">
+                <ul class="navbar-nav me-auto mb-2 mb-xl-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Link</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+<section class="container-lg">
+    <h2 class="page-title my-4">Личный кабинет</h2>
+    <div class="row row-cols-1 row-cols-sm-1 row-cols-md-1 row-cols-lg-2 g-3">
+        <div class="col">
+            <div class="Personal-info-card shadow-box-st mb-3">
+                <div class="row row-cols-2 g-3">
+                    <div class="col-5">
+                        <div class="user-photo-box">
+                            <img src="img/user.png" alt="">
+                        </div>
+                        <div class="user-id-box">
+                            <span>UserID: 1270226669</span>
+                        </div>
+                    </div>
+                    <div class="user-box-info col-7 d-flex flex-column">
+                        <h4 class="user-name">Пушкин Александр</h4>
+                        <span class="user-age">225 лет</span>
+                        <span class="user-from">Москва, Российская империя</span>
+                        <a class="user-profile">Полный профиль</a>
+                        <span class="user-status"><b>Статус:</b> Ученик</span>
+                        <span class="user-education"><b>Место учёбы:</b> ГБУ ОО ЗО “СОШ №15”</span>
+                    </div>
+                </div>
+            </div>
+            <div class="btn-box mb-3">
+                <div class="achievements shadow-box-st">
+                    <div>
+                        <span>Достижения</span>
+                    </div>
+                    <div>
+                        <img src="img/medal.png" alt="">
+                    </div>
+                </div>
+                <div class="personal-report shadow-box-st">
+                    <div>
+                        <span>Персональные отчёты</span>
+                    </div>
+                    <div>
+                        <img src="img/doc.png" alt="">
+                    </div>
+                </div>
+            </div>
+            <div class="news-box">
+                <div class="post shadow-box-st">
+                    <div class="row row-cols-2 g-2">
+                        <div class="col-5">
+                            <div class="news-photo-box">
+                                <div class="date-post-box">
+                                    <span class="date-post">
+                                        23 июля 2024
+                                    </span>
+                                </div>
+                                <img src="img/news-1.png" alt="">
+                            </div>
+                        </div>
+                        <div class="descrip-post col-7">
+                            <div>
+                                <h6>Продолжается регистрация на окружной хакатон в Сибирском федеральном округе проекта «Цифровой про...</h6>
+                                <p class="mb-0">С 6 по 8 сентября в Омске пройдет окружной хакатон в Сибирском федеральном округе...</p>
+                            </div>
+                            <div class="under-descrip">
+                                <div class="post-tags">
+                                    <a href="#">#хакатон</a>
+                                </div>
+                                <div class="rubric-post">
+                                    <a href="#">Новости</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="menu-lk col">
+            <nav class="nav nav-pills shadow-box-st mb-2" id="pills-tab" role="tablist">
+                <a class="nav-link active" id="pills-main-tab" data-bs-toggle="pill" href="#pills-main" role="tab" aria-controls="pills-main" aria-selected="true">Основное</a>
+                <a class="nav-link" id="pills-competencies-tab" data-bs-toggle="pill" href="#pills-competencies" role="tab" aria-controls="pills-competencies" aria-selected="false">Компетенции</a>
+                <a class="nav-link" id="pills-project-tab" data-bs-toggle="pill" href="#pills-project" role="tab" aria-controls="pills-project" tabindex="-1" aria-disabled="true">Проекты</a>
+                <a class="nav-link" id="pills-education-tab" data-bs-toggle="pill" href="#pills-education" role="tab" aria-controls="pills-education" tabindex="-1" aria-disabled="true">Обучение</a>
+                <a class="nav-link" id="pills-internships-tab" data-bs-toggle="pill" href="#pills-internships" role="tab" aria-controls="pills-internships" tabindex="-1" aria-disabled="true">Стажировки</a>
+            </nav>
+            <div class="tab-content" id="pills-tabContent">
+                <div class="tab-pane fade show active" id="pills-main" role="tabpanel" aria-labelledby="pills-main-tab">
+                    <div class="content-menu-lk">
+                        <div class="card-content-menu shadow-box-st mb-3">
+                            <h3>Проекты</h3>
+                            <div class="content-empty">
+                                <div class="me-2">
+                                    <img src="img/cat.png" alt="">
+                                </div>
+                                <div class="descrip-empty">
+                                    <p>
+                                        Oops!<br>
+                                        Тут пока ничего нет
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <a class="btn-assortment" href="#">Подобрать</a>
+                            </div>
+                        </div>
+                        <div class="card-content-menu shadow-box-st mb-3">
+                            <h3>Обучения</h3>
+                            <div class="content-empty">
+                                <div class="me-2">
+                                    <img src="img/cat.png" alt="">
+                                </div>
+                                <div class="descrip-empty">
+                                    <p>
+                                        Oops!<br>
+                                        Тут пока ничего нет
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <a class="btn-assortment" href="#">Подобрать</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="pills-competencies" role="tabpanel" aria-labelledby="pills-competencies-tab">
+                    <div class="content-menu-lk">
+                        <div class="card-content-menu shadow-box-st mb-3">
+                            <h3>Компетенции</h3>
+                            <div class="content-empty">
+                                <div class="me-2">
+                                    <img src="img/cat.png" alt="">
+                                </div>
+                                <div class="descrip-empty">
+                                    <p>
+                                        Oops!<br>
+                                        Тут пока ничего нет
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <a class="btn-assortment" href="#">Подобрать</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="pills-project" role="tabpanel" aria-labelledby="pills-project-tab">
+                    <div class="content-menu-lk">
+                        <div class="card-content-menu shadow-box-st mb-3">
+                            <h3>Проекты</h3>
+                            <div class="content-empty">
+                                <div class="me-2">
+                                    <img src="img/cat.png" alt="">
+                                </div>
+                                <div class="descrip-empty">
+                                    <p>
+                                        Oops!<br>
+                                        Тут пока ничего нет
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <a class="btn-assortment" href="#">Подобрать</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="pills-education" role="tabpanel" aria-labelledby="pills-education-tab">
+                    <div class="content-menu-lk">
+                        <div class="card-content-menu shadow-box-st mb-3">
+                            <h3>Обучения</h3>
+                            <div class="content-empty">
+                                <div class="me-2">
+                                    <img src="img/cat.png" alt="">
+                                </div>
+                                <div class="descrip-empty">
+                                    <p>
+                                        Oops!<br>
+                                        Тут пока ничего нет
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <a class="btn-assortment" href="#">Подобрать</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="pills-internships" role="tabpanel" aria-labelledby="pills-internships-tab">
+                    <div class="content-menu-lk">
+                        <div class="card-content-menu shadow-box-st mb-3">
+                            <h3>Стажировки</h3>
+                            <div class="content-empty">
+                                <div class="me-2">
+                                    <img src="img/cat.png" alt="">
+                                </div>
+                                <div class="descrip-empty">
+                                    <p>
+                                        Oops!<br>
+                                        Тут пока ничего нет
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <a class="btn-assortment" href="#">Подобрать</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
+<script src="js/script.js"></script>
+<script src="js/dropdown-menu.js"></script>
+</body>
+</html>
