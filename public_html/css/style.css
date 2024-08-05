@@ -56,7 +56,7 @@
 /*END RIGHT CONTENT*/
 
 /*LEFT CONTENT*/
-.shadow-box-st{
+.shadow-box-st1{
     -webkit-box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.2);
     -moz-box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.2);
     box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.2);
@@ -363,29 +363,31 @@
 
 
 /**/
-.btn-box{
-    display: flex;
-    justify-content: space-between;
-    flex-flow: column wrap;
+.btn-plates{
+    padding:                            1.5em 1em 1.5em 1em;
+    border-radius:                      1em;
+    justify-content:                    space-between;
+    align-items:                        center;
+    font-weight:                        bold;
+    cursor:                             pointer;
+    text-transform:                     uppercase;
+    transition:                         all .2s ease-in-out;
+    border:                             2px solid #cccccc70;
+    background:                         #ffffff
+                                        no-repeat
+                                        right .5em center;
+}
+.btn-plates:hover{
+    margin-top:                         -1px;
+    margin-bottom:                      1px;
+    color:                              darkred;
+    -webkit-box-shadow:                 0 5px 10px 2px #223C5033;
+    -moz-box-shadow:                    0 5px 10px 2px #223C5033;
+    box-shadow:                         0 5px 10px 2px #223C5033;
 }
 .achievements{
-    background-color: #FFFFFF;
-    padding: .5em 1em .5em 1.5em;
-    border-radius: 1em;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-weight: bold;
-    cursor: pointer;
+    background-image:                   url("../img/medal.png");
 }
 .personal-report{
-    background-color: #FFFFFF;
-    padding: .5em 1em .5em 1.5em;
-    border-radius: 1em;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-weight: bold;
-    cursor: pointer;
+    background-image:                   url("../img/doc.png");
 }
-

@@ -22,8 +22,22 @@
                     </div>
                 </div>
             </div>
-            <div class="btn-box mb-3">
-                <div class="achievements shadow-box-st">
+            <div class="btn-box mb-3 row row-cols-1 row-cols-xxl-2 g-3">
+                <div>
+                    <div class="btn-plates achievements col">
+                            <span>Достижения</span>
+                    </div>
+                </div>
+                <div>
+                    <div class="btn-plates personal-report col">
+                        <div>
+                            <span>Персональные отчёты</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--
+                <div class="achievements shadow-box-st col">
                     <div>
                         <span>Достижения</span>
                     </div>
@@ -31,15 +45,8 @@
                         <img src="img/medal.png" alt="">
                     </div>
                 </div>
-                <div class="personal-report shadow-box-st">
-                    <div>
-                        <span>Персональные отчёты</span>
-                    </div>
-                    <div>
-                        <img src="img/doc.png" alt="">
-                    </div>
-                </div>
-            </div>
+
+            -->
         </div>
         <div class="menu-lk col">
             <nav class="nav nav-pills shadow-box-st mb-2" id="pills-tab" role="tablist">
