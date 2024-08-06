@@ -1,9 +1,11 @@
 @import url("page.css");
 @import url("news.css");
+@import url("plates.css");
 
 /*PERSONAL CABINET*/
 .page-title{
-    color: #515151;
+    color: #272a2f;
+    text-transform: uppercase;
 }
 /*RIGHT CONTENT*/
 .menu-lk nav{
@@ -54,43 +56,6 @@
     border: 1px solid #820000;
 }
 /*END RIGHT CONTENT*/
-
-/*LEFT CONTENT*/
-.shadow-box-st1{
-    -webkit-box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.2);
-    -moz-box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.2);
-    box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.2);
-}
-.Personal-info-card{
-    background-color: #FFFFFF;
-    border-radius: 15px;
-    padding: 12px;
-}
-.user-photo-box{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-.user-photo-box img{
-    max-width: 267px;
-    max-height: 241px;
-    width: 100%;
-    object-fit: cover;
-}
-.user-id-box{
-    text-align: center;
-    border: 1px solid #820000;
-    border-radius: 5px;
-}
-.user-box-info a{
-    color: #c10f1a;
-    cursor: pointer;
-    transition: .3s linear;
-}
-.user-box-info a:hover{
-    color: #660000;
-}
-/*END LEFT CONTENT*/
 
 /*LOGIN PAGE*/
 .link-to-home{
@@ -326,17 +291,6 @@
         width: 100%;
     }
 }
-@media screen and (max-width: 500px) {
-    .btn-box{
-        flex-direction: column;
-    }
-    .achievements{
-        margin-bottom: 8px;
-    }
-    .achievements,.personal-report{
-        width: 100%;
-    }
-}
 @media screen and (max-width: 400px){
     .lk > span{
         font-size: 10px !important;
@@ -361,33 +315,41 @@
     }
 }
 
+/*LEFT CONTENT*/
+.personal-info-card{
+    background-color:                   #FFFFFF;
+    border-radius:                      1rem;
+    padding:                            1.25rem 1rem;
+}
+.user-photo-box{
+}
+.user-photo-box img{
+    max-width: 267px;
+    max-height: 241px;
+    width: 100%;
+    object-fit: cover;
+}
+.user-id-box{
+    text-align: center;
+    border: 1px solid #820000;
+    border-radius: 5px;
+}
+.user-box-info a{
+    color: #c10f1a;
+    cursor: pointer;
+    transition: .3s linear;
+}
+.user-box-info a:hover{
+    color: #660000;
+}
+/*END LEFT CONTENT*/
 
-/**/
-.btn-plates{
-    padding:                            1.5em 1em 1.5em 1em;
-    border-radius:                      1em;
-    justify-content:                    space-between;
-    align-items:                        center;
-    font-weight:                        bold;
-    cursor:                             pointer;
-    text-transform:                     uppercase;
-    transition:                         all .2s ease-in-out;
-    border:                             2px solid #cccccc70;
-    background:                         #ffffff
-                                        no-repeat
-                                        right .5em center;
+html{
+    font-size: 18px;
 }
-.btn-plates:hover{
-    margin-top:                         -1px;
-    margin-bottom:                      1px;
-    color:                              darkred;
-    -webkit-box-shadow:                 0 5px 10px 2px #223C5033;
-    -moz-box-shadow:                    0 5px 10px 2px #223C5033;
-    box-shadow:                         0 5px 10px 2px #223C5033;
-}
-.achievements{
-    background-image:                   url("../img/medal.png");
-}
-.personal-report{
-    background-image:                   url("../img/doc.png");
+
+@media (min-width: 1400px) {
+    .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
+        max-width:                      1500px !important;
+    }
 }

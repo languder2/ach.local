@@ -4,7 +4,7 @@
 }
 /* body */
 body{
-    background-color:           #F1F1F1;
+    background-color:           #F1F1F1 !important;
     min-height:                 100vh;
     margin:                     0;
 }
