@@ -1,0 +1,90 @@
+/* CSS Modal */
+#modal{
+    position:                       absolute;
+    left:                           0;
+    top:                            0;
+    bottom:                         0;
+    right:                          0;
+    overflow:                       hidden;
+    z-index:                        -1;
+}
+#modal.active{
+    z-index:                        1000;
+}
+#modal:before{
+    clip-path:                      polygon(100% 0%, 100% 85%, 0% 15%, 0% 0%);
+    content:                        "";
+    position:                       absolute;
+    width:                          100vw;
+    height:                         100vh;
+    background-color:               #3f0000;
+    top:                            -100vh;
+    opacity:                        .5;
+    transition-property:            top;
+    transition-timing-function:     ease-in-out;
+    transition-duration:            .5s;
+}
+#modal:after{
+    clip-path:                      polygon(100% 100%, 100% 85%, 0% 15%, 0% 100%);
+    content:                        "";
+    position:                       absolute;
+    width:                          100vw;
+    height:                         100vh;
+    background-color:               #3f0000;
+    top:                            100vh;
+    opacity:                        1;
+    transition-property:            top;
+    transition-timing-function:     ease-in-out;
+    transition-duration:            .5s;
+}
+#modal.active:after,
+#modal.active:before{
+    top:                            0;
+}
+#modalContent{
+    position:                       fixed;
+    top:                            15rem;
+    bottom:                         15rem;
+    width:                          50rem;
+    left:                           calc( (100vw - 50rem) / 2);
+    padding:                        1.5rem;
+    border-radius:                  .75rem;
+    opacity:                        0;
+    transform:                      scale(1.2);
+    transition:                     all .5s ease-in-out;
+    z-index:                        1000;
+}
+#modal.active #modalContent{
+    background-color:               #ffffff;
+    opacity:                        1;
+    transform:                      scale(1);
+    transition-property:            scale,opacity,height,top,width,left;
+    transition-timing-function:     ease-in-out;
+    transition-duration:            .5s,.5s,.3s,.3s,.2s,.2s;
+}
+
+@media screen and (max-width: 30rem) {
+    #modalContent{
+        width:                      calc( 100vw - 1rem);
+        left:                       .5rem;
+    }
+}
+@media screen and (min-width: 30rem) and (max-width: 50rem){
+    #modalContent{
+        width:                      calc( 100vw - 4rem);
+        left:                       2rem;
+    }
+}
+@media screen and (max-height: 30rem) {
+    #modalContent{
+        height:                     calc( 100vh - 1rem);
+        top:                       .5rem;
+    }
+}
+@media screen and (max-height: 50rem) {
+    #modalContent{
+        height:                    calc( 100vh - 4rem);
+        top:                       2rem;
+    }
+}
+/* END Modal*/
