@@ -1,0 +1,86 @@
+/* s BOX */
+
+.btn-outline-red{
+    --bs-btn-color:                 #ffffff;
+    --bs-btn-border-color:          #820000;
+    --bs-btn-bg:                    #820000;
+    --bs-btn-hover-color:           #fff;
+    --bs-btn-hover-bg:              #af0000;
+    --bs-btn-hover-border-color:    #820000;
+    --bs-btn-active-color:          #fff;
+    --bs-btn-active-bg:             #bf0000;
+    --bs-btn-active-border-color:   #820000;
+    --bs-btn-disabled-color:        #6c757d;
+    --bs-btn-disabled-bg:           transparent;
+    --bs-btn-disabled-border-color: #6c757d;
+    --bs-gradient:                  none;
+}
+/**/
+.rounded-top-4{
+    border-top-left-radius:         1rem;
+    border-top-right-radius:        1rem;
+}
+.rounded-bottom-4{
+    border-bottom-left-radius:      1rem;
+    border-bottom-right-radius:     1rem;
+
+}
+/* s-input-box */
+.s-input-box{
+    position:                       relative;
+    padding:                        .75rem;
+}
+.s-input-box label{
+    position:                       absolute;
+    top:                            1.5rem;
+    left:                           21px;
+    background-color:               white;
+    padding-left:                   10px;
+    z-index:                        1000;
+}
+.s-input-box input{
+    border-width:                   2px;
+    padding:                        .75rem 1.25rem;
+}
+
+.s-input-box label{
+    position:                       absolute;
+    top:                            1.5rem;
+    left:                           1.5rem;
+    background-color:               white;
+    padding-left:                   10px;
+    z-index:                        1000;
+}
+.s-input-box >input:focus{
+    box-shadow:                     none;
+    border:                         solid 2px #820000;
+    margin:                         0;
+    border-radius:                  6px;
+}
+.s-input-box:has(>input:not(:placeholder-shown)) label,
+.s-input-box:has(>input:focus) label,
+.s-input-box label.active{
+    transition:                     0.3s ease;
+    font-size:                      .75rem;
+    top:                            .25rem;
+    padding:                        0 3px;
+    left:                           24px
+}
+/* btn btn-main*/
+.btn-main{
+    --bs-btn-color:                 #fff;
+    --bs-btn-bg:                    darkred;
+    --bs-btn-border-color:          darkred;
+    --bs-btn-hover-color:           #fff;
+    --bs-btn-hover-bg:              #a20101;
+    --bs-btn-hover-border-color:    #a20101;
+    --bs-btn-focus-shadow-rgb:      49, 132, 253;
+    --bs-btn-active-color:          #fff;
+    --bs-btn-active-bg:             #0a58ca;
+    --bs-btn-active-border-color:   #0a53be;
+    --bs-btn-active-shadow:         inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --bs-btn-disabled-color:        #fff;
+    --bs-btn-disabled-bg:           #0d6efd;
+    --bs-btn-disabled-border-color: #0d6efd;
+    text-transform:                 uppercase;
+}

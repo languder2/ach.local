@@ -1,11 +1,21 @@
 document.addEventListener("DOMContentLoaded",()=>{
-    let modal = document.getElementById("modal");
+    let modal       = document.getElementById("modal");
 
-    if (modal === null)
-        return false;
+    if (modal === null) return false;
 
-    document.querySelectorAll(".show-modal").forEach(el=>{
+    let modalContent    = modal.querySelector("#modalContent");
+
+    document.querySelectorAll(".show-modal, .test").forEach(el=>{
         el.addEventListener("click",()=>{
+            hidePanels(modalContent);
+
+            let action = el.getAttribute("data-action");
+
+            if(action === null || modalContent.querySelector(action) === null)
+                return false;
+
+            modalContent.querySelector(action).classList.remove("d-none");
+
             modal.classList.add("active");
         });
     });
@@ -21,5 +31,35 @@ document.addEventListener("DOMContentLoaded",()=>{
 
         if (evt.key === "Escape")
             console.clear();
+
+
+        if(evt.key === "1")
+            showSignUp(modalContent);
+
     });
 });
+
+function showSignUp(modalContent){
+    if(modalContent.classList.contains("hide"))
+        return false;
+
+    let time= 1250;
+
+    modalContent.classList.add("hide");
+
+    let timer1= setTimeout(()=>{
+        hidePanels(modalContent);
+        modalContent.querySelector("#signUp").classList.remove("d-none");
+    },time/2);
+
+    let timer2= setTimeout(()=>{
+        modalContent.classList.remove("hide");
+    },time);
+
+}
+
+function hidePanels(modalContent){
+    modalContent.querySelectorAll(".panel:not(.d-none)").forEach(el=>{
+        el.classList.add("d-none");
+    });
+}

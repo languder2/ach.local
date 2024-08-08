@@ -8,12 +8,16 @@
     <title>Личный кабинет</title>
 
     <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?<?=microtime(true)?>">
+    <link href="node_modules/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet">
 
-    <script defer src="node_modules/bootstrap/js/dist/"
-    <script defer src="js/lib/bootstrap.bundle.min.js"></script>
-    <script defer src="js/lib/bootstrap.bundle.min.js"></script>
-    <script defer src="js/lib/popper.min.js"></script>
+    <link rel="stylesheet" href="css/style.css?<?=microtime(true)?>">
+    <link rel="stylesheet" href="css/forms.css?<?=microtime(true)?>">
+
+    <script defer src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!--
+    <script defer src="node_modules/@popperjs/core/dist/esm/popper.js"></script>
+    -->
+    <script defer src="js/modal.js?<?=microtime(true)?>"></script>
 </head>
 <body>
 <?php include_once("header.php");?>

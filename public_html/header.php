@@ -102,7 +102,7 @@
                 </a>
             </div>
             <div class="ms-auto">
-                <a href="#" class="btn-account">
+                <a href="#" class="btn-account show-modal" data-action="#signIn">
                     личный кабинет
                 </a>
             </div>
