@@ -6,7 +6,9 @@ document.addEventListener("DOMContentLoaded",()=>{
     let modalContent    = modal.querySelector("#modalContent");
 
     document.querySelectorAll(".show-modal, .test").forEach(el=>{
-        el.addEventListener("click",()=>{
+        el.addEventListener("click",(evt)=>{
+            evt.preventDefault();
+
             hidePanels(modalContent);
 
             let action = el.getAttribute("data-action");
@@ -15,6 +17,8 @@ document.addEventListener("DOMContentLoaded",()=>{
                 return false;
 
             modalContent.querySelector(action).classList.remove("d-none");
+
+            setModalHeight(modalContent);
 
             modal.classList.add("active");
         });
@@ -50,6 +54,7 @@ function showSignUp(modalContent){
     let timer1= setTimeout(()=>{
         hidePanels(modalContent);
         modalContent.querySelector("#signUp").classList.remove("d-none");
+        setModalHeight(modalContent);
     },time/2);
 
     let timer2= setTimeout(()=>{
@@ -62,4 +67,17 @@ function hidePanels(modalContent){
     modalContent.querySelectorAll(".panel:not(.d-none)").forEach(el=>{
         el.classList.add("d-none");
     });
+}
+
+function setModalHeight(modalContent){
+
+    let offset= 100*(1 - modalContent.offsetHeight/window.screen.height) / 2;
+
+    if(offset > 20)
+        offset*= 0.6;
+
+    else if(offset <=0)
+        offset = 0;
+
+    modalContent.style.top = offset+"vh";
 }

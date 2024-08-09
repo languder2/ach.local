@@ -18,7 +18,7 @@
 #modal:before{
     clip-path:                      polygon(100% 0%, 100% 85%, 0% 15%, 0% 0%);
     content:                        "";
-    position:                       absolute;
+    position:                       fixed;
     width:                          100vw;
     height:                         100vh;
     background-color:               #3f0000;
@@ -31,7 +31,7 @@
 #modal:after{
     clip-path:                      polygon(100% 100%, 100% 85%, 0% 15%, 0% 100%);
     content:                        "";
-    position:                       absolute;
+    position:                       fixed;
     width:                          100vw;
     height:                         100vh;
     background-color:               #3f0000;
@@ -47,8 +47,6 @@
 }
 #modalContent{
     position:                       fixed;
-    top:                            15rem;
-    bottom:                         15rem;
     width:                          25em;
     left:                           calc( (100vw - 25rem) / 2);
     padding:                        1rem 1.5rem;
@@ -57,6 +55,8 @@
     transform:                      scale(1.2);
     transition:                     all .5s ease-in-out;
     z-index:                        1000;
+    max-height:                     100vh;
+    overflow-y:                     auto;
 }
 #modal.active #modalContent{
     background-color:               #ffffff;
@@ -94,10 +94,10 @@
 }
 @media screen and (min-width: 30rem) and (max-width: 50rem){
     #modalContent{
-        width:                      calc( 100vw - 4rem);
-        left:                       2rem;
+        left:                       calc( (100vw - 25rem) / 2);
     }
 }
+/*
 @media screen and (max-height: 30rem) {
     #modalContent{
         height:                     calc( 100vh - 1rem);
