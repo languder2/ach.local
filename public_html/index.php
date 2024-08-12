@@ -1,30 +1,56 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Личный кабинет</title>
+<?php
 
-    <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="node_modules/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet">
+/*
+ *---------------------------------------------------------------
+ * CHECK PHP VERSION
+ *---------------------------------------------------------------
+ */
 
-    <link rel="stylesheet" href="css/style.css?<?=microtime(true)?>">
-    <link rel="stylesheet" href="css/forms.css?<?=microtime(true)?>">
+$minPhpVersion = '8.1'; // If you update this, don't forget to update `spark`.
+if (version_compare(PHP_VERSION, $minPhpVersion, '<')) {
+    $message = sprintf(
+        'Your PHP version must be %s or higher to run CodeIgniter. Current version: %s',
+        $minPhpVersion,
+        PHP_VERSION
+    );
 
-    <script defer src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
-    <!--
-    <script defer src="node_modules/@popperjs/core/dist/esm/popper.js"></script>
-    -->
-    <script defer src="js/modal.js?<?=microtime(true)?>"></script>
-</head>
-<body>
-<?php include_once("header.php");?>
-<section class="page-content py-4">
-    <?php include_once("content/MainPage.php")?>
-</section>
+    header('HTTP/1.1 503 Service Unavailable.', true, 503);
+    echo $message;
 
-<?php include_once("footer.php");?>
-</body>
-</html>
+    exit(1);
+}
+
+/*
+ *---------------------------------------------------------------
+ * SET THE CURRENT DIRECTORY
+ *---------------------------------------------------------------
+ */
+
+// Path to the front controller (this file)
+define('FCPATH', __DIR__ . DIRECTORY_SEPARATOR);
+
+// Ensure the current directory is pointing to the front controller's directory
+if (getcwd() . DIRECTORY_SEPARATOR !== FCPATH) {
+    chdir(FCPATH);
+}
+
+/*
+ *---------------------------------------------------------------
+ * BOOTSTRAP THE APPLICATION
+ *---------------------------------------------------------------
+ * This process sets up the path constants, loads and registers
+ * our autoloader, along with Composer's, loads our constants
+ * and fires up an environment-specific bootstrapping.
+ */
+
+// LOAD OUR PATHS CONFIG FILE
+// This is the line that might need to be changed, depending on your folder structure.
+require FCPATH . '../app/Config/Paths.php';
+// ^^^ Change this line if you move your application folder
+
+$paths = new Config\Paths();
+
+// LOAD THE FRAMEWORK BOOTSTRAP FILE
+require $paths->systemDirectory . '/Boot.php';
+
+exit(CodeIgniter\Boot::bootWeb($paths));
