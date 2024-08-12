@@ -1,4 +1,3 @@
-<div class="container-xxl">
     <h3 class="page-title mb-4">Личный кабинет</h3>
     <div class="row row-cols-1 row-cols-sm-1 row-cols-md-1 row-cols-lg-2 g-4">
         <div class="col">
@@ -139,4 +138,3 @@
             </div>
         </div>
     </div>
-</div>

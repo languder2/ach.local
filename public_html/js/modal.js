@@ -9,18 +9,22 @@ document.addEventListener("DOMContentLoaded",()=>{
         el.addEventListener("click",(evt)=>{
             evt.preventDefault();
 
-            hidePanels(modalContent);
-
             let action = el.getAttribute("data-action");
 
             if(action === null || modalContent.querySelector(action) === null)
                 return false;
 
-            modalContent.querySelector(action).classList.remove("d-none");
+            if(modal.classList.contains("active"))
+                showModalAction(modalContent,action)
+            else{
+                hidePanels(modalContent);
 
-            setModalHeight(modalContent);
+                modalContent.querySelector(action).classList.remove("d-none");
 
-            modal.classList.add("active");
+                setModalHeight(modalContent);
+
+                modal.classList.add("active");
+            }
         });
     });
 
@@ -35,15 +39,10 @@ document.addEventListener("DOMContentLoaded",()=>{
 
         if (evt.key === "Escape")
             console.clear();
-
-
-        if(evt.key === "1")
-            showSignUp(modalContent);
-
     });
 });
 
-function showSignUp(modalContent){
+function showModalAction(modalContent,action){
     if(modalContent.classList.contains("hide"))
         return false;
 
@@ -53,7 +52,7 @@ function showSignUp(modalContent){
 
     let timer1= setTimeout(()=>{
         hidePanels(modalContent);
-        modalContent.querySelector("#signUp").classList.remove("d-none");
+        modalContent.querySelector(action).classList.remove("d-none");
         setModalHeight(modalContent);
     },time/2);
 
@@ -74,10 +73,11 @@ function setModalHeight(modalContent){
     let offset= 100*(1 - modalContent.offsetHeight/window.screen.height) / 2;
 
     if(offset > 20)
-        offset*= 0.6;
+        offset*= 1;
 
-    else if(offset <=0)
-        offset = 0;
+    else
+        if(offset <=0)
+            offset = 0;
 
     modalContent.style.top = offset+"vh";
 }

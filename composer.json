@@ -27,25 +27,10 @@
         "predis/predis": "^1.1 || ^2.0"
     },
     "suggest": {
-        "ext-curl": "If you use CURLRequest class",
-        "ext-dom": "If you use TestResponse",
-        "ext-exif": "If you run Image class tests",
         "ext-fileinfo": "Improves mime type detection for files",
-        "ext-gd": "If you use Image class GDHandler",
-        "ext-imagick": "If you use Image class ImageMagickHandler",
-        "ext-libxml": "If you use TestResponse",
-        "ext-memcache": "If you use Cache class MemcachedHandler with Memcache",
-        "ext-memcached": "If you use Cache class MemcachedHandler with Memcached",
         "ext-mysqli": "If you use MySQL",
-        "ext-oci8": "If you use Oracle Database",
-        "ext-pgsql": "If you use PostgreSQL",
         "ext-readline": "Improves CLI::input() usability",
-        "ext-redis": "If you use Cache class RedisHandler",
-        "ext-simplexml": "If you format XML",
-        "ext-sodium": "If you use Encryption SodiumHandler",
-        "ext-sqlite3": "If you use SQLite3",
-        "ext-sqlsrv": "If you use SQL Server",
-        "ext-xdebug": "If you use CIUnitTestCase::assertHeaderEmitted()"
+        "ext-simplexml": "If you format XML"
     },
     "autoload": {
         "psr-4": {
