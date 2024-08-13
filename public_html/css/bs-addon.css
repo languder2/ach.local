@@ -3,8 +3,6 @@
     --link-color:                   #820000FF;
     --link-hover-color:             #ff0000FF;
 }
-
-
 /* font-size */
 .fs-1\.25{
     font-size:                      1.25rem;
@@ -28,3 +26,9 @@
     padding-bottom:                 .75rem;
 }
 /**/
+.w-80{
+    width:                          80%;
+}
+.w-20{
+    width:                          20%;
+}

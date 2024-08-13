@@ -17,6 +17,7 @@
     <script defer src="node_modules/@popperjs/core/dist/esm/popper.js"></script>
     -->
     <script defer src="<?=base_url("js/modal.js")?>?<?=microtime(true)?>"></script>
+    <script defer src="<?=base_url("js/user.js")?>?<?=microtime(true)?>"></script>
 </head>
 <body>
 <?php

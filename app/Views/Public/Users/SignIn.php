@@ -7,7 +7,7 @@
 
     <div class="s-input-box">
         <input type="text" name="form[email]" id="signInET" class="form-control" placeholder="" value="">
-        <label for="signIn">
+        <label for="signInET">
             E-mail
         </label>
     </div>
