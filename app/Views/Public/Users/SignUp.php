@@ -1,4 +1,5 @@
 <form
+        action="signUp"
         id="signUp" class="panel d-none"
 >
     <h4 class="text-center mt-0 text-uppercase fw-bold">
@@ -47,16 +48,30 @@
         </label>
     </div>
 
-    <div class="form-check px-2 mx-4 my-2">
-        <input class="form-check-input" type="checkbox" value="" id="suAgreement" required>
+    <div class="form-check ps-3 pe-2 mx-4 my-2">
+        <input
+                type="checkbox"
+                name="form[agreement]"
+                id="suAgreement"
+                value="1"
+                class="form-check-input"
+                required
+        >
         <label class="form-check-label" for="suAgreement">
             Я принимаю условия пользовательского соглашения
         </label>
     </div>
 
-    <div class="form-check px-2 mx-4 my-2">
-        <input class="form-check-input" type="checkbox" value="" id="suDaraProcessing" required>
-        <label class="form-check-label" for="suDaraProcessing">
+    <div class="form-check ps-3 pe-2 mx-4 my-2">
+        <input
+                type="checkbox"
+                name="form[dataProcessing]"
+                id="suDataProcessing"
+                value="1"
+                class="form-check-input"
+                required
+        >
+        <label class="form-check-label" for="suDataProcessing">
             Я даю согласие на обработку моих персональных данных на условиях, определённых политикой обработки персональных данных
         </label>
     </div>

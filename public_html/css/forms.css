@@ -50,12 +50,6 @@
     padding-left:                       10px;
     z-index:                            1000;
 }
-.s-input-box >input:focus{
-    box-shadow:                         none;
-    border:                             solid 2px #820000;
-    margin:                             0;
-    border-radius:                      6px;
-}
 .s-input-box:has(>input:not(:placeholder-shown)) label,
 .s-input-box:has(>input:focus) label,
 .s-input-box label.active{
@@ -92,7 +86,7 @@
     box-shadow:                         0 5px 7px 1px var(--shadow-color);
 }
 .btn-main:active{
-    box-shadow:                         0 0 0 4px darkred inset;
+    box-shadow:                         0 0 0 2px darkred inset;
     color:                              darkred;
 }
 .btn-grp{
@@ -115,6 +109,21 @@ input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active{
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: inherit;
+    -webkit-background-clip:            text;
+    -webkit-text-fill-color:            inherit;
+}
+.form-check-input:checked {
+    background-color:                   darkred;
+    border-color:                       darkred;
+}
+.form-check-input:focus {
+    border-color:                       darkred;
+    outline:                            0;
+    box-shadow:                         0 0 0 .25rem #8B000030;
+}
+.form-check label{
+    cursor:                             pointer;
+}
+.form-check:hover label{
+    color:                              darkred;
 }

@@ -2,6 +2,7 @@
 
 use CodeIgniter\Router\RouteCollection;
 use App\Controllers\Pages;
+use App\Controllers\Users;
 
 
 /**
@@ -9,4 +10,5 @@ use App\Controllers\Pages;
  */
 
 
-$routes->get('/',                               [Pages::class, 'index']);
+$routes->get('/',                                       [Pages::class, 'index']);
+$routes->post('signUp',                                 [Users::class, 'signUp']);

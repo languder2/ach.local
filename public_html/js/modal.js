@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded",()=>{
         if (evt.key === "Escape")
             modal.classList.toggle("active");
 
-        if (evt.key === "Escape")
+        if (evt.key === "Escape" || evt.key === "=")
             console.clear();
     });
 });
