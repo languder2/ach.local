@@ -127,3 +127,8 @@ input:-webkit-autofill:active{
 .form-check:hover label{
     color:                              darkred;
 }
+.form-control:focus{
+    border-color:                       blue;
+    outline:                            0;
+    box-shadow:                         none;
+}

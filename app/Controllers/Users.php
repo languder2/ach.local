@@ -2,13 +2,103 @@
 
 namespace App\Controllers;
 
+use CodeIgniter\HTTP\ResponseInterface;
+
 class Users extends BaseController
 {
-    public function signUp(): string
+    public function signUp(): ResponseInterface
     {
-        $form= $this->request->getVar('form');
 
-        return  json_encode($form, JSON_UNESCAPED_UNICODE);
+        $form= (object)$this->request->getVar('form');
+
+
+        $validation= (object)[
+            "rules"     => [
+                'form.surname'                  => 'required',
+                'form.name'                     => 'required',
+                'form.patronymic'               => 'required',
+                'form.email'                    => 'required|valid_email',
+                'form.password'                 => 'required|matches[form.retry]',
+                'form.retry'                    => 'required|matches[form.password]',
+                'form.agreement'                => 'required',
+                'form.dataProcessing'           => 'required',
+            ],
+            "message"   => [
+                'form.surname'                  =>   [
+                    "required"                  =>  'form[surname]'
+                ],
+                'form.name'                     =>   [
+                    "required"                  =>  'form[name]'
+                ],
+                'form.patronymic'               =>   [
+                    "required"                  =>  'form[patronymic]'
+                ],
+                'form.email'                    =>   [
+                    "required"                  =>  'form[email]',
+                    "valid_email"               =>  'form[email]'
+                ],
+                'form.password'                 =>   [
+                    "required"                  =>  'form[password]',
+                    "matches"                   =>  'form[password]',
+                ],
+                'form.retry'                    =>   [
+                    "required"                  =>  'form[retry]',
+                    "matches"                   =>  'form[retry]',
+                ],
+                'form.agreement'                =>   [
+                    "required"                  =>  'form[agreement]'
+                ],
+                'form.dataProcessing'           =>   [
+                    "required"                  =>  'form[dataProcessing]'
+                ],
+            ]
+        ];
+
+        $validation->status = $this->validate($validation->rules,$validation->message);
+
+        if(!$validation->status){
+            $answer= (object)[
+                "status"                        => "errors",
+                "message"                       => "Заполните поля",
+                "errors"                        => array_values($this->validator->getErrors())
+            ];
+
+            return  $this->response->setJSON($answer);
+        }
+
+        $isset= $this->db
+            ->table("users")
+            ->where("email",$form->email)
+            ->get()
+            ->getNumRows();
+
+        if($isset){
+            $answer= (object)[
+                "status"                        => "error",
+                "message"                       => "E-mail $form->email уже занят",
+            ];
+            return  $this->response->setJSON($answer);
+        }
+
+        $sql= [
+            "surname"                           => $form->surname,
+            "name"                              => $form->name,
+            "patronymic"                        => $form->patronymic,
+            "email"                             => $form->email,
+            "password"                          => password_hash($form->password,PASSWORD_BCRYPT),
+        ];
+
+        $this->db
+            ->table("users")
+            ->insert($sql);
+
+        $answer= (object)[
+            "status"                        => "success",
+            "message"                       => "Письмо подтверждения отправленно",
+        ];
+
+        return  $this->response->setJSON($answer);
     }
 
 }
+

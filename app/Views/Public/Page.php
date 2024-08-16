@@ -12,10 +12,11 @@
     <link rel="stylesheet" href="<?=base_url("css/style.css")?>?<?=microtime(true)?>">
     <link rel="stylesheet" href="<?=base_url("css/forms.css")?>?<?=microtime(true)?>">
 
-    <script defer src="<?=base_url("node_modules/bootstrap/dist/js/bootstrap.min.js")?>"></script>
+    <script defer src="<?=base_url("node_modules/bootstrap/dist/js/bootstrap.bundle.min.js")?>"></script>
     <!--
     <script defer src="node_modules/@popperjs/core/dist/esm/popper.js"></script>
     -->
+    <script defer src="<?=base_url("js/script.js")?>?<?=microtime(true)?>"></script>
     <script defer src="<?=base_url("js/modal.js")?>?<?=microtime(true)?>"></script>
     <script defer src="<?=base_url("js/user.js")?>?<?=microtime(true)?>"></script>
 </head>

@@ -43,19 +43,24 @@ document.addEventListener("DOMContentLoaded",()=>{
             })
                 .then(response => {return response.text();})
                 .then(data => {
+                    console.clear();
+
+                    let inputs= signUp.querySelectorAll("input.is-invalid");
+                    inputs.forEach(el=>{
+                        el.classList.remove("is-invalid");
+                    });
+
+                    data= JSON.parse(data);
+
                     console.log(data);
-                    //data= JSON.parse(data);
+
+                    if(data.errors && data.errors.length)
+                        data.errors.forEach((name)=>{
+                            let el= signUp.querySelector("[name='"+name+"']");
+                            el.classList.add("is-invalid");
+                            return false;
+                        });
                 });
-
-
-
         });
     }
 });
-const validateEmail = (email) => {
-    return String(email)
-        .toLowerCase()
-        .match(
-            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-        );
-};

@@ -10,5 +10,13 @@ use App\Controllers\Users;
  */
 
 
-$routes->get('/',                                       [Pages::class, 'index']);
-$routes->post('signUp',                                 [Users::class, 'signUp']);
+$routes->get('/',                           [Pages::class, 'index']);
+$routes->post('signUp',                     [Users::class, 'signUp']);
+
+
+/**
+$routes->group('test', ['filter' => 'myfilter'], function($routes) {
+    $routes->get('profile', 'AccountController::profile');
+    $routes->get('settings', 'AccountController::settings');
+});
+/**/

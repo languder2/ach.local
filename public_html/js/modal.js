@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded",()=>{
         });
     });
 
-    modal.addEventListener("click",(evt)=>{
+    modal.addEventListener("mousedown",(evt)=>{
         if(evt.target.id === "modal")
             modal.classList.remove("active");
     });
@@ -39,6 +39,12 @@ document.addEventListener("DOMContentLoaded",()=>{
 
         if (evt.key === "Escape" || evt.key === "=")
             console.clear();
+
+        if (evt.key === "0")
+            setHeight(
+                document.querySelector(".callout-wrapper"),
+                document.querySelector(".callout-wrapper .callout")
+            );
     });
 });
 

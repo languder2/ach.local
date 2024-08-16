@@ -1,4 +1,27 @@
-/*SHOW CONTENT RADIO BUTTON*/
+document.addEventListener("DOMContentLoaded",()=>{
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    });
+})
+
+const validateEmail = (email) => {
+    return String(email)
+        .toLowerCase()
+        .match(
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        );
+};
+
+function setHeight(wrapper,inner){
+    wrapper.style.height= wrapper.scrollHeight+"px";
+    console.log(wrapper.scrollHeight);
+    wrapper.parentElement.scrollIntoView({behavior: "smooth"});
+}
+
+
+
+/*SHOW CONTENT RADIO BUTTON*
 const tabs = document.querySelectorAll('.tab-pane');
 const radios = document.querySelectorAll('input[name="tab-radio"]');
 
@@ -38,3 +61,5 @@ notFatherNameCheckbox.addEventListener("change", () => {
         inputFatherName.disabled = false; // Включаем поле "Отчество"
     }
 });
+
+/* */

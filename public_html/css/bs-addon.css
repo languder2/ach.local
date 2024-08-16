@@ -32,3 +32,15 @@
 .w-20{
     width:                          20%;
 }
+/**/
+.m-\.75{
+    margin:                         .75rem;
+}
+.mx-\.75{
+    margin-left:                    .75rem;
+    margin-right:                   .75rem;
+}
+.my-\.75{
+    margin-top:                     .75rem;
+    margin-bottom:                  .75rem;
+}

@@ -1,0 +1,19 @@
+/* callouts */
+.callout{
+    padding:                            0.75rem;
+    border:                             solid 2px var(--bs-border-color);
+    border-left-width:                  5px;
+    border-radius:                      .5rem;
+}
+.callout.callout-error{
+    border-left-color:                  darkred;
+    color:                              darkred;
+}
+.callout-wrapper{
+    transition:                         height .5s ease-in-out;
+    height:                             auto;
+    overflow-y:                         hidden;
+}
+.callout-wrapper.hide{
+    height:                             0;
+}

@@ -6,7 +6,6 @@ class Pages extends BaseController
 {
     public function index(): string
     {
-
         return view('Public/Page',[
             "pageContent"       => $pageContent??null
         ]);

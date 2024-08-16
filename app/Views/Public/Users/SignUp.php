@@ -6,43 +6,114 @@
         Регистрация
     </h4>
 
+    <div class="callout-wrapper hide">
+        <div class="callout callout-error mx-.75">
+                1231231
+        </div>
+    </div>
+
     <div class="s-input-box">
-        <input type="text" name="form[surname]" id="suSurname" class="form-control" placeholder="" value="" required>
+        <input
+                type                ="text"
+                name                ="form[surname]"
+                id                  ="suSurname"
+                class               ="form-control"
+                placeholder         =""
+                value               =""
+                data-bs-toggle      ="tooltip"
+                data-bs-placement   ="bottom"
+                title               =""
+                required
+        >
         <label for="suSurname">
             Фамилия
         </label>
     </div>
 
     <div class="s-input-box">
-        <input type="text" name="form[name]" id="suName" class="form-control" placeholder="" value="" required>
+        <input
+                type                ="text"
+                name                ="form[name]"
+                id                  ="suName"
+                class               ="form-control"
+                placeholder         =""
+                value               =""
+                data-bs-toggle      ="tooltip"
+                data-bs-placement   ="bottom"
+                title               =""
+                required
+        >
         <label for="suName">
             Имя
         </label>
     </div>
 
     <div class="s-input-box">
-        <input type="text" name="form[patronymic]" id="suPatronymic" class="form-control" placeholder="" value="">
+        <input
+                type                ="text"
+                name                ="form[patronymic]"
+                id                  ="suPatronymic"
+                class               ="form-control"
+                placeholder         =""
+                value               =""
+                data-bs-toggle      ="tooltip"
+                data-bs-placement   ="bottom"
+                title               =""
+        >
         <label for="suPatronymic">
             Отчество
         </label>
     </div>
 
     <div class="s-input-box">
-        <input type="email" name="form[email]" id="suEmail" class="form-control" placeholder="" value="" required>
+        <input
+                type                ="email"
+                name                ="form[email]"
+                id                  ="suEmail"
+                class               ="form-control"
+                placeholder         =""
+                value               =""
+                data-bs-toggle      ="tooltip"
+                data-bs-placement   ="bottom"
+                title               =""
+                required
+        >
         <label for="suEmail">
             E-mail
         </label>
     </div>
 
     <div class="s-input-box">
-        <input type="password" name="form[password]" id="suPass" class="form-control" placeholder="" value="" required>
+        <input
+                type                ="password"
+                name                ="form[password]"
+                id                  ="suPass"
+                class               ="form-control"
+                placeholder         =""
+                value               =""
+                data-bs-toggle      ="tooltip"
+                data-bs-placement   ="bottom"
+                title               =""
+                required
+        >
         <label for="suPass">
             Пароль
         </label>
     </div>
 
     <div class="s-input-box">
-        <input type="password" name="form[retry]" id="suRetry" class="form-control" placeholder="" value="" required>
+        <input
+                type                ="password"
+                name                ="form[retry]"
+                id                  ="suRetry"
+                class               ="form-control"
+                placeholder         =""
+                value               =""
+                data-bs-toggle      ="tooltip"
+                data-bs-placement   ="bottom"
+                title               =""
+                required
+        >
         <label for="suRetry">
             Повторить пароль
         </label>
@@ -50,11 +121,11 @@
 
     <div class="form-check ps-3 pe-2 mx-4 my-2">
         <input
-                type="checkbox"
-                name="form[agreement]"
-                id="suAgreement"
-                value="1"
-                class="form-check-input"
+                type                ="checkbox"
+                name                ="form[agreement]"
+                id                  ="suAgreement"
+                value               ="1"
+                class               ="form-check-input"
                 required
         >
         <label class="form-check-label" for="suAgreement">
@@ -64,11 +135,11 @@
 
     <div class="form-check ps-3 pe-2 mx-4 my-2">
         <input
-                type="checkbox"
-                name="form[dataProcessing]"
-                id="suDataProcessing"
-                value="1"
-                class="form-check-input"
+                type                ="checkbox"
+                name                ="form[dataProcessing]"
+                id                  ="suDataProcessing"
+                value               ="1"
+                class               ="form-check-input"
                 required
         >
         <label class="form-check-label" for="suDataProcessing">
@@ -78,17 +149,16 @@
 
     <div class="s-input-box text-center btn-grp">
         <a
-                href="#"
-                class="btn-main w-20 show-modal"
-                data-action="#signIn"
+                href                ="#"
+                class               ="btn-main w-20 show-modal"
+                data-action         ="#signIn"
         >
             <i class="bi bi-arrow-left"></i>
         </a>
         <input
-                type="submit"
-                class="btn-main w-80"
-                value="Зарегистрироваться"
+                type                ="submit"
+                class               ="btn-main w-80"
+                value               ="Зарегистрироваться"
         >
     </div>
-
 </form>
