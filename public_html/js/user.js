@@ -52,14 +52,45 @@ document.addEventListener("DOMContentLoaded",()=>{
 
                     data= JSON.parse(data);
 
-                    console.log(data);
-
                     if(data.errors && data.errors.length)
                         data.errors.forEach((name)=>{
                             let el= signUp.querySelector("[name='"+name+"']");
                             el.classList.add("is-invalid");
                             return false;
                         });
+
+                    if(data.status && data.status === "error"){
+                        switch (data.code){
+                            case "emailOccupied":
+                                signUp.querySelector("#suEmail").classList.add("is-invalid");
+
+                                document.querySelector("#modal .callout-error").innerHTML= data.message;
+
+                                setHeight(
+                                    document.querySelector(".callout-wrapper"),
+                                    "show"
+                                );
+
+                            break;
+                            case "noValidate":
+
+                            break;
+                            default:
+                                console.log(data.code);
+                            break;
+                        }
+
+                        return false;
+                    }
+
+                    if(data.status === "true"){
+                        setHeight(
+                            document.querySelector(".callout-wrapper"),
+                            "hide"
+                        );
+                    }
+
+
                 });
         });
     }

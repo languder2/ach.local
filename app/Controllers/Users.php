@@ -59,6 +59,7 @@ class Users extends BaseController
         if(!$validation->status){
             $answer= (object)[
                 "status"                        => "errors",
+                "code"                          => "noValidate",
                 "message"                       => "Заполните поля",
                 "errors"                        => array_values($this->validator->getErrors())
             ];
@@ -75,6 +76,7 @@ class Users extends BaseController
         if($isset){
             $answer= (object)[
                 "status"                        => "error",
+                "code"                          => "emailOccupied",
                 "message"                       => "E-mail $form->email уже занят",
             ];
             return  $this->response->setJSON($answer);
@@ -93,8 +95,8 @@ class Users extends BaseController
             ->insert($sql);
 
         $answer= (object)[
-            "status"                        => "success",
-            "message"                       => "Письмо подтверждения отправленно",
+            "status"                            => "success",
+            "code"                              => "success",
         ];
 
         return  $this->response->setJSON($answer);

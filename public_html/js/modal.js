@@ -42,8 +42,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 
         if (evt.key === "0")
             setHeight(
-                document.querySelector(".callout-wrapper"),
-                document.querySelector(".callout-wrapper .callout")
+                document.querySelector(".callout-wrapper")
             );
     });
 });

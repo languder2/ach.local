@@ -13,9 +13,12 @@ const validateEmail = (email) => {
         );
 };
 
-function setHeight(wrapper,inner){
-    wrapper.style.height= wrapper.scrollHeight+"px";
-    console.log(wrapper.scrollHeight);
+function setHeight(wrapper,type){
+    if(type === "show")
+        wrapper.style.height= wrapper.scrollHeight+"px";
+    else
+        wrapper.style.height= "0";
+
     wrapper.parentElement.scrollIntoView({behavior: "smooth"});
 }
 
