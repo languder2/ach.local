@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 
     let modalContent    = modal.querySelector("#modalContent");
 
-    document.querySelectorAll(".show-modal, .test").forEach(el=>{
+    document.querySelectorAll(".show-modal").forEach(el=>{
         el.addEventListener("click",(evt)=>{
             evt.preventDefault();
 
@@ -39,11 +39,6 @@ document.addEventListener("DOMContentLoaded",()=>{
 
         if (evt.key === "Escape" || evt.key === "=")
             console.clear();
-
-        if (evt.key === "0")
-            setHeight(
-                document.querySelector(".callout-wrapper")
-            );
     });
 });
 
