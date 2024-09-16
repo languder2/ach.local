@@ -13,6 +13,12 @@
 .fs-1\.10{
     font-size:                      1.10rem;
 }
+.fs-\.75{
+    font-size:                      .75rem;
+}
+.fs-\.5{
+    font-size:                      .5rem;
+}
 /* paddings */
 .p-\.75{
     padding:                        .75rem;
@@ -43,4 +49,11 @@
 .my-\.75{
     margin-top:                     .75rem;
     margin-bottom:                  .75rem;
+}
+/**/
+.color\:red{
+    color:                          #dd0000;
+}
+.color\:green{
+    color:                          #006600;
 }

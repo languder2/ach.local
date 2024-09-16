@@ -9,6 +9,10 @@
     border-left-color:                  darkred;
     color:                              darkred;
 }
+.callout.callout-success{
+    border-left-color:                  darkgreen;
+    color:                              darkgreen;
+}
 .callout-wrapper{
     transition:                         height .5s ease-in-out;
     height:                             auto;

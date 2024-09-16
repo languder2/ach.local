@@ -24,9 +24,11 @@ use CodeIgniter\Database\Exceptions\DataException;
 use CodeIgniter\Database\Query;
 use CodeIgniter\Entity\Entity;
 use CodeIgniter\Exceptions\ModelException;
+use CodeIgniter\Session\Session;
 use CodeIgniter\Validation\ValidationInterface;
 use Config\Database;
 use Config\Feature;
+use Config\Services;
 use ReflectionException;
 use stdClass;
 
@@ -40,6 +42,7 @@ use stdClass;
  *      - allow intermingling calls to the builder
  *      - removes the need to use Result object directly in most cases
  *
+ * @property-read Session $session
  * @property-read BaseConnection $db
  *
  * @method $this groupBy($by, ?bool $escape = null)
@@ -155,6 +158,8 @@ class Model extends BaseModel
         $db ??= Database::connect($this->DBGroup);
 
         $this->db = $db;
+
+        $this->session= Services::session();
 
         parent::__construct($validation);
     }

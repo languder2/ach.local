@@ -10,8 +10,27 @@ use App\Controllers\Users;
  */
 
 
-$routes->get('/',                           [Pages::class, 'index']);
-$routes->post('signUp',                     [Users::class, 'signUp']);
+$routes->get(   '/',                                    [Pages::class, 'index']);
+$routes->post(  'signUp',                               [Users::class, 'signUp']);
+$routes->get(   'pass',                                 [Users::class, 'pass']);
+
+
+$routes->get(   "admin",                                [Users::class, 'adminPage']);
+$routes->get(   "admin/(:any)",                         [Users::class, 'adminPage']);
+
+
+$routes->group('students', [], function($routes) {
+    $routes->get(   "signIn",                                [Users::class, 'studentSignIn']);
+    $routes->post(  "signIn",                                [Users::class, 'ssiProcessing']);
+    $routes->get(   "email_confirm",                         [Users::class, 'ssiStep2']);
+    $routes->post(  "confirm",                               [Users::class, 'ssiConfirm']);
+    $routes->get(   "email_confirm/(:segment)",              [Users::class, 'ssiConfirmLink']);
+    $routes->get(   "step3",                                 [Users::class, 'ssiStep3']);
+    $routes->post(  "step3",                                 [Users::class, 'ssiProcessingS3']);
+});
+
+
+
 
 
 /**
