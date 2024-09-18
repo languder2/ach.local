@@ -11,7 +11,7 @@
         <input type="hidden" name="email" value="<?=$user->email??""?>">
         <div class="text-center confirm-code d-flex">
             <label id="inputs" class="inputs d-block mx-auto">
-                <input name="code[]" type="text" inputmode="numeric" maxlength="1" />
+                <input name="code[]" type="text" inputmode="numeric" maxlength="1" autofocus/>
                 <input name="code[]" type="text" inputmode="numeric" maxlength="1" />
                 <input name="code[]" type="text" inputmode="numeric" maxlength="1" />
                 <input name="code[]" type="text" inputmode="numeric" maxlength="1" />
@@ -26,21 +26,27 @@
     Если письмо с активацией долго не приходит<br>проверьте папку Спам.
 </p>
 <hr>
-<p class="fs-1.25 text-center">
-    Отправить код повторно через <span class="timer">00:59</span>
-</p>
+<div id="timerBox">
+    <p class="fs-1.25 text-center reverse-counter">
+        Отправить код повторно через <span class="timer" data-counter="60">01:00    </span>
+    </p>
+    <p class="text-center resend-email d-none">
+        <a
+            href="<?=base_url(route_to("Users::ssiResendEmail"))?>"
+            id="resendEmail"
+            class="link fs-1.25"
+        >
+            Повторно отправить письмо
+        </a>
+    </p>
+</div>
 <hr>
 <div class="text-center">
-    Использовать другие данные
+    <a
+        href="<?=base_url(route_to("Users::ssiChangeData"))?>"
+        class="link fs-1.25"
+    >
+        Использовать другие данные
+    </a>
 </div>
 
-<!----
-<div class="s-input-box text-center btn-grp">
-    <a href="#" class="btn-main w-50 show-modal" data-action="#signIn">
-        изменить данные
-    </a>
-    <a href="#" class="btn-main w-50 show-modal" data-action="#signIn">
-        отправить повторно
-    </a>
-</div>
-!---->

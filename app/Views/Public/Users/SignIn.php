@@ -1,19 +1,38 @@
 <form
-        id="signIn" class="panel d-none"
+        id              ="signIn"
+        class           ="panel d-none"
+        method          ="POST"
+        action          ="<?=base_url(route_to("Users::authSI"))?>"
 >
     <h4 class="text-center mt-0 text-uppercase fw-bold">
         Вход
     </h4>
 
     <div class="s-input-box">
-        <input type="text" name="form[email]" id="signInET" class="form-control" placeholder="" value="">
+        <input
+                type="text"
+                name="form[email]"
+                id="signInET"
+                class="form-control"
+                placeholder=""
+                value=""
+                required
+        >
         <label for="signInET">
             E-mail
         </label>
     </div>
 
     <div class="s-input-box">
-        <input type="password" name="form[password]" id="signInPass" class="form-control" placeholder="" value="">
+        <input
+                type="password"
+                name="form[password]"
+                id="signInPass"
+                class="form-control"
+                placeholder=""
+                value=""
+                required
+        >
         <label for="signInPass">
             Пароль
         </label>

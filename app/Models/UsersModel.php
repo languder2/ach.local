@@ -78,4 +78,44 @@ class UsersModel extends GeneralModel{
         return true;
     }
 
+    public function sdoCreateEmailCURL($user):bool
+    {
+        $isp                    = "https://31.129.110.26:1500";
+        $user                   = "root";
+        $pass                   = "spmU&wR@9C7X";
+
+        $ch = curl_init();
+
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_SSL_VERIFYHOST => false,
+            CURLOPT_SSL_VERIFYPEER => false
+        ]);
+
+        $params['func']             = 'email.edit';
+        $params['sok']              = 'ok';
+        $params['name']             = 'sultansv';
+        $params['domainname']       = 'stud.mgu-mlt.ru';
+        $params['passwd']           = 'MelSU2024';
+        $params['owned']            = 'sultansv@std.work-mgu.ru';
+        $params['forward']          = 'languder1985@ya.ru';
+        $params['out']              = 'xml';
+
+        $url = $isp.'?authinfo='. urlencode($user).':'.urlencode($pass).'&'.http_build_query($params);
+
+        curl_setopt($ch, CURLOPT_URL, $url);
+
+        $result                     = curl_exec($ch);
+        $result                     = simplexml_load_string($result,"SimpleXMLElement",LIBXML_NOCDATA);
+        if($result->error)
+            dd("error");
+        else
+            dd("success");
+
+        curl_close($ch);
+
+
+
+        return true;
+    }
 }

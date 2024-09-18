@@ -1,4 +1,4 @@
-<form method="POST" action="<?=route_to("Users::ssiProcessing")?>">
+<form id="ssiStep1" method="POST" action="<?=route_to("Users::ssiProcessing")?>">
     <h4 class="
                 text-center border-bottom border-1 pb-3
     ">
@@ -83,15 +83,39 @@
     </div>
     <div class="s-input-box">
         <input
-                type="text"
-                name="form[messenger]"
-                id="ssiMessenger"
-                class="form-control"
-                placeholder=""
-                value="<?=$form->messenger??""?>"
+                type                ="password"
+                name                ="form[password]"
+                id                  ="suPass"
+                class               ="form-control"
+                placeholder         =""
+                value               =""
+                data-bs-toggle      ="tooltip"
+                data-bs-placement   ="bottom"
+                title               =""
+                autocomplete        ="false"
+                required
         >
-        <label for="ssiMessenger">
-            Мессенджер
+        <label for="suPass">
+            Пароль
+        </label>
+    </div>
+
+    <div class="s-input-box">
+        <input
+                type                ="password"
+                name                ="form[confirm]"
+                id                  ="suConfirm"
+                class               ="form-control"
+                placeholder         =""
+                value               =""
+                data-bs-toggle      ="tooltip"
+                data-bs-placement   ="bottom"
+                title               =""
+                autocomplete        ="false"
+                required
+        >
+        <label for="suRetry">
+            Повторить пароль
         </label>
     </div>
 

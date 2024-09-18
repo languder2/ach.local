@@ -1,101 +1,63 @@
-const inputs = document.getElementById("inputs");
+document.addEventListener("DOMContentLoaded",()=>{
+    let timerBox= document.getElementById("timerBox");
+    if(!timerBox) return false;
 
-if(inputs){
-    inputs.addEventListener("paste", function (e) {
-        let paste = (e.clipboardData || window.clipboardData).getData("text");
+    let timer= timerBox.querySelector(".timer");
 
-        let list = inputs.querySelectorAll("input");
-        let i= 0;
-        for (const symbol of paste) {
-            if(!isNaN(parseInt(symbol))){
-                list[i].value= symbol;
-                if(i>=5)    break;
-                i++;
-            }
-        }
-        confirmCode(e.target);
-    });
 
-    inputs.addEventListener("keyup", function (e) {
-        let key = e.key;
+    let counter = parseInt(timer.getAttribute("data-counter"));
 
-        if (key === "backspace" || key === "delete")
-            return false;
+    updateTimer(timer,counter);
 
-            if(isNaN(e.target.value))
-                e.target.value = '';
-
-        if (isNaN(key)) {
-            e.preventDefault();
-        }
-        else{
-            e.target.value = key;
-            confirmCode(e.target);
-        }
-    });
-
-/**/
-    inputs.addEventListener("keydown", function (e) {
-        const target = e.target;
-        const key = e.key.toLowerCase();
-        if (key === "backspace" || key === "delete") {
-            if(target.value !== "" ){
-                target.value = "";
-            }
-            else{
-                const prev = target.previousElementSibling;
-                if (prev) {
-                    prev.focus();
-                }
-            }
+    function updateTimer(timer,counter)     {
+        if(counter === 0){
+            timerBox.querySelector(".reverse-counter").classList.add("d-none");
+            timerBox.querySelector(".resend-email").classList.remove("d-none");
             return false;
         }
-    });
-/**/
+        counter--;
+        timer.setAttribute("data-counter",counter)
+        setTimeout(
+            ()=>{
+                let minutes = Math.floor(counter/60);
 
-    function confirmCode(target){
-        let list = inputs.querySelectorAll("input");
+                if(minutes<10)
+                    minutes= '0'+ minutes;
 
-        let empty = Array.from(list).filter(input => input.value.trim() === '');
+                let seconds= counter%60;
 
-        if(empty.length !== 0){
-            let next = target.nextElementSibling;
+                if(seconds<10)
+                    seconds= '0'+ seconds;
 
-            if (next)
-                next.focus();
-            else
-                empty[0].focus();
 
-            return false;
-        }
+                timer.textContent = minutes+":"+seconds;
+                updateTimer(timer,counter);
+            },
+            1000
+        );
+    }
 
-        let form= document.getElementById("confirmCode");
-        let data= new FormData(form);
-        fetch(form.getAttribute("action"),{
-            method: "POST",
-            body: data,
+    document.getElementById("resendEmail").addEventListener("click",(evt)=>{
+        evt.preventDefault();
+
+        fetch(evt.target.href,{
+            method: "GET",
         })
             .then(response => {return response.text();})
             .then(data => {
                 data= JSON.parse(data);
+
                 if(data.status === "error")
-                    ErrorClear();
-                else if(data.status === "success"){
                     location.href= data.page;
+                else if(data.status === "success"){
+                    document.querySelectorAll("#inputs input")[0].focus();
+                    updateTimer(timer,data.counter);
+                    timerBox.querySelector(".reverse-counter").classList.remove("d-none");
+                    timerBox.querySelector(".resend-email").classList.add("d-none");
+                    return false;
                 }
             });
-    }
-
-    function ErrorClear(){
-        let list= inputs.querySelectorAll("input");
-        list.forEach(el=> {
-            el.value= '';
-            el.style.animation= 'none';
-            el.offsetHeight;
-            el.style.animation= 'ConfirmErrorClear .5s linear';
-        });
-        list[0].focus();
-    }
+    });
 
 
-}
+});

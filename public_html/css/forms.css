@@ -55,7 +55,7 @@
 .s-input-box label.active{
     transition:                         0.3s ease;
     font-size:                          .75rem;
-    top:                                .25rem;
+    top:                                0rem;
     padding:                            0 3px;
     left:                               24px
 }

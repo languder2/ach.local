@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded",()=>{
     let signUp= document.getElementById("signUp");
-    if(signUp !== null){
+    if(signUp){
         signUp.addEventListener("submit",(evt)=>{
             evt.preventDefault();
 
@@ -34,8 +34,6 @@ document.addEventListener("DOMContentLoaded",()=>{
                 signUp.querySelector("#suRetry").classList.add("is-invalid");
                 signUp.querySelector("#suPass").classList.add("is-invalid");
             }
-
-            let errorsCnt= signUp.querySelectorAll("input.is-invalid").length;
 
             fetch(signUp.getAttribute("action"),{
                 method: "POST",
@@ -92,6 +90,45 @@ document.addEventListener("DOMContentLoaded",()=>{
 
 
                 });
+        });
+    }
+
+});
+document.addEventListener("DOMContentLoaded",()=>{
+    let signIn= document.getElementById("signIn");
+
+    if(signIn){
+        signIn.addEventListener("submit",e=>{
+
+            e.preventDefault();
+
+            let email   = document.getElementById("signInET");
+            let pass    = document.getElementById("signInPass");
+
+            if(!validateEmail(email.value)){
+                email.classList.add("is-invalid");
+
+                return false;
+            }
+            else{
+                email.classList.remove("is-invalid")
+
+                let data= new FormData(signIn);
+
+                fetch(signIn.getAttribute("action"),{
+                    method:             "POST",
+                    body:               data,
+                })
+                    .then(response => {return response.text();})
+                    .then(data => {
+                        data= JSON.parse(data);
+                        if(data.status === "success")
+                            location.reload();
+                    });
+
+
+                return false;
+            }
         });
     }
 });
