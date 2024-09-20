@@ -14,19 +14,6 @@ class Users extends BaseController
         $this->users        = model(UsersModel::class);
     }
 
-    public function adminPage():RedirectResponse
-    {
-        $this->users->checkAuth();
-
-        /**
-        $router = service('router');
-        $currentRoute = $router->getMatchedRoute();
-        $controller = $router->controllerName();
-        $method = $router->methodName();
-        /**/
-
-        return redirect()->to(base_url("/test/123/as"));
-    }
     public function signUp(): ResponseInterface
     {
 
@@ -41,7 +28,6 @@ class Users extends BaseController
                 'form.password'                 => 'required|matches[form.retry]',
                 'form.retry'                    => 'required|matches[form.password]',
                 'form.agreement'                => 'required',
-                'form.dataProcessing'           => 'required',
             ],
             "message"   => [
                 'form.surname'                  =>   [
@@ -67,9 +53,6 @@ class Users extends BaseController
                 ],
                 'form.agreement'                =>   [
                     "required"                  =>  'form[agreement]'
-                ],
-                'form.dataProcessing'           =>   [
-                    "required"                  =>  'form[dataProcessing]'
                 ],
             ]
         ];
@@ -114,9 +97,21 @@ class Users extends BaseController
             ->table("users")
             ->insert($sql);
 
+        $user = $this->db
+            ->table("users")
+            ->where("email",$form->email)
+            ->get()
+            ->getFirstRow();
+
+        $this->session->set("isLoggedIn",$user);
+
+        $this->users->verifiedGenerate($user,false);
+
         $answer= (object)[
-            "status"                            => "success",
-            "code"                              => "success",
+            "status"                => "success",
+            "code"                  => "success",
+            "user"                  => $user,
+            "page"                  => base_url(route_to("Pages::account")),
         ];
 
         return  $this->response->setJSON($answer);
@@ -128,7 +123,7 @@ class Users extends BaseController
         return password_hash($pass,PASSWORD_BCRYPT);
     }
 
-    public function studentSignIn():string
+    public function ssiStep1():string
     {
 
         if($this->session->has("ssi-form"))
@@ -152,7 +147,7 @@ class Users extends BaseController
         ]);
     }
 
-    public function ssiProcessing():RedirectResponse|string
+    public function ssiProcessingS1():RedirectResponse|string
     {
 
         $form= (object)$this->request->getVar('form');
@@ -162,7 +157,7 @@ class Users extends BaseController
         ]);
 
         if(!isset($form->email))
-            return redirect()->to(route_to("Users::studentSignIn"));
+            return redirect()->to(route_to("Users::ssiStep1"));
 
         /**/
 
@@ -203,7 +198,7 @@ class Users extends BaseController
                 "ssi-errors"            => array_values($this->validator->getErrors())
             ]);
 
-            return redirect()->to(route_to("Users::studentSignIn"));
+            return redirect()->to(route_to("Users::ssiStep1"));
         }
 
         if($this->users->checkUser("email",$form->email)){
@@ -212,7 +207,7 @@ class Users extends BaseController
                 "ssi-errors"            => ["form[email]"]
             ]);
 
-            return redirect()->to(route_to("Users::studentSignIn"));
+            return redirect()->to(route_to("Users::ssiStep1"));
         }
 
         /* add user */
@@ -223,6 +218,7 @@ class Users extends BaseController
             "patronymic"                        => $form->patronymic,
             "email"                             => $form->email,
             "phone"                             => $form->phone,
+            "role"                              => "student",
             "password"                          => password_hash($form->password,PASSWORD_BCRYPT),
             "tmp"                               => $form->confirm,
         ];
@@ -235,131 +231,10 @@ class Users extends BaseController
         /**/
         $this->session->set("ssi-user",$form);
 
-        /**/
-        $hash       = $this->users->verificationAdd("verificationByLink",$form->email,null,true);
-
-        $code = rand(100000, 999999);
-
-        $this->users->verificationAdd("verificationByCode",$form->email,$code,true);
-
-
-        /* mail */
-        $email          = service('email');
-
-        $body           = view("Public/Emails/EmailVerification",[
-            "name"                          => $form->name,
-            "patronymic"                    => $form->patronymic,
-            "email"                         => $form->email,
-            "code"                          => $code,
-            "link"                          => base_url("students/email_confirm/$hash"),
-        ]);
-
-        $email->setFrom("no-reply@mgu-mlt.ru","No Reply MelSU");
-        $email->setTo($form->email);
-        $email->setSubject('Подтверждение E-mail');
-        $email->setMessage($body);
-        $email->send();
-
-        $this->session->set("ssi-email-confirm",$code);
-
-        /**/
         return redirect()->to(route_to("Users::ssiStep2"));
     }
 
-    public function ssiStep2($code= null):string|RedirectResponse
-    {
-        if($this->session->has("ssi-user"))
-            $user           = $this->session->get("ssi-user");
-        else
-            return redirect()->to(route_to("Users::studentSignIn"));
-
-        if($this->session->has("ssi-email-confirm"))
-            $code           = $this->session->get("ssi-email-confirm");
-
-        $verified= $this->db
-            ->table("users")
-            ->where([
-                "email"             => $user->email,
-                "verified"          => "1"
-            ])
-            ->get()
-            ->getNumRows();
-
-        if($verified)
-            return redirect()->to(route_to("Users::ssiStep3"));
-
-        $pageContent= view("Public/Templates/Students/SignIn/Step2",[
-            "user"                      => $user??null,
-            "code"                      => $code??null,
-        ]);
-
-
-        return view("Public/Templates/Students/Page",[
-            "pageContent"               => $pageContent
-        ]);
-    }
-
-    public function ssiConfirm():ResponseInterface
-    {
-        $code1              = $this->session->get("ssi-email-confirm");
-        $code2              = implode('',$this->request->getVar('code'));
-        $answer= [
-            "code1"         => $code1,
-            "code2"         => $code2
-        ];
-
-        if($code1 == $code2){
-            $email= $this->request->getVar('email');
-
-            /**/
-            $this->db
-                ->table("actions")
-                ->delete(["op"=>$email]);
-
-            $this->db
-                ->table("users")
-                ->update(["verified"=>"1"],["email"=>$email]);
-            /**/
-            $answer["status"]           = "success";
-            $answer["page"]             = base_url(route_to("Users::ssiStep3"));
-            $answer["email"]            = $email;
-        }
-        else
-            $answer["status"]           = "error";
-
-
-
-
-        return $this->response->setJSON($answer);
-    }
-
-    public function ssiConfirmLink($code):RedirectResponse
-    {
-        $action= $this->db
-            ->table("actions")
-            ->where([
-                "code"              => "verificationByLink",
-                "value"             => esc($code)
-            ])
-            ->get()
-            ->getFirstRow()
-        ;
-
-        if(is_null($action))
-            return redirect()->to(route_to("Users::studentSignIn"));
-
-        $this->db
-            ->table("actions")
-            ->delete(["op"=>$action->op]);
-
-        $this->db
-            ->table("users")
-            ->update(["verified"=>"1"],["email"=>$action->op]);
-
-        return redirect()->to(route_to("Users::ssiStep3"));
-    }
-
-    public function ssiStep3():string
+    public function ssiStep2():string
     {
         if($this->session->has("ssi-form"))
             $form       = $this->session->get("ssi-form");
@@ -373,38 +248,38 @@ class Users extends BaseController
 
         /**/
         $faculties      = $this->db
-                            ->table("faculties")
-                            ->orderBy("sort")
-                            ->orderBy("name")
-                            ->get()
-                            ->getResult()
+            ->table("faculties")
+            ->orderBy("sort")
+            ->orderBy("name")
+            ->get()
+            ->getResult()
         ;
 
         /**/
         $departments    = $this->db
-                            ->table("departments")
-                            ->orderBy("sort")
-                            ->orderBy("name")
-                            ->get()
-                            ->getResult()
+            ->table("departments")
+            ->orderBy("sort")
+            ->orderBy("name")
+            ->get()
+            ->getResult()
         ;
 
         /**/
         $levels         = $this->db
-                            ->table("levels")
-                            ->orderBy("sort")
-                            ->orderBy("name")
-                            ->get()
-                            ->getResult()
+            ->table("levels")
+            ->orderBy("sort")
+            ->orderBy("name")
+            ->get()
+            ->getResult()
         ;
 
         /**/
         $specialities   = $this->db
-                            ->table("specialities")
-                            ->orderBy("code")
-                            ->orderBy("name")
-                            ->get()
-                            ->getResult()
+            ->table("specialities")
+            ->orderBy("code")
+            ->orderBy("name")
+            ->get()
+            ->getResult()
         ;
 
 
@@ -430,24 +305,132 @@ class Users extends BaseController
         ]);
     }
 
-    public function ssiProcessingS3():string
+    public function ssiProcessingS2():RedirectResponse
     {
         $form           = $this->request->getPost("form");
-        $email          = $this->request->getPost("email");
 
-        if(!empty($form) && !empty($email))
-            $this->db
+        if($this->session->has("ssi-user")){
+            $user           = $this->session->get("ssi-user");
+            $email          = $user->email;
+            $this->users->verifiedGenerate($user);
+        }
+        else
+            $email          = $this->request->getPost("email");
+
+        if(empty($form) or empty($email))
+            return redirect()->back();
+
+        $this->db
                 ->table("users")
                 ->update($form,["email"=>$email]);
 
-        $pageContent= view("Public/Templates/Students/SignIn/Success",[
-            "email"                     => $email,
-        ]);
+        return redirect()->to(route_to("Users::ssiStep3"));
+    }
 
+    public function ssiStep3($code= null):string|RedirectResponse
+    {
+        if($this->session->has("ssi-user"))
+            $user           = $this->session->get("ssi-user");
+        else
+            return redirect()->to(route_to("Users::ssiStep1"));
+
+        if($this->session->has("ssi-email-confirm"))
+            $code           = $this->session->get("ssi-email-confirm");
+
+        $verified= $this->db
+            ->table("users")
+            ->where([
+                "email"             => $user->email,
+                "verified"          => "1"
+            ])
+            ->get()
+            ->getNumRows();
+
+        if($verified)
+            return redirect()->to(route_to("Users::ssiStep3"));
+
+        $pageContent= view("Public/Templates/Students/SignIn/Step2",[
+            "user"                      => $user??null,
+            "code"                      => $code??null,
+        ]);
 
         return view("Public/Templates/Students/Page",[
             "pageContent"               => $pageContent
         ]);
+    }
+
+    public function ssiSuccess():string
+    {
+        if($this->session->has("ssi-user"))
+            $user           = $this->session->get("ssi-user");
+
+
+        $pageContent= view("Public/Templates/Students/SignIn/Success",[
+            "email"                     => $user->email??null,
+        ]);
+
+        return view("Public/Templates/Students/Page",[
+            "pageContent"               => $pageContent
+        ]);
+    }
+    public function ssiConfirm():ResponseInterface
+    {
+        $code1              = $this->session->get("ssi-email-confirm");
+        $code2              = implode('',$this->request->getVar('code'));
+        $answer= [
+            "code1"         => $code1,
+            "code2"         => $code2
+        ];
+
+        if($code1 == $code2){
+            $email= $this->request->getVar('email');
+
+            /**/
+            $this->db
+                ->table("actions")
+                ->delete(["op"=>$email]);
+
+            $this->db
+                ->table("users")
+                ->update(["verified"=>"1"],["email"=>$email]);
+            /**/
+            $answer["status"]           = "success";
+            $answer["page"]             = base_url(route_to("Users::ssiSuccess"));
+            $answer["email"]            = $email;
+        }
+        else
+            $answer["status"]           = "error";
+
+
+
+
+        return $this->response->setJSON($answer);
+    }
+
+    public function ssiConfirmLink($code):RedirectResponse
+    {
+        $action= $this->db
+            ->table("actions")
+            ->where([
+                "code"              => "verificationByLink",
+                "value"             => esc($code)
+            ])
+            ->get()
+            ->getFirstRow()
+        ;
+
+        if(is_null($action))
+            return redirect()->to(route_to("Users::ssiConfirmError"));
+
+        $this->db
+            ->table("actions")
+            ->delete(["op"=>$action->op]);
+
+        $this->db
+            ->table("users")
+            ->update(["verified"=>"1"],["email"=>$action->op]);
+
+        return redirect()->to(route_to("Users::ssiSuccess"));
     }
 
     public function ssiChangeData():RedirectResponse
@@ -464,7 +447,7 @@ class Users extends BaseController
 
         $this->session->set("ssi-form",$user);
 
-        return redirect()->to(route_to("Users::studentSignIn"));
+        return redirect()->to(route_to("Users::ssiStep1"));
     }
 
     public function ssiResendEmail():ResponseInterface
@@ -484,7 +467,7 @@ class Users extends BaseController
             if(is_null($user))
                 return $this->response->setJSON([
                     "status"                => "error",
-                    "page"                  => base_url(route_to("Users::studentSignIn")),
+                    "page"                  => base_url(route_to("Users::ssiStep1")),
                 ]);
 
             if($user->verified === "1")
@@ -493,32 +476,7 @@ class Users extends BaseController
                     "page"                  => base_url(route_to("Users::ssiProcessingS3")),
                 ]);
 
-            /**/
-            $hash       = $this->users->verificationAdd("verificationByLink",$form->email,null,true);
-
-            $code = rand(100000, 999999);
-
-            $this->users->verificationAdd("verificationByCode",$form->email,$code,true);
-
-
-            /* mail */
-            $email          = service('email');
-
-            $body           = view("Public/Emails/EmailVerification",[
-                "name"                      => $form->name,
-                "patronymic"                => $form->patronymic,
-                "email"                     => $form->email,
-                "code"                      => $code,
-                "link"                      => base_url("students/email_confirm/$hash"),
-            ]);
-
-            $email->setFrom("no-reply@mgu-mlt.ru","No Reply MelSU");
-            $email->setTo($form->email);
-            $email->setSubject('Подтверждение E-mail');
-            $email->setMessage($body);
-            $email->send();
-
-            $this->session->set("ssi-email-confirm",$code);
+            $this->users->verifiedGenerate($user);
 
             $answer= [
                 "status"                    => "success",
@@ -528,7 +486,7 @@ class Users extends BaseController
         else{
             $answer= [
                 "status"    => "error",
-                "page"      => base_url(route_to("Users::studentSignIn")),
+                "page"      => base_url(route_to("Users::ssiStep1")),
             ];
 
         }
@@ -552,14 +510,15 @@ class Users extends BaseController
         $form= (object) $this->request->getPost("form");
 
 
-        if(!$form->email || !$form->password)
+        if(!$form->login || !$form->password)
             return $this->response->setJSON([
                 "status"    => "error",
             ]);
 
         $user       = $this->db
                         ->table("users")
-                        ->where("email",$form->email)
+                        ->where("email",$form->login)
+                        ->orWhere("login",$form->login)
                         ->get()
                         ->getFirstRow();
 
@@ -576,10 +535,11 @@ class Users extends BaseController
                 "message"   => "Неверный пароль"
             ]);
 
-        $this->session->set("auth",$user);
+        $this->session->set("isLoggedIn",$user);
 
         $answer     = [
             "status"        => "success",
+            "page"          => base_url(route_to("Pages::account")),
         ];
 
         return $this->response->setJSON($answer);
@@ -588,6 +548,42 @@ class Users extends BaseController
     {
         return  $this->model->translatarate("Проверка Султан С.В., Шевченко, Трищук.? asd");
     }
+
+    public function exit():RedirectResponse
+    {
+        $this->session->destroy();
+        return redirect()->to(route_to("Pages::index"));
+    }
+
+    public function RecoverPassword($processing = false):ResponseInterface
+    {
+
+        $form = (object) $this->request->getVar("form");
+
+        $user = $this->db
+            ->table("users")
+            ->where("email",$form->email)
+            ->get()
+            ->getFirstRow();
+
+        if(is_null($user))
+            return  $this->response->setJSON([
+                "status"        => "error",
+                "message"       => "Пользователь не найден",
+            ]);
+
+        $answer = [
+            "processing"        => $processing,
+            "form"              => $form,
+            "user"              => &$user,
+            "status"            => "success",
+            "message"           => "Ссылка для восстановления пароля отправлена Вам на почту!<br>
+                                    Она действительна в течение суток"
+        ];
+
+        return  $this->response->setJSON($answer);
+    }
+
 
 }
 

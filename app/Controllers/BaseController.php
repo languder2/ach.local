@@ -44,6 +44,7 @@ abstract class BaseController extends Controller
     protected Session $session;
     protected GeneralModel $model;
     protected BaseConnection $db;
+    protected object $user;
     /**
      * Be sure to declare properties for any property fetch you initialized.
      * The creation of dynamic property is deprecated in PHP 8.2.
@@ -64,5 +65,9 @@ abstract class BaseController extends Controller
         $this->session = Services::session();
         $this->db = Database::connect();
         $this->model = model(GeneralModel::class);
+
+        if(session()->has("isLoggedIn"))
+            $this->user = session()->get("isLoggedIn");
+
     }
 }

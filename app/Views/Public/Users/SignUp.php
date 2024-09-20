@@ -6,9 +6,8 @@
         Регистрация
     </h4>
 
-    <div class="callout-wrapper hide">
-        <div class="callout callout-error mx-.75">
-                1231231
+    <div class="callout-wrapper hide mb-2">
+        <div class="callout callout-error mx-2">
         </div>
     </div>
 
@@ -127,23 +126,10 @@
                 value               ="1"
                 class               ="form-check-input"
                 required
+                checked
         >
-        <label class="form-check-label" for="suAgreement">
-            Я принимаю условия пользовательского соглашения
-        </label>
-    </div>
-
-    <div class="form-check ps-3 pe-2 mx-4 my-2">
-        <input
-                type                ="checkbox"
-                name                ="form[dataProcessing]"
-                id                  ="suDataProcessing"
-                value               ="1"
-                class               ="form-check-input"
-                required
-        >
-        <label class="form-check-label" for="suDataProcessing">
-            Я даю согласие на обработку моих персональных данных на условиях, определённых политикой обработки персональных данных
+        <label class="form-check-label fs-.75" for="suAgreement">
+            Нажимая кнопку «Продолжить», я даю свое согласие на обработку моих персональных данных, в соответствии с Федеральным законом от 27.07.2006 года №152-ФЗ «О персональных данных», на условиях и для целей, определенных в Согласии на обработку персональных данных<span class="color:red">*</span>
         </label>
     </div>
 
@@ -158,7 +144,7 @@
         <input
                 type                ="submit"
                 class               ="btn-main w-80"
-                value               ="Зарегистрироваться"
+                value               ="Продолжить"
         >
     </div>
 </form>

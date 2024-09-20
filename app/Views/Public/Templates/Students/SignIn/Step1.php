@@ -1,4 +1,4 @@
-<form id="ssiStep1" method="POST" action="<?=route_to("Users::ssiProcessing")?>">
+<form id="ssiStep1" method="POST" action="<?=route_to("Users::ssiProcessingS1")?>">
     <h4 class="
                 text-center border-bottom border-1 pb-3
     ">
@@ -122,7 +122,7 @@
     <div class="form-check ps-3 pe-0 mx-4 my-2">
         <input type="checkbox" name="form[agreement]" id="suAgreement" value="1" class="form-check-input" required="" checked>
         <label class="form-check-label fs-.75" for="suAgreement">
-            Нажимая кнопку «Отправить», я даю свое согласие на обработку моих персональных данных, в соответствии с Федеральным законом от 27.07.2006 года №152-ФЗ «О персональных данных», на условиях и для целей, определенных в Согласии на обработку персональных данных<span class="color:red">*</span>
+            Нажимая кнопку «Далее», я даю свое согласие на обработку моих персональных данных, в соответствии с Федеральным законом от 27.07.2006 года №152-ФЗ «О персональных данных», на условиях и для целей, определенных в Согласии на обработку персональных данных<span class="color:red">*</span>
         </label>
     </div>
 

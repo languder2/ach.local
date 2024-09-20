@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded",()=>{
+document.addEventListener("DOMContentLoaded",()=> {
     let signUp= document.getElementById("signUp");
     if(signUp){
         signUp.addEventListener("submit",(evt)=>{
@@ -50,6 +50,8 @@ document.addEventListener("DOMContentLoaded",()=>{
 
                     data= JSON.parse(data);
 
+                    console.log(data);
+
                     if(data.errors && data.errors.length)
                         data.errors.forEach((name)=>{
                             let el= signUp.querySelector("[name='"+name+"']");
@@ -72,7 +74,7 @@ document.addEventListener("DOMContentLoaded",()=>{
                             break;
                             case "noValidate":
 
-                            break;
+                                break;
                             default:
                                 console.log(data.code);
                             break;
@@ -80,6 +82,9 @@ document.addEventListener("DOMContentLoaded",()=>{
 
                         return false;
                     }
+
+                    if(data.status === "success")
+                        location.href = data.page;
 
                     if(data.status === "true"){
                         setHeight(
@@ -94,7 +99,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     }
 
 });
-document.addEventListener("DOMContentLoaded",()=>{
+document.addEventListener("DOMContentLoaded",()=> {
     let signIn= document.getElementById("signIn");
 
     if(signIn){
@@ -105,30 +110,75 @@ document.addEventListener("DOMContentLoaded",()=>{
             let email   = document.getElementById("signInET");
             let pass    = document.getElementById("signInPass");
 
+            email.classList.remove("is-invalid")
+
+            let data= new FormData(signIn);
+
+            fetch(signIn.getAttribute("action"),{
+                method:             "POST",
+                body:               data,
+            })
+                .then(response => {return response.text();})
+                .then(data => {
+                    data= JSON.parse(data);
+                    if(data.status === "success")
+                        location.href = data.page;
+
+                    else if(data.status === "error"){
+                        signIn.querySelector(".callout-wrapper .callout").textContent = data.message;
+                        signIn.querySelector(".callout-wrapper").classList.remove("hide");
+                    }
+
+                });
+
+
+            return false;
+        });
+    }
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    let rp= document.getElementById("RecoverPassword");
+
+    if(rp) {
+        rp.addEventListener("submit",(evt)=>{
+            evt.preventDefault();
+
+            let email   = rp.querySelector("#rpEmail");
+
             if(!validateEmail(email.value)){
                 email.classList.add("is-invalid");
-
                 return false;
             }
             else{
-                email.classList.remove("is-invalid")
 
-                let data= new FormData(signIn);
+                let data= new FormData(rp);
 
-                fetch(signIn.getAttribute("action"),{
+                fetch(rp.getAttribute("action"),{
                     method:             "POST",
                     body:               data,
                 })
                     .then(response => {return response.text();})
                     .then(data => {
+
                         data= JSON.parse(data);
-                        if(data.status === "success")
-                            location.reload();
+
+                        if(data.status === "success"){
+                            let modalContent       = document.querySelector("#modal #modalContent");
+
+                            modalContent.querySelector("#message").innerHTML = data.message;
+
+                            showModalAction(modalContent,"#message");
+                        }
+                        else if(data.status === "error"){
+                            rp.querySelector(".callout-wrapper .callout").textContent = data.message;
+                            rp.querySelector(".callout-wrapper").classList.remove("hide");
+                        }
+
                     });
-
-
-                return false;
             }
-        });
+
+        })
+
     }
 });

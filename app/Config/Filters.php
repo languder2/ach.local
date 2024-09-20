@@ -13,6 +13,8 @@ use CodeIgniter\Filters\InvalidChars;
 use CodeIgniter\Filters\PageCache;
 use CodeIgniter\Filters\PerformanceMetrics;
 use CodeIgniter\Filters\SecureHeaders;
+use App\Filters\AuthFilter;
+use App\Filters\AuthAdminFilter;
 
 class Filters extends BaseFilters
 {
@@ -36,6 +38,8 @@ class Filters extends BaseFilters
         'pagecache'                 => PageCache::class,
         'performance'               => PerformanceMetrics::class,
         'disableDebugBar'           => DisableDebugBar::class,
+        'auth'                      => AuthFilter::class,
+        'admin'                     => AuthAdminFilter::class,
     ];
 
     /**

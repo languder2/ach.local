@@ -8,10 +8,17 @@
         Вход
     </h4>
 
+    <div class="callout-wrapper hide mb-2">
+        <div class="callout callout-error mx-2">
+            error
+        </div>
+    </div>
+
+
     <div class="s-input-box">
         <input
                 type="text"
-                name="form[email]"
+                name="form[login]"
                 id="signInET"
                 class="form-control"
                 placeholder=""
@@ -19,7 +26,7 @@
                 required
         >
         <label for="signInET">
-            E-mail
+            E-mail или Логин
         </label>
     </div>
 
@@ -58,8 +65,8 @@
         <br>
         <a
             href="#"
-            class="link"
-            data-action="#sign"
+            class="link show-modal"
+            data-action="#RecoverPassword"
         >
             Не помню пароль
         </a>

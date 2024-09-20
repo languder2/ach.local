@@ -114,8 +114,43 @@ class UsersModel extends GeneralModel{
 
         curl_close($ch);
 
-
-
         return true;
     }
+
+    public function verifiedGenerate($user,$withCode = true):bool
+    {
+        /* generate verified */
+        $hash       = self::verificationAdd("verificationByLink",$user->email,null,true);
+
+        if($withCode){
+            $code = rand(100000, 999999);
+
+            self::verificationAdd("verificationByCode",$user->email,$code,true);
+        }
+
+        /* mail */
+        $email          = service('email');
+
+        $body           = view(
+            $withCode?"Public/Emails/EmailVerification":"Public/Emails/EmailVerificationByLink",
+            [
+            "name"                          => $user->name,
+            "patronymic"                    => $user->patronymic,
+            "email"                         => $user->email,
+            "code"                          => &$code,
+            "link"                          => base_url("students/email_confirm/$hash"),
+        ]);
+
+        $email->setFrom("no-reply@mgu-mlt.ru","No Reply MelSU");
+        $email->setTo($user->email);
+        $email->setSubject('Подтверждение E-mail');
+        $email->setMessage($body);
+        $email->send();
+
+        $this->session->set("ssi-email-confirm",$code);
+
+        /**/
+        return true;
+    }
+
 }
