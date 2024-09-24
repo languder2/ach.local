@@ -56,12 +56,17 @@
             Нет аккаунта?
         </span>
         <a
-            href="#"
-            class="link show-modal"
-            data-action="#signUp"
+            href="<?=base_url("students")?>"
+            class="link"
         >
             Зарегистрироваться
+            <!--
+                href="#"
+                class="link show-modal"
+                data-action="#signUp"
+            -->
         </a>
+
         <br>
         <a
             href="#"

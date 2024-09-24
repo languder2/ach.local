@@ -153,4 +153,62 @@ class UsersModel extends GeneralModel{
         return true;
     }
 
+    public function setAction($code,$op,$value):int
+    {
+        $this->db
+            ->table("actions")
+            ->insert([
+                "code"      => $code,
+                "op"        => $op,
+                "value"     => $value,
+            ]);
+
+        return $this->db->insertID();
+    }
+    public function deleteAction()
+    {
+
+    }
+
+    public function getAction($code,$op = null,$value= null)
+    {
+        $where= [
+            "code"          => $code
+        ];
+
+        if($op)
+            $where["op"] = $op;
+
+        if($value)
+            $where["value"] = $value;
+
+        $q= $this->db
+            ->table("actions")
+            ->where($where)
+        ->get()
+        ->getFirstRow()
+        ;
+
+        return $q;
+    }
+
+    public function updateLogged():object|null
+    {
+        if(!$this->session->has("isLoggedIn"))
+            return null;
+
+        $user           = $this->session->get("isLoggedIn");
+
+        $user = $this->db
+            ->table("users")
+            ->where("id",$user->id)
+            ->get()
+            ->getFirstRow();
+
+        $this->session->set("isLoggedIn",$user);
+
+        return $user;
+    }
+
+
 }

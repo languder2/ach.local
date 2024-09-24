@@ -546,6 +546,13 @@ class Users extends BaseController
     }
     public function test():string
     {
+        $result = $this->db->query("DESCRIBE users")->getResult();
+
+        echo "<pre>";
+        print_r($result);
+        echo "</pre>";
+
+
         return  $this->model->translatarate("Проверка Султан С.В., Шевченко, Трищук.? asd");
     }
 
@@ -555,8 +562,31 @@ class Users extends BaseController
         return redirect()->to(route_to("Pages::index"));
     }
 
-    public function RecoverPassword($processing = false):ResponseInterface
+    public function RecoverPassword($code = false):ResponseInterface
     {
+
+        if($code){
+            $q = $this->db
+                ->table("actions")
+                ->where([
+                    "value"     => $code,
+                    "code"      => "RecoverPassword"
+                ])
+                ->orderBy("time","desc")
+                ->get()
+                ->getFirstRow()
+            ;
+
+            if(is_null($q)){
+                session()->set("view","Messages/RecoverPassword/LinkOutdated");
+                return redirect()->to(route_to("Pages::Message"));
+            }
+
+            session()->set("rp-email",$q->op);
+
+            return redirect()->to(route_to("Account::ChangePassword"));
+
+        }
 
         $form = (object) $this->request->getVar("form");
 
@@ -572,13 +602,42 @@ class Users extends BaseController
                 "message"       => "Пользователь не найден",
             ]);
 
+
+        /* generate code */
+        $code = hash("sha1",microtime(true));
+
+        /* clear old password recover records*/
+        $this->db
+            ->table("actions")
+            ->delete([
+                "op"        => $user->email,
+                "code"      => "RecoverPassword"
+            ]);
+
+        /* add new password recover record*/
+        $this->users->setAction("RecoverPassword",$user->email,$code);
+
+        /* generate password recover link */
+        $link= base_url(route_to("Users::RecoverPassword")."/$code");
+
+        /* send mail with password recover link */
+        $this->model->sendEmail(
+            $user->email,
+            "Восстановление пароля",
+            view(
+                "Emails/RecoverPassword",
+                [
+                    "name"                          => $user->name,
+                    "patronymic"                    => $user->patronymic,
+                    "email"                         => $user->email,
+                    "link"                          => $link,
+                ])
+        );
+
+        /* send answer */
         $answer = [
-            "processing"        => $processing,
-            "form"              => $form,
-            "user"              => &$user,
             "status"            => "success",
-            "message"           => "Ссылка для восстановления пароля отправлена Вам на почту!<br>
-                                    Она действительна в течение суток"
+            "message"           => view("Messages/RecoverPassword/MailSend")
         ];
 
         return  $this->response->setJSON($answer);

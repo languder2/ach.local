@@ -3,7 +3,7 @@
 use CodeIgniter\Router\RouteCollection;
 use App\Controllers\Pages;
 use App\Controllers\Users;
-use App\Controllers\Admin;
+use App\Controllers\Account;
 use App\Controllers\Students;
 
 
@@ -18,13 +18,26 @@ $routes->post(  'signUp',                               [Users::class, 'signUp']
 $routes->get(   'pass',                                 [Users::class, 'pass']);
 $routes->post(  'authSI',                               [Users::class, 'authSI']);
 $routes->get(   'RecoverPassword',                      [Users::class, 'RecoverPassword']);
-$routes->post(  'RecoverPassword',                      [[Users::class, 'RecoverPassword'],"true"]);
+$routes->post(   'RecoverPassword',                     [Users::class, 'RecoverPassword']);
+$routes->get(   'RecoverPassword/(:segment)',           [Users::class, 'RecoverPassword']);
+
+$routes->get(   'account/change-password',              [Account::class, 'ChangePassword']);
+$routes->post(   'account/change-password',             [Account::class, 'cpProcessing']);
+
+
+$routes->get(   'message',                              [Pages::class, 'Message']);
 
 
 
-$routes->group('', ['filter' => 'auth'], function($routes) {
-    $routes->get(   "test",                                     [Users::class, 'test']);
-    $routes->get(   "account",                                  [Pages::class, 'account']);
+
+
+$routes->get(   "test",                                     [Users::class, 'test']);
+
+$routes->group('account', ['filter' => 'auth'], function($routes) {
+    $routes->get(   "/",                                    [Pages::class, 'account']);
+    $routes->post(  "/",                                    [Pages::class, 'account']);
+    $routes->post(  "change-info",                          [Account::class, 'changeInfo']);
+    $routes->get(   "verification-request",                 [Account::class, 'verificationRequest']);
 });
 
 $routes->get(   "admin",                              [Pages::class, 'adminAuth']);

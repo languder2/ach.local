@@ -174,6 +174,8 @@ document.addEventListener("DOMContentLoaded", () => {
                             rp.querySelector(".callout-wrapper .callout").textContent = data.message;
                             rp.querySelector(".callout-wrapper").classList.remove("hide");
                         }
+                        else if(data.status === "log")
+                            console.log(data);
 
                     });
             }
@@ -181,4 +183,22 @@ document.addEventListener("DOMContentLoaded", () => {
         })
 
     }
+});
+
+document.addEventListener("DOMContentLoaded",() =>  {
+    let formCP= document.getElementById("ChangePassword");
+
+    if(!formCP) return false;
+
+    formCP.addEventListener("submit", (evt) => {
+        let pass    = formCP.querySelector("[name='form[password]']");
+        let retry   = formCP.querySelector("[name='form[retry]']");
+
+        if(pass.value !== retry.value){
+            evt.preventDefault();
+            pass.classList.add("is-invalid");
+            retry.classList.add("is-invalid");
+        }
+
+    });
 });

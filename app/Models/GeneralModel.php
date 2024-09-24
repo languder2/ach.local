@@ -26,6 +26,18 @@ class GeneralModel extends Model
         $tls                    = Transliterator::createFromRules($rules);
         return $tls->transliterate( mb_strtolower($str, 'UTF-8') );
     }
+    public function sendEmail($email,$subject,$body):bool
+    {
+        /* mail */
+        $mail          = service('email');
+        $mail->setFrom("no-reply@mgu-mlt.ru","No Reply MelSU");
+        $mail->setTo($email);
+        $mail->setSubject($subject);
+        $mail->setMessage($body);
+        $mail->send();
+
+        return true;
+    }
 
 }
 
