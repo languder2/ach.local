@@ -1,7 +1,6 @@
 <?php
 namespace App\Models;
 use CodeIgniter\Database\ConnectionInterface;
-use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\Validation\ValidationInterface;
 
 class UsersModel extends GeneralModel{
@@ -10,16 +9,7 @@ class UsersModel extends GeneralModel{
         parent::__construct($db, $validation);
     }
 
-    public function checkAuth($type= null):bool
-    {
-        $this->saveCurrentPage();
-
-        dd($this->session->get('lastPage'));
-        if(!$this->session->has('auth')) return false;
-
-        return false;
-    }
-
+    /*
     public function saveCurrentPage():bool
     {
         $router         = service('router');
@@ -31,7 +21,7 @@ class UsersModel extends GeneralModel{
         $this->session->set("lastPage",$url);
         return true;
     }
-
+*/
     public function checkUser($filed,$value,$return= false):bool|object
     {
         $q              = $this->db
@@ -107,14 +97,13 @@ class UsersModel extends GeneralModel{
 
         $result                     = curl_exec($ch);
         $result                     = simplexml_load_string($result,"SimpleXMLElement",LIBXML_NOCDATA);
-        if($result->error)
-            dd("error");
-        else
-            dd("success");
 
         curl_close($ch);
 
-        return true;
+        if($result->error)
+            return false;
+        else
+            return true;
     }
 
     public function verifiedGenerate($user,$withCode = true):bool

@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded",() => {
-    console.log(123);
     let dsFaculty       = document.querySelector('select[data-ds="faculty"]');
     let dsLevel         = document.querySelector('select[data-ds="level"]');
 

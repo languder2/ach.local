@@ -14,17 +14,6 @@
                     </a>
                 </div>
 
-                <?php if($user->role === "admin"):?>
-                    <div class="ms-2">
-                        <a
-                                href            ="<?=base_url(route_to("Pages::adminIndex"))?>"
-                                class           ="btn-account"
-                        >
-                            админ панель
-                        </a>
-                    </div>
-                <?php endif;?>
-
                 <div class="ms-2">
                     <a
                             href            ="<?=base_url(route_to("Users::exit"))?>"

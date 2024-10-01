@@ -61,10 +61,12 @@ class Account extends BaseController
             ->update(
                 [
                     "password"          => password_hash($form->password, PASSWORD_DEFAULT),
-                    "email"             => $email,
+
+                ],
+                [
+                    "email"             => $email
                 ]
             );
-
 
         $this->db
             ->table("actions")
@@ -99,20 +101,46 @@ class Account extends BaseController
         else
             return redirect()->to("/");
 
-        $form = $this->request->getPost("form");
+
+        $form = (object)$this->request->getPost("form");
+
+        if(isset($form->email) and $form->email !== $user->email){
+            $cnt= $this->db
+                ->table("users")
+                ->where("email",$form->email)
+                ->where("id!=",$user->id)
+                ->get()
+                ->getNumRows();
+
+            if($cnt !== 0){
+                session()->setFlashdata("account-message",(object)[
+                    "status"                    => "error",
+                    "content"                   => "E-mail ".$form->email." занят",
+                ]);
+
+                return redirect()->to("account");
+            }
+
+            $form->verified = '0';
+
+            $newUser = clone $user;
+
+            $newUser->email = $form->email;
+
+            $this->users->verifiedGenerate($newUser);
+        }
+
 
         $this->db
             ->table("users")
             ->update(
-                $form,
+                (array)$form,
                 [
-                    "email"     => $user->email,
+                    "email"     => $user->email
                 ]
             );
 
         $this->users->updateLogged();
-
-
 
         $message= match ($this->request->getPost("type")){
             "personal"          => "Персональные данные сохранены",
@@ -132,9 +160,24 @@ class Account extends BaseController
     public function verificationRequest():RedirectResponse
     {
 
-        dd(123);
-        return redirect()->to("/");
+        if(empty($this->user))
+            return redirect()->to("/");
 
+        $this->users->verifiedGenerate($this->user);
+
+        return redirect()->to("account");
+    }
+
+    public function verificationResend():RedirectResponse
+    {
+        $this->users->verifiedGenerate($this->user);
+
+        session()->setFlashdata("account-message",(object)[
+            "status"                    => "success",
+            "content"                   => "Письмо для верификации почты ".$this->user->email." отправлено",
+        ]);
+
+        return redirect()->to("account");
     }
 
 }

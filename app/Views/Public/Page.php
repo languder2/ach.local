@@ -22,6 +22,7 @@
     <script defer src="<?=base_url("js/dependent-selects.js")?>?<?=microtime(true)?>"></script>
     <script defer src="<?=base_url("js/ssi-timer.js")?>?<?=microtime(true)?>"></script>
     <script defer src="<?=base_url("js/number-code.js")?>?<?=microtime(true)?>"></script>
+    <script defer src="<?=base_url("js/menu.js")?>?<?=microtime(true)?>"></script>
 </head>
 <body>
 <?php

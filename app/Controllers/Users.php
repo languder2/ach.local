@@ -5,6 +5,7 @@ namespace App\Controllers;
 use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\HTTP\ResponseInterface;
 use App\Models\UsersModel;
+use http\Message;
 
 class Users extends BaseController
 {
@@ -359,8 +360,21 @@ class Users extends BaseController
         ]);
     }
 
-    public function ssiSuccess():string
+    public function ssiSuccess():string|RedirectResponse
     {
+        $this->users->updateLogged();
+
+        session()->setFlashdata("account-message",(object)[
+            "status"                    => "success",
+            "content"                   => "Верификация успешно пройдена",
+        ]);
+
+        return redirect()->to("account");
+
+        /**
+         *
+         * https://ach.local/students/success
+         */
         if($this->session->has("ssi-user"))
             $user           = $this->session->get("ssi-user");
 
@@ -372,6 +386,7 @@ class Users extends BaseController
         return view("Public/Templates/Students/Page",[
             "pageContent"               => $pageContent
         ]);
+        /**/
     }
     public function ssiConfirm():ResponseInterface
     {
@@ -429,6 +444,8 @@ class Users extends BaseController
         $this->db
             ->table("users")
             ->update(["verified"=>"1"],["email"=>$action->op]);
+
+        $this->users->updateLogged();
 
         return redirect()->to(route_to("Users::ssiSuccess"));
     }

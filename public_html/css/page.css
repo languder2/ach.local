@@ -10,9 +10,11 @@ body{
 }
 /* header */
 header{
-    position:                   sticky;
+    position:                   fixed;
+    left:                       0;
+    right:                      0;
     top:                        0;
-    z-index:                    100;
+    z-index:                    2000;
     background-color:           darkred;
 }
 .logo{
@@ -59,9 +61,15 @@ header{
 footer{
     background-color:           darkred;
     color:                      white;
+    position:                   fixed;
+    bottom:                     0;
+    left:                       0;
+    right:                      0;
+    z-index:                    2000;
 }
 /* page content */
 section.page-content{
     display:                    block;
-    min-height:                 calc(100vh - 6rem - 3.25rem);
+    padding-top:                8rem !important;
+    padding-bottom:             4rem !important;
 }

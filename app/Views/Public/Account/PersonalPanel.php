@@ -1,97 +1,29 @@
-<h5 class="pe-4 ps-5 pb-2 border-bottom border-1">
+<h5 class="px-4 px-md-5 pb-2 border-bottom border-1">
     Персональные данные
 </h5>
-<form id="ssiStep1" class="px-4 pt-2" method="POST" action="<?=base_url("account/change-info")?>">
-
-    <input type="hidden" name="type" value="personal">
-
-    <div class="s-input-box">
-        <input
-                type="text"
-                name="form[surname]"
-                id="ssiSurname"
-                class="form-control"
-                placeholder=""
-                value="<?=$user->surname??""?>"
-                required
-        >
-        <label for="ssiSurname">
-
-            Фамилия<span class="color:red">*</span>
-        </label>
+<div class="px-4 px-md-5">
+    <div class="container-fluid">
+        <div class="row row-cols-2 g-3">
+            <div class="col">
+                ФИО:
+            </div>
+            <div class="col">
+                <?php echo $user->surname??"" ?>
+                <?php echo $user->name??"" ?>
+                <?php echo $user->patronymic??"" ?>
+            </div>
+            <div class="col">
+                E-mail:
+            </div>
+            <div class="col">
+                <?php echo $user->email??"" ?>
+            </div>
+            <div class="col">
+                Телефон
+            </div>
+            <div class="col">
+                <?php echo $user->phone??"" ?>
+            </div>
+        </div>
     </div>
-    <div class="s-input-box">
-        <input
-                type="text"
-                name="form[name]"
-                id="ssiName"
-                class="form-control"
-                placeholder=""
-                value="<?=$user->name??""?>"
-                required
-        >
-        <label for="ssiName">
-            Имя<span class="color:red">*</span>
-        </label>
-    </div>
-    <div class="s-input-box">
-        <input
-                type="text"
-                name="form[patronymic]"
-                id="ssiPatronymic"
-                class="form-control"
-                placeholder=""
-                value="<?=$user->patronymic??""?>"
-        >
-        <label for="ssiPatronymic">
-            Отчество
-        </label>
-    </div>
-    <div class="s-input-box">
-        <input
-                type="email"
-                name="form[email]"
-                id="ssiEmail"
-                class="form-control"
-                placeholder=""
-                value="<?=$user->email??""?>"
-                required
-        >
-        <label for="ssiEmail">
-            E-mail<span class="color:red">*</span>
-        </label>
-    </div>
-    <div class="s-input-box">
-        <input
-                type="tel"
-                name="form[phone]"
-                id="ssiPhone"
-                class="form-control"
-                placeholder=""
-                value="<?=$user->phone??""?>"
-        >
-        <label for="ssiPhone">
-            Телефон
-        </label>
-    </div>
-
-    <div class="s-input-box">
-        <input
-                type="text"
-                name="form[messenger]"
-                id="ssiMessenger"
-                class="form-control"
-                placeholder=""
-                value="<?=$user->messenger??""?>"
-        >
-        <label for="messenger">
-            Мессенджер
-        </label>
-    </div>
-
-    <div class="s-input-box text-center">
-        <button class="d-inline-block btn-main w-50">
-            далее
-        </button>
-    </div>
-</form>
+</div>

@@ -15,7 +15,11 @@
         "ext-mbstring": "*",
         "codeigniter4/queue": "dev-develop",
         "laminas/laminas-escaper": "^2.13",
-        "psr/log": "^3.0"
+        "psr/log": "^3.0",
+        "ext-curl": "*",
+        "ext-libxml": "*",
+        "ext-simplexml": "*"
+
     },
     "require-dev": {
         "codeigniter/coding-standard": "^1.7"
@@ -23,8 +27,7 @@
     "suggest": {
         "ext-fileinfo": "Improves mime type detection for files",
         "ext-mysqli": "If you use MySQL",
-        "ext-readline": "Improves CLI::input() usability",
-        "ext-simplexml": "If you format XML"
+        "ext-readline": "Improves CLI::input() usability"
     },
     "autoload": {
         "psr-4": {

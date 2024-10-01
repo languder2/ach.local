@@ -3,35 +3,36 @@
 </h3>
 
 <?php if(isset($message)):?>
-<div class="callout mb-4 callout-<?=$message->status??""?> bg-white shadow-box-st ">
-    <?=$message->content?>
-</div>
+    <div class="callout mb-4 callout-<?=$message->status??""?> bg-white shadow-box-st ">
+        <?=$message->content??""?>
+    </div>
 <?php endif;?>
 
 <div class="row row-cols-1 row-cols-sm-1 row-cols-md-1 row-cols-lg-2 g-4">
     <div class="col">
-        <div class="bg-white py-3 rounded-4 mb-4 shadow-box-st">
+        <div class="bg-white py-3 rounded-4 mb-3 shadow-box-st">
             <?php echo view("Public/Account/PersonalPanel",[
-                    "user"      => &$user
+                "user"      => &$user
             ])?>
         </div>
-        <div class="bg-white py-3 rounded-4 shadow-box-st mb-4">
+    </div>
+    <div class="col">
+        <div class="bg-white py-3 rounded-4 shadow-box-st mb-3">
+            <?php echo view("Public/Account/EducationPanel",[
+                "user"      => &$user
+            ])?>
+        </div>
+    </div>
+    <div class="col">
+        <div class="bg-white py-3 rounded-4 shadow-box-st mb-3">
             <?php echo view("Public/Account/ChangePasswordPanel",[
                 "user"      => &$user
             ])?>
         </div>
     </div>
     <div class="col">
-        <div class="bg-white py-3 rounded-4 shadow-box-st mb-4">
-            <?php echo view("Public/Account/EducationPanel",[
-                "user"      => &$user
-            ])?>
-        </div>
-
         <?php if($user->verified === "0"):?>
-
-            <div class="bg-white py-3 rounded-4 shadow-box-st  mb-4">
-
+            <div class="bg-white py-3 rounded-4 shadow-box-st  mb-3">
                 <?php
                 if(isset($verification))
                     echo view("Public/Account/VerificationPass",[
@@ -44,9 +45,6 @@
 
                 ?>
             </div>
-
-
-
         <?php endif;?>
     </div>
 </div>

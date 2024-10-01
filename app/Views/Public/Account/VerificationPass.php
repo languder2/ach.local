@@ -26,13 +26,12 @@
     <hr>
     <div id="timerBox">
         <p class="text-center reverse-counter">
-            Отправить код повторно через <span class="timer" data-counter="60">01:00    </span>
+            Отправить код повторно через <span class="timer" data-counter="10">01:00    </span>
         </p>
         <p class="text-center resend-email d-none">
             <a
-                    href="<?=base_url(route_to("Users::ssiResendEmail"))?>"
-                    id="resendEmail"
-                    class="link fs-1.25"
+                    href="<?=base_url("account/verification-resend")?>"
+                    class="link"
             >
                 Повторно отправить письмо
             </a>

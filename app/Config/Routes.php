@@ -12,7 +12,8 @@ use App\Controllers\Students;
  */
 
 
-$routes->get(   "/",                                    [Pages::class, 'faq']);
+$routes->get(   "/",                                    [Pages::class, 'auth']);
+$routes->post(   "/",                                   [Pages::class, 'auth']);
 $routes->get(   'exit',                                 [Users::class, 'exit']);
 $routes->post(  'signUp',                               [Users::class, 'signUp']);
 $routes->get(   'pass',                                 [Users::class, 'pass']);
@@ -27,10 +28,6 @@ $routes->post(   'account/change-password',             [Account::class, 'cpProc
 
 $routes->get(   'message',                              [Pages::class, 'Message']);
 
-
-
-
-
 $routes->get(   "test",                                     [Users::class, 'test']);
 
 $routes->group('account', ['filter' => 'auth'], function($routes) {
@@ -38,10 +35,12 @@ $routes->group('account', ['filter' => 'auth'], function($routes) {
     $routes->post(  "/",                                    [Pages::class, 'account']);
     $routes->post(  "change-info",                          [Account::class, 'changeInfo']);
     $routes->get(   "verification-request",                 [Account::class, 'verificationRequest']);
+    $routes->get(   "verification-resend",                  [Account::class, 'verificationResend']);
 });
 
-$routes->get(   "admin",                              [Pages::class, 'adminAuth']);
+
 $routes->group('admin', ['filter' => 'admin'], function($routes) {
+    $routes->get(   "/",                                    [Pages::class, 'adminIndex']);
     $routes->get(   "index",                                    [Pages::class, 'adminIndex']);
     $routes->get(   "students",                                 [Students::class, 'adminStudents']);
 });
