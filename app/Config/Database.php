@@ -52,9 +52,9 @@ class Database extends Config
     public array $beget = [
         'DSN'          => '',
         'hostname'     => 'localhost',
-        'username'     => 'ucrtecrt_ach',
+        'username'     => 'ucrtecrt_dev',
         'password'     => 'DBMainPassMelSU2024',
-        'database'     => 'ucrtecrt_ach',
+        'database'     => 'ucrtecrt_dev',
         'DBDriver'     => 'MySQLi',
         'DBPrefix'     => '',
         'pConnect'     => false,

@@ -180,6 +180,160 @@ class Account extends BaseController
         return redirect()->to("account");
     }
 
+    public function changePersonal():string
+    {
+        $user= $this->db
+            ->table("users")
+            ->where("id",session()->get("isLoggedIn")->id)
+            ->get()
+            ->getFirstRow();
+
+        $pageContent = view("Public/Account/Forms/Personal",[
+            "user" => &$user
+        ]);
+
+        return view('Public/Page',[
+            "pageContent"       => &$pageContent
+        ]);
+    }
+    public function changeEducation($sid = null):string|RedirectResponse
+    {
+
+        if($sid){
+            $student        = $this->db
+                ->table("students")
+                ->where([
+                    "id"    => $sid,
+                    "uid"   => session()->get("isLoggedIn")->id
+                ])
+                ->get()
+                ->getFirstRow()
+            ;
+
+            if(is_null($student))
+                return redirect()->to("account");
+        }
+
+        /**/
+        $faculties      = $this->db
+            ->table("faculties")
+            ->orderBy("sort")
+            ->orderBy("name")
+            ->get()
+            ->getResult()
+        ;
+
+        /**/
+        $departments    = $this->db
+            ->table("departments")
+            ->orderBy("sort")
+            ->orderBy("name")
+            ->get()
+            ->getResult()
+        ;
+
+        /**/
+        $levels         = $this->db
+            ->table("levels")
+            ->orderBy("sort")
+            ->orderBy("name")
+            ->get()
+            ->getResult()
+        ;
+
+        /**/
+        $specialities   = $this->db
+            ->table("specialities")
+            ->orderBy("code")
+            ->orderBy("name")
+            ->get()
+            ->getResult()
+        ;
+
+        /**/
+        $pageContent = view("Public/Account/Forms/Education",[
+            "student"                   => &$student,
+            "faculties"                 => $faculties,
+            "departments"               => $departments,
+            "levels"                    => $levels,
+            "specialities"              => $specialities,
+
+        ]);
+
+        return view('Public/Page',[
+            "pageContent"       => &$pageContent
+        ]);
+    }
+
+    public function saveEducation():RedirectResponse
+    {
+        $form       = (object)$this->request->getPost("form");
+        $sid        = $this->request->getPost("sid");
+
+        $form->uid= session()->get("isLoggedIn")->id;
+
+        $q= $this->db
+            ->table("students")
+            ->where((array)$form)
+            ->get()
+            ->getNumRows();
+
+        if($q){
+            session()->setFlashdata("account-message",(object)[
+                "status"                    => "error",
+                "content"                   => "Данные о обучении были добавлены ранее",
+            ]);
+        }
+
+        if(empty($sid)){
+            $this->db
+                ->table("students")
+                ->insert($form);
+
+            $this->db
+                ->table("users")
+                ->update(
+                    [
+                        "role"      => "student"
+                    ],
+                    [
+                        "id"        => $form->uid,
+                        "role"      => "user"
+                    ]);
+
+            session()->setFlashdata("account-message",(object)[
+                "status"                    => "success",
+                "content"                   => "Данные о обучении добавлены",
+            ]);
+        }
+        else{
+            $q= $this->db
+                ->table("students")
+                ->where([
+                    "uid"       => $form->uid,
+                    "id"        => $sid
+                ])
+                ->get()
+                ->getNumRows()
+            ;
+
+            if(!$q)
+                return redirect()->to("account");
+
+            $this->db
+                ->table("students")
+                ->update($form,[
+                    "id"    => $sid,
+                ]);
+
+            session()->setFlashdata("account-message",(object)[
+                "status"                    => "success",
+                "content"                   => "Данные о обучении сохранены",
+            ]);
+        }
+
+        return redirect()->to("account");
+    }
 }
 
 

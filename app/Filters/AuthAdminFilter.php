@@ -13,7 +13,12 @@ class AuthAdminFilter implements FilterInterface
         if (!session()->has('isLoggedIn'))
             return redirect()->to('/');
 
+        define("HAS_LOGGED",true);
+
         $user= session()->get('isLoggedIn');
+
+        if($user->role === "admin")
+            define("HAS_LOGGED_ADMIN",true);
 
         if(!in_array($user->role,["admin","manager"]))
             return redirect()->to('/');

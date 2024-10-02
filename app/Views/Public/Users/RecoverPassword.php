@@ -5,7 +5,7 @@
         action          ="<?=base_url(route_to("Users::RecoverPassword"))?>"
 >
     <h4 class="text-center mt-0 text-uppercase fw-bold">
-        Непомните пароль?
+        Не помните пароль?
     </h4>
 
     <div class="callout-wrapper hide mb-2">

@@ -23,6 +23,8 @@
     <script defer src="<?=base_url("js/ssi-timer.js")?>?<?=microtime(true)?>"></script>
     <script defer src="<?=base_url("js/number-code.js")?>?<?=microtime(true)?>"></script>
     <script defer src="<?=base_url("js/menu.js")?>?<?=microtime(true)?>"></script>
+    <script defer src="<?=base_url("js/question.js")?>?<?=microtime(true)?>"></script>
+    <script defer src="//code.jivo.ru/widget/TLPC8alVpo" async></script>
 </head>
 <body>
 <?php
@@ -33,7 +35,8 @@
         <?=$pageContent??view("welcome_message")?>
     </div>
 </section>
-<?php
-echo view("Public/Template/Footer");
-?></body>
+    <?php
+        echo view("Public/Template/Footer");
+    ?>
+</body>
 </html>

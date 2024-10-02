@@ -515,3 +515,8 @@ ul#menu{
     display:                        block;
     transition:                     all .2s linear;
 }
+/* ask question */
+#aqQuestion{
+    resize:                         none;
+    height:                         10rem;
+}

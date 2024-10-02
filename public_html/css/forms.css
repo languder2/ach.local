@@ -38,24 +38,27 @@
     padding-left:                       10px;
     z-index:                            1000;
 }
+.s-input-box textarea,
 .s-input-box input{
     border-width:                       2px;
     padding:                            .75rem 1.25rem;
 }
 .s-input-box label{
     position:                           absolute;
-    top:                                1.5rem;
-    left:                               1.5rem;
+    top:                                1.35rem;
+    left:                               1rem;
     background-color:                   white;
     padding-left:                       10px;
     z-index:                            1000;
 }
+.s-input-box:has(>textarea:not(:placeholder-shown)) label,
+.s-input-box:has(>textarea:focus) label,
 .s-input-box:has(>input:not(:placeholder-shown)) label,
 .s-input-box:has(>input:focus) label,
 .s-input-box label.active{
     transition:                         0.3s ease;
     font-size:                          .75rem;
-    top:                                0rem;
+    top:                                0;
     padding:                            0 3px;
     left:                               24px
 }

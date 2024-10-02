@@ -5,10 +5,18 @@
                 <div>
                     <?= view("Public/Template/Logo")?>
                 </div>
+
                 <div class="ms-auto"></div>
-                <?php if(isset($user)):?>
+
+                <div class="ms-2">
+                    <a href="#" class="btn-account show-modal" data-action="#askQuestion">
+                        Поддержка
+                    </a>
+                </div>
+
+                <?php if(defined("HAS_LOGGED")):?>
                     <?php if(!defined("HAS_ACCOUNT")):?>
-                        <div class=" d-none d-md-block">
+                        <div class="ms-2 d-none d-md-block">
                             <a
                                     href            ="<?=base_url(route_to("Pages::account"))?>"
                                     class           ="btn-account"
@@ -18,7 +26,7 @@
                         </div>
                     <?php endif;?>
 
-                    <?php if($user->role === "admin" and !defined("HAS_ADMIN")):?>
+                    <?php if(defined("HAS_LOGGED_ADMIN")):?>
                         <div class="ms-2 d-none d-md-block">
                             <a
                                     href            ="<?=base_url(route_to("Pages::adminIndex"))?>"
@@ -47,7 +55,7 @@
                     </div>
                     -->
                 <?php else:?>
-                    <div class="ms-auto">
+                    <div class="ms-2">
                         <a href="#" class="btn-account show-modal" data-action="#signIn">
                             войти
                         </a>

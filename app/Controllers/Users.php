@@ -106,7 +106,7 @@ class Users extends BaseController
 
         $this->session->set("isLoggedIn",$user);
 
-        $this->users->verifiedGenerate($user,false);
+        $this->users->verifiedGenerate($user);
 
         $answer= (object)[
             "status"                => "success",
@@ -563,14 +563,18 @@ class Users extends BaseController
     }
     public function test():string
     {
-        $result = $this->db->query("DESCRIBE users")->getResult();
 
-        echo "<pre>";
-        print_r($result);
-        echo "</pre>";
+        $form= (object)[
+            "name"      => "tets",
+            "email"     => "languder2@gmail.com",
+        ];
 
+        $email          = service('email');
 
-        return  $this->model->translatarate("Проверка Султан С.В., Шевченко, Трищук.? asd");
+        dd($email);
+
+        return "123";
+        //return  $this->model->translatarate("Проверка Султан С.В., Шевченко, Трищук.? asd");
     }
 
     public function exit():RedirectResponse

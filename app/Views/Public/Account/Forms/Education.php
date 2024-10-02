@@ -1,13 +1,13 @@
-<?php if(isset($user->students)):?>
+<div class="mw-md-50rem mx-auto bg-white py-3 rounded-4 mb-4 shadow-box-st">
     <h5 class="pe-4 ps-5 pb-2 border-bottom border-1">
         Учебные данные
     </h5>
     <form
             method="POST"
-            action="<?= base_url("account/change-info")?>"
+            action="<?= base_url("account/save-education")?>"
             class="px-4 pt-2"
     >
-        <input type="hidden" name="type" value="education">
+        <input type="hidden" name="sid"  value="<?=$student->id??null?>">
 
         <?php if(isset($faculties)):?>
             <label class="s-select-box">
@@ -16,7 +16,7 @@
                     <?php foreach ($faculties as $item):?>
                         <option
                                 value               ="<?=$item->id?>"
-                            <?=($user->faculty === $item->id)?"selected":""?>
+                            <?=(!empty($student) && $student->faculty === $item->id)?"selected":""?>
                         >
                             <?=$item->name?>
                         </option>
@@ -33,11 +33,15 @@
                         <option
                                 data-faculty        = "<?=$item->faculty?>"
                                 value               = "<?=$item->id?>"
-                                <?php if($item->faculty !== $user->faculty and !is_null($user->faculty)):?>
+                                <?php if(
+                                        !empty($student)
+                                        && $item->faculty !== $student->faculty
+                                        && !is_null($student->faculty)):
+                                ?>
                                     class           = "ds-hidden-faculty"
                                     disabled
                                 <?php endif;?>
-                                <?=($user->department === $item->id)?"selected":""?>
+                                <?=(!empty($student) && $student->department === $item->id)?"selected":""?>
                         >
                             <?=$item->name?>
                         </option>
@@ -53,7 +57,7 @@
                     <?php foreach ($levels as $item):?>
                         <option
                                 value               ="<?=$item->id?>"
-                                <?=($user->level === $item->id)?"selected":""?>
+                                <?=(!empty($student) && $student->level === $item->id)?"selected":""?>
                         >
                             <?=$item->name?>
                         </option>
@@ -71,12 +75,20 @@
                                 data-faculty        ="<?=$item->faculty?>"
                                 data-level          ="<?=$item->level?>"
                                 value               ="<?=$item->id?>"
-                                <?=($user->speciality === $item->id)?"selected":""?>
+                                <?=(!empty($student) && $student->speciality === $item->id)?"selected":""?>
                                 class="
-                                    <?php if($item->faculty !== $user->faculty and !is_null($user->faculty)):?>
+                                    <?php if(
+                                            !empty($student)
+                                            && $item->faculty !== $student->faculty
+                                            && !is_null($student->faculty)):
+                                    ?>
                                         ds-hidden-faculty
                                     <?php endif;?>
-                                    <?php if($item->level !== $user->level and !is_null($user->level)):?>
+                                    <?php if(
+                                            !empty($student)
+                                            && $item->level !== $student->level
+                                            && !is_null($student->level)):
+                                    ?>
                                         ds-hidden-level
                                     <?php endif;?>
                                 "
@@ -99,7 +111,7 @@
                     id="ssiCourse"
                     class="form-control"
                     placeholder=""
-                    value="<?=$user->course??""?>"
+                    value="<?=$student->course??""?>"
                     required
             >
             <label for="ssiCourse">
@@ -113,7 +125,25 @@
                     id="ssiGrp"
                     class="form-control"
                     placeholder=""
-                    value="<?=$user->grp??""?>"
+                    value="<?=$student->grp??""?>"
+                    required
+            >
+            <label for="ssiGrp">
+                Группа
+            </label>
+        </div>
+
+        <div class="s-input-box">
+            <input
+                    type="number"
+                    name="form[grp]"
+                    id="ssiGrp"
+                    class="form-control"
+                    min="1900"
+                    max="2099"
+                    step="1"
+                    placeholder=""
+                    value="<?=$student->grp??""?>"
                     required
             >
             <label for="ssiGrp">
@@ -127,4 +157,4 @@
             </button>
         </div>
     </form>
-<?php endif;?>
+</div>

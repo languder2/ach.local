@@ -9,7 +9,7 @@
         </div>
     <?php endif;?>
 
-    <div class="row row-cols-1 row-cols-sm-1 row-cols-md-1 row-cols-lg-1 g-4">
+    <div class="row row-cols-1 row-cols-sm-1 row-cols-md-1 row-cols-lg-1 g-0">
         <div class="col">
             <?php if(isset($user) && $user->verified === "0"):?>
                 <div class="bg-white py-3 rounded-4 shadow-box-st mb-4">
@@ -33,16 +33,12 @@
             </div>
         </div>
 
-        <?php if(!empty($user->students)):?>
-            <div class="col">
-                <div class="bg-white py-3 rounded-4 shadow-box-st mb-4">
-                    <?php echo view("Public/Account/EducationPanel",[
-                        "user"      => &$user
-                    ])?>
-                </div>
+        <div class="col">
+            <div class="bg-white py-3 rounded-4 shadow-box-st mb-4">
+                <?php echo view("Public/Account/EducationPanel",[
+                    "user"      => &$user
+                ])?>
             </div>
-        <?php endif;?>
-
+        </div>
     </div>
-
 </div>

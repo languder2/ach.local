@@ -15,6 +15,7 @@ use CodeIgniter\Filters\PerformanceMetrics;
 use CodeIgniter\Filters\SecureHeaders;
 use App\Filters\AuthFilter;
 use App\Filters\AuthAdminFilter;
+use App\Filters\BaseFilter;
 
 class Filters extends BaseFilters
 {
@@ -40,6 +41,7 @@ class Filters extends BaseFilters
         'disableDebugBar'           => DisableDebugBar::class,
         'auth'                      => AuthFilter::class,
         'admin'                     => AuthAdminFilter::class,
+        'base'                      => BaseFilter::class,
     ];
 
     /**

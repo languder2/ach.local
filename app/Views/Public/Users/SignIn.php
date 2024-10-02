@@ -56,11 +56,16 @@
             Нет аккаунта?
         </span>
         <a
-            href="<?=base_url("students")?>"
-            class="link"
+                href="#"
+                class="link show-modal"
+                data-action="#signUp"
         >
             Зарегистрироваться
             <!--
+
+            href="<?=base_url("students")?>"
+            class="link"
+
                 href="#"
                 class="link show-modal"
                 data-action="#signUp"
@@ -69,9 +74,9 @@
 
         <br>
         <a
-            href="#"
-            class="link show-modal"
-            data-action="#RecoverPassword"
+                href="#"
+                class="link show-modal"
+                data-action="#RecoverPassword"
         >
             Не помню пароль
         </a>

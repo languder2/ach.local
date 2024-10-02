@@ -4,9 +4,14 @@ namespace App\Controllers;
 
 use App\Models\UsersModel;
 use CodeIgniter\HTTP\RedirectResponse;
+use CodeIgniter\HTTP\ResponseInterface;
 
 class Pages extends BaseController
 {
+
+    protected string $emailAQStudent    = "helpdo.stud@mgu-mlt.ru";
+    protected string $emailAQTeacher    = "helpdo.ed@mgu-mlt.ru";
+
     protected UsersModel $users;
     public function __construct()
     {
@@ -89,43 +94,6 @@ class Pages extends BaseController
             ->get()
             ->getFirstRow();
 
-        /**
-        $faculties      = $this->db
-            ->table("faculties")
-            ->orderBy("sort")
-            ->orderBy("name")
-            ->get()
-            ->getResult()
-        ;
-
-        /**
-        $departments    = $this->db
-            ->table("departments")
-            ->orderBy("sort")
-            ->orderBy("name")
-            ->get()
-            ->getResult()
-        ;
-
-        /**
-        $levels         = $this->db
-            ->table("levels")
-            ->orderBy("sort")
-            ->orderBy("name")
-            ->get()
-            ->getResult()
-        ;
-
-        /**
-        $specialities   = $this->db
-            ->table("specialities")
-            ->orderBy("code")
-            ->orderBy("name")
-            ->get()
-            ->getResult()
-        ;
-
-         /**  */
 
         $user->students = $this->db
             ->table("students")
@@ -214,6 +182,51 @@ class Pages extends BaseController
         return view("Public/Page",[
             "pageContent"       => &$message,
         ]);
+    }
+
+    public function AskQuestion():ResponseInterface
+    {
+
+        $form= (object)$this->request->getPost("form");
+
+        if(session()->has("isLoggedIn")){
+            $form->role         = &session()->get("isLoggedIn")->role;
+            $form->uid          = &session()->get("isLoggedIn")->id;
+        }
+        else
+            $form->role         = "guest";
+
+        $this->db
+            ->table("questions")
+            ->insert($form);
+
+        $answer= [
+            "status"            => "send",
+            "message"           => view("Messages/SendAQ"),
+            "form"              => &$form,
+        ];
+
+        /**/
+        $email          = service('email');
+
+        $mailTo = match($form->role){
+            "student"       => $this->emailAQStudent,
+            "teacher"       => $this->emailAQTeacher,
+            default         => $this->emailAQStudent,
+        };
+
+        $email->setReplyTo($form->email);
+        $email->setTo($mailTo);
+        $email->setSubject('Задать вопрос');
+        $email->setMessage(
+            view("Emails/AskQuestion",[
+                "form"          => &$form
+            ])
+        );
+        $email->send();
+
+        /**/
+        return $this->response->setJSON($answer);
     }
 
 }
