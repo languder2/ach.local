@@ -70,14 +70,22 @@ function hidePanels(modalContent){
 
 function setModalHeight(modalContent){
 
-    let offset= 100*(1 - modalContent.offsetHeight/window.screen.height) / 2;
+    modalContent.style.bottom           = "auto";
 
-    if(offset > 20)
-        offset*= 1;
+    let rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
 
-    else
-        if(offset <=0)
-            offset = 0;
+    let offset= 100*(1 - modalContent.offsetHeight/window.screen.height)/2;
 
-    modalContent.style.top = offset+"vh";
+    let offsetPX = offset*window.screen.height/100;
+
+    let top         = 6.5*rem;
+    let bottom      = 3*rem;
+
+    modalContent.style.top              = offset + "vh";
+
+    if(offset === 0)
+        modalContent.style.bottom       = bottom + "px";
+
+    if(offsetPX < top)
+        modalContent.style.top          = top + "px";
 }

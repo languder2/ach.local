@@ -18,8 +18,9 @@
         "psr/log": "^3.0",
         "ext-curl": "*",
         "ext-libxml": "*",
-        "ext-simplexml": "*"
-
+        "ext-simplexml": "*",
+        "llagerlof/moodlerest": "2.4.0",
+        "phpoffice/phpspreadsheet": "^2.0"
     },
     "require-dev": {
         "codeigniter/coding-standard": "^1.7"

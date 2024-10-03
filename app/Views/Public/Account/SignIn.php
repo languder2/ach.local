@@ -60,8 +60,9 @@
             Нет аккаунта?
         </span>
             <a
-                    href="<?=base_url("students")?>"
-                    class="link"
+                    href="#"
+                    class="link show-modal"
+                    data-action="#signUp"
             >
                 Зарегистрироваться
                 <!--

@@ -133,21 +133,37 @@
             </label>
         </div>
 
-        <div class="s-input-box">
+        <div class="s-input-box years">
             <input
-                    type="number"
-                    name="form[grp]"
-                    id="ssiGrp"
-                    class="form-control"
-                    min="1900"
-                    max="2099"
-                    step="1"
-                    placeholder=""
-                    value="<?=$student->grp??""?>"
-                    required
+                    type            = "number"
+                    name            = "form[years_from]"
+                    id              =  "edYearsFrom"
+                    class           = "form-control"
+                    min             = "1980"
+                    max             = <?=date("Y")?>
+                    step            = "1"
+                    placeholder     = ""
+                    value           = "<?=$student->years_from??""?>"
             >
-            <label for="ssiGrp">
-                Группа
+            <label for="edYearsFrom">
+                Начало обучения
+            </label>
+        </div>
+
+        <div class="s-input-box years">
+            <input
+                    type            = "number"
+                    name            = "form[years_to]"
+                    id              =  "edYearsTo"
+                    class           = "form-control"
+                    min             = "1980"
+                    max             = <?=(int)date("Y")+10?>
+                    step            = "1"
+                    placeholder     = ""
+                    value           = "<?=$student->years_to??""?>"
+            >
+            <label for="edYearsTo">
+                Конец обучения
             </label>
         </div>
 

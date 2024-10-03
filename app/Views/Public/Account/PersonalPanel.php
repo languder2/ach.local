@@ -29,7 +29,7 @@
 
             <p class="text-center text-md-end">
                 <a href="<?=base_url("account/change-personal")?>" class="link d-inline-block">
-                    изменить персональные данные
+                    изменить данные
                 </a>
             </p>
         </div>

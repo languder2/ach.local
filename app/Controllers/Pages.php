@@ -109,7 +109,7 @@ class Pages extends BaseController
                 specialities.name as speciality,
                 specialities.code as code,
                 students.course, students.grp, students.status,
-                students.year_start, students.year_end
+                students.years_from, students.years_to
                 ",
             )
             ->where("uid",$user->id)
@@ -173,7 +173,7 @@ class Pages extends BaseController
             $message = view(session()->get("view"),[]);
 
         if(session()->has("message"))
-            $message = view(session()->get("message"),[]);
+            $message = session()->get("message");
 
 
         if(is_null($message))
@@ -215,6 +215,7 @@ class Pages extends BaseController
             default         => $this->emailAQStudent,
         };
 
+        $email->setProtocol("sendmail");
         $email->setReplyTo($form->email);
         $email->setTo($mailTo);
         $email->setSubject('Задать вопрос');

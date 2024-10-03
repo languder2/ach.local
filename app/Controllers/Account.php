@@ -270,6 +270,13 @@ class Account extends BaseController
         $form       = (object)$this->request->getPost("form");
         $sid        = $this->request->getPost("sid");
 
+        if($form->years_from === "")
+            $form->years_from = null;
+
+        if($form->years_to === "")
+            $form->years_to = null;
+
+
         $form->uid= session()->get("isLoggedIn")->id;
 
         $q= $this->db

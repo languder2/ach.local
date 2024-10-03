@@ -47,6 +47,22 @@
                         <?php echo $student->grp?>
                     </div>
 
+
+                    <?php if(!empty($student->years_from) || !empty($student->years_to) ):?>
+                        <div class="col-12 col-sm-4 mb-sm-3 fw-semibold">
+                            Годы обучения:
+                        </div>
+                        <div class="col-12 col-sm-8 mb-3">
+                            <?php if(!empty($student->years_from)):?>
+                                с <?=$student->years_from?>
+                            <?php endif;?>
+                            <?php if(!empty($student->years_to)):?>
+                                до <?=$student->years_to?>
+                            <?php endif;?>
+                        </div>
+                    <?php endif;?>
+
+
                     <p class="text-center text-md-end mb-3">
                         <a href="<?=base_url("account/change-education/$student->id")?>" class="link text-decoration-underline d-inline-block">
                             Изменить учебные данные

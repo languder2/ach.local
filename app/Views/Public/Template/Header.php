@@ -10,18 +10,24 @@
 
                 <div class="ms-2">
                     <a href="#" class="btn-account show-modal" data-action="#askQuestion">
-                        Поддержка
+                        <span class="d-none d-sm-block">
+                            Поддержка
+                        </span>
+                        <i class="bi bi-chat-left d-sm-none"></i>
                     </a>
                 </div>
 
                 <?php if(defined("HAS_LOGGED")):?>
                     <?php if(!defined("HAS_ACCOUNT")):?>
-                        <div class="ms-2 d-none d-md-block">
+                        <div class="ms-2">
                             <a
                                     href            ="<?=base_url(route_to("Pages::account"))?>"
                                     class           ="btn-account"
                             >
-                                личный кабинет
+                                <span class="d-none d-sm-block">
+                                    личный кабинет
+                                </span>
+                                <i class="bi bi-person d-sm-none"></i>
                             </a>
                         </div>
                     <?php endif;?>
@@ -42,7 +48,10 @@
                                 href            ="<?=base_url(route_to("Users::exit"))?>"
                                 class           ="btn-account"
                         >
-                            выход
+                            <span class="d-none d-sm-block">
+                                выход
+                            </span>
+                            <i class="bi bi-box-arrow-right d-sm-none"></i>
                         </a>
                     </div>
                 <!--
@@ -57,7 +66,10 @@
                 <?php else:?>
                     <div class="ms-2">
                         <a href="#" class="btn-account show-modal" data-action="#signIn">
-                            войти
+                            <span class="d-none d-sm-block">
+                                войти
+                            </span>
+                            <i class="bi bi-person d-sm-none"></i>
                         </a>
                     </div>
                 <?php endif;?>

@@ -5,6 +5,7 @@ use App\Controllers\Pages;
 use App\Controllers\Users;
 use App\Controllers\Account;
 use App\Controllers\Students;
+use App\Controllers\Test;
 
 
 /**
@@ -35,17 +36,8 @@ $routes->group('admin', ['filter' => 'admin'], function($routes) {
 
 /**/
 $routes->group('students', [], function($routes) {
-    $routes->get(   "",                                         [Users::class, 'ssiStep1']);
-    $routes->get(   "signIn",                                   [Users::class, 'ssiStep1']);
-    $routes->post(  "signIn",                                   [Users::class, 'ssiProcessingS1']);
-    $routes->get(   "email_confirm",                            [Users::class, 'ssiStep3']);
     $routes->post(  "confirm",                                  [Users::class, 'ssiConfirm']);
     $routes->get(   "email_confirm/(:segment)",                 [Users::class, 'ssiConfirmLink']);
-    $routes->get(   "step2",                                    [Users::class, 'ssiStep2']);
-    $routes->post(  "step2",                                    [Users::class, 'ssiProcessingS2']);
-    $routes->get(   "change-data",                              [Users::class, 'ssiChangeData']);
-    $routes->get(   "resend-email",                             [Users::class, 'ssiResendEmail']);
-    $routes->get(   "success",                                  [Users::class, 'ssiSuccess']);
 });
 /**/
 $routes->group("sdo", [], function($routes) {
@@ -54,7 +46,8 @@ $routes->group("sdo", [], function($routes) {
 
 /**/
 $routes->group('', ['filter' => 'base'], function($routes) {
-    $routes->get("/",                                           [Pages::class, 'faq']);
+    $routes->get("/",                                           [Pages::class, 'auth']);
+    $routes->post("/",                                           [Pages::class, 'auth']);
     $routes->get('exit',                                        [Users::class, 'exit']);
     $routes->post('signUp',                                     [Users::class, 'signUp']);
     $routes->get('pass',                                        [Users::class, 'pass']);
@@ -69,8 +62,11 @@ $routes->group('', ['filter' => 'base'], function($routes) {
 
     $routes->get('message',                                     [Pages::class, 'Message']);
     $routes->get("test",                                        [Users::class, 'test']);
+//    $routes->get("moodle",                                      [Test::class, 'moodle']);
+//    $routes->get("teachers",                                    [Test::class, 'SITeachers']);
+//    $routes->get("students",                                    [Test::class, 'students']);
 
     $routes->post("ask-question",                               [Pages::class, 'AskQuestion']);
 
-    $routes->match(["get","post"],"(:any)",                     [Pages::class, 'faq']);
+    $routes->match(["get","post"],"(:any)",                     [Pages::class, 'auth']);
 });

@@ -124,270 +124,6 @@ class Users extends BaseController
         return password_hash($pass,PASSWORD_BCRYPT);
     }
 
-    public function ssiStep1():string
-    {
-
-        if($this->session->has("ssi-form"))
-            $form       = $this->session->get("ssi-form");
-
-        if($this->session->has("ssi-message"))
-            $message    = $this->session->get("ssi-message");
-
-        if($this->session->has("ssi-errors"))
-            $errors    = $this->session->get("ssi-errors");
-
-        $pageContent= view("Public/Templates/Students/SignIn/Step1",[
-            "form"                      => $form??null,
-            "message"                   => $message??null,
-            "errors"                    => $errors??[],
-        ]);
-
-
-        return view("Public/Templates/Students/Page",[
-            "pageContent"               => $pageContent
-        ]);
-    }
-
-    public function ssiProcessingS1():RedirectResponse|string
-    {
-
-        $form= (object)$this->request->getVar('form');
-
-        $this->session->setFlashdata([
-            "ssi-form"              => $form
-        ]);
-
-        if(!isset($form->email))
-            return redirect()->to(route_to("Users::ssiStep1"));
-
-        /**/
-
-        $validation= (object)[
-            "rules"     => [
-                'form.surname'                  => 'required',
-                'form.name'                     => 'required',
-                'form.email'                    => 'required|valid_email',
-                'form.password'                 => 'required|matches[form.confirm]',
-                'form.confirm'                  => 'required|matches[form.password]',
-            ],
-            "message"   => [
-                'form.surname'                  =>   [
-                    "required"                  =>  'form[surname]'
-                ],
-                'form.name'                     =>   [
-                    "required"                  =>  'form[name]'
-                ],
-                'form.password'                 =>   [
-                    "required"                  =>  'form[password]'
-                ],
-                'form.confirm'                  =>   [
-                    "required"                  =>  'form[confirm]'
-                ],
-                'form.email'                    =>   [
-                    "required"                  =>  'form[email]',
-                    "valid_email"               =>  'form[email]',
-                ],
-            ]
-        ];
-
-        $validation->status = $this->validate($validation->rules,$validation->message);
-
-        if(!$validation->status){
-
-            $this->session->setFlashdata([
-                "ssi-message"           => "Заполните обязательные поля",
-                "ssi-errors"            => array_values($this->validator->getErrors())
-            ]);
-
-            return redirect()->to(route_to("Users::ssiStep1"));
-        }
-
-        if($this->users->checkUser("email",$form->email)){
-            $this->session->setFlashdata([
-                "ssi-message"           => "Email $form->email уже занят",
-                "ssi-errors"            => ["form[email]"]
-            ]);
-
-            return redirect()->to(route_to("Users::ssiStep1"));
-        }
-
-        /* add user */
-
-        $sql= [
-            "surname"                           => $form->surname,
-            "name"                              => $form->name,
-            "patronymic"                        => $form->patronymic,
-            "email"                             => $form->email,
-            "phone"                             => $form->phone,
-            "role"                              => "student",
-            "password"                          => password_hash($form->password,PASSWORD_BCRYPT),
-            "tmp"                               => $form->confirm,
-        ];
-
-        /**/
-        $this->db
-            ->table("users")
-            ->insert($sql);
-
-        /**/
-        $this->session->set("ssi-user",$form);
-
-        return redirect()->to(route_to("Users::ssiStep2"));
-    }
-
-    public function ssiStep2():string
-    {
-        if($this->session->has("ssi-form"))
-            $form       = $this->session->get("ssi-form");
-
-        if($this->session->has("ssi-message"))
-            $message    = $this->session->get("ssi-message");
-
-        if($this->session->has("ssi-errors"))
-            $errors    = $this->session->get("ssi-errors");
-
-
-        /**/
-        $faculties      = $this->db
-            ->table("faculties")
-            ->orderBy("sort")
-            ->orderBy("name")
-            ->get()
-            ->getResult()
-        ;
-
-        /**/
-        $departments    = $this->db
-            ->table("departments")
-            ->orderBy("sort")
-            ->orderBy("name")
-            ->get()
-            ->getResult()
-        ;
-
-        /**/
-        $levels         = $this->db
-            ->table("levels")
-            ->orderBy("sort")
-            ->orderBy("name")
-            ->get()
-            ->getResult()
-        ;
-
-        /**/
-        $specialities   = $this->db
-            ->table("specialities")
-            ->orderBy("code")
-            ->orderBy("name")
-            ->get()
-            ->getResult()
-        ;
-
-
-        /**/
-        if($this->session->has("ssi-user"))
-            $user           = $this->session->get("ssi-user");
-
-        /**/
-        $pageContent= view("Public/Templates/Students/SignIn/Step3",[
-            "user"                      => $user??(object)[],
-            "form"                      => $form??null,
-            "message"                   => $message??null,
-            "errors"                    => $errors??[],
-            "faculties"                 => $faculties,
-            "departments"               => $departments,
-            "levels"                    => $levels,
-            "specialities"              => $specialities,
-        ]);
-
-
-        return view("Public/Templates/Students/Page",[
-            "pageContent"               => $pageContent
-        ]);
-    }
-
-    public function ssiProcessingS2():RedirectResponse
-    {
-        $form           = $this->request->getPost("form");
-
-        if($this->session->has("ssi-user")){
-            $user           = $this->session->get("ssi-user");
-            $email          = $user->email;
-            $this->users->verifiedGenerate($user);
-        }
-        else
-            $email          = $this->request->getPost("email");
-
-        if(empty($form) or empty($email))
-            return redirect()->back();
-
-        $this->db
-                ->table("users")
-                ->update($form,["email"=>$email]);
-
-        return redirect()->to(route_to("Users::ssiStep3"));
-    }
-
-    public function ssiStep3($code= null):string|RedirectResponse
-    {
-        if($this->session->has("ssi-user"))
-            $user           = $this->session->get("ssi-user");
-        else
-            return redirect()->to(route_to("Users::ssiStep1"));
-
-        if($this->session->has("ssi-email-confirm"))
-            $code           = $this->session->get("ssi-email-confirm");
-
-        $verified= $this->db
-            ->table("users")
-            ->where([
-                "email"             => $user->email,
-                "verified"          => "1"
-            ])
-            ->get()
-            ->getNumRows();
-
-        if($verified)
-            return redirect()->to(route_to("Users::ssiStep3"));
-
-        $pageContent= view("Public/Templates/Students/SignIn/Step2",[
-            "user"                      => $user??null,
-            "code"                      => $code??null,
-        ]);
-
-        return view("Public/Templates/Students/Page",[
-            "pageContent"               => $pageContent
-        ]);
-    }
-
-    public function ssiSuccess():string|RedirectResponse
-    {
-        $this->users->updateLogged();
-
-        session()->setFlashdata("account-message",(object)[
-            "status"                    => "success",
-            "content"                   => "Верификация успешно пройдена",
-        ]);
-
-        return redirect()->to("account");
-
-        /**
-         *
-         * https://ach.local/students/success
-         */
-        if($this->session->has("ssi-user"))
-            $user           = $this->session->get("ssi-user");
-
-
-        $pageContent= view("Public/Templates/Students/SignIn/Success",[
-            "email"                     => $user->email??null,
-        ]);
-
-        return view("Public/Templates/Students/Page",[
-            "pageContent"               => $pageContent
-        ]);
-        /**/
-    }
     public function ssiConfirm():ResponseInterface
     {
         $code1              = $this->session->get("ssi-email-confirm");
@@ -410,13 +146,16 @@ class Users extends BaseController
                 ->update(["verified"=>"1"],["email"=>$email]);
             /**/
             $answer["status"]           = "success";
-            $answer["page"]             = base_url(route_to("Users::ssiSuccess"));
+            $answer["page"]             = base_url("account");
             $answer["email"]            = $email;
+
+            session()->setFlashdata("account-message",(object)[
+                "status"                    => "success",
+                "content"                   => "Почта удачно верифицирована",
+            ]);
         }
         else
             $answer["status"]           = "error";
-
-
 
 
         return $this->response->setJSON($answer);
@@ -434,8 +173,10 @@ class Users extends BaseController
             ->getFirstRow()
         ;
 
-        if(is_null($action))
-            return redirect()->to(route_to("Users::ssiConfirmError"));
+        if(is_null($action)){
+            session()->set("message","Код верификации недействителен или ссылка устарела");
+            return redirect()->to("message");
+        }
 
         $this->db
             ->table("actions")
@@ -447,69 +188,15 @@ class Users extends BaseController
 
         $this->users->updateLogged();
 
-        return redirect()->to(route_to("Users::ssiSuccess"));
+        session()->setFlashdata("account-message",(object)[
+            "status"                    => "success",
+            "content"                   => "Почта удачно верифицирована",
+        ]);
+
+        return redirect()->to("account");
     }
 
-    public function ssiChangeData():RedirectResponse
-    {
-        $user           = $this->session->get("ssi-user");
 
-        $this->db
-            ->table("users")
-            ->delete(["email"=>$user->email]);
-
-        $this->db
-            ->table("actions")
-            ->delete(["op"=>$user->email]);
-
-        $this->session->set("ssi-form",$user);
-
-        return redirect()->to(route_to("Users::ssiStep1"));
-    }
-
-    public function ssiResendEmail():ResponseInterface
-    {
-
-        if($this->session->has("ssi-user")){
-
-            $form           = $this->session->get("ssi-user");
-
-            $user=          $this->db
-                                ->table("users")
-                                ->where("email",$form->email)
-                                ->get()
-                                ->getFirstRow();
-
-
-            if(is_null($user))
-                return $this->response->setJSON([
-                    "status"                => "error",
-                    "page"                  => base_url(route_to("Users::ssiStep1")),
-                ]);
-
-            if($user->verified === "1")
-                return $this->response->setJSON([
-                    "status"                => "error",
-                    "page"                  => base_url(route_to("Users::ssiProcessingS3")),
-                ]);
-
-            $this->users->verifiedGenerate($user);
-
-            $answer= [
-                "status"                    => "success",
-                "counter"                   => 180,
-            ];
-        }
-        else{
-            $answer= [
-                "status"    => "error",
-                "page"      => base_url(route_to("Users::ssiStep1")),
-            ];
-
-        }
-
-        return $this->response->setJSON($answer);
-    }
 
     public function sdoCreateEmail():string
     {

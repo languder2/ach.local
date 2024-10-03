@@ -486,7 +486,7 @@ body.studentSignIn{
     position:                       absolute;
     left:                           10px;
     right:                          10px;
-    height:                         3px;
+    height:                         2px;
     background-color:               darkred;
     top:                            1.3rem;
     transition:                     all .2s linear;
