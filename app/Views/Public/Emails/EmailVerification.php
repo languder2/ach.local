@@ -2,7 +2,7 @@
     <div style="background-color: #fefefe; margin: 0 auto; padding:1rem 2rem; text-align: center; border-radius: .75rem; max-width: 50rem">
         <h3>
             ФГБОУ "МелГУ"
-        </h3>
+        </h3>+
         <hr>
         <p>
             Приветствуем, <?=$name??""?> <?=$patronymic??""?>!

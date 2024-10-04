@@ -16,7 +16,7 @@ class App extends BaseConfig
      *
      * E.g., http://example.com/
      */
-    public string $baseURL = 'https://ach.mgu-mlt.ru/';
+    public string $baseURL = 'https://dev.mgu-mlt.ru/';
 
     public string $localURL = 'https://ach.local/';
 

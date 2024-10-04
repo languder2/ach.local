@@ -47,7 +47,7 @@ $routes->group("sdo", [], function($routes) {
 /**/
 $routes->group('', ['filter' => 'base'], function($routes) {
     $routes->get("/",                                           [Pages::class, 'auth']);
-    $routes->post("/",                                           [Pages::class, 'auth']);
+    $routes->post("/",                                          [Pages::class, 'auth']);
     $routes->get('exit',                                        [Users::class, 'exit']);
     $routes->post('signUp',                                     [Users::class, 'signUp']);
     $routes->get('pass',                                        [Users::class, 'pass']);
@@ -62,9 +62,13 @@ $routes->group('', ['filter' => 'base'], function($routes) {
 
     $routes->get('message',                                     [Pages::class, 'Message']);
     $routes->get("test",                                        [Users::class, 'test']);
+//    $routes->get("json",                                        [Test::class, 'json']);
 //    $routes->get("moodle",                                      [Test::class, 'moodle']);
+    $routes->get("mailing",                                     [Test::class, 'mailing']);
+//    $routes->get("test-email",                                  [Test::class, 'generateEmails']);
 //    $routes->get("teachers",                                    [Test::class, 'SITeachers']);
 //    $routes->get("students",                                    [Test::class, 'students']);
+    $routes->get("report",                                      [Test::class, 'saveXLS']);
 
     $routes->post("ask-question",                               [Pages::class, 'AskQuestion']);
 

@@ -199,5 +199,28 @@ class UsersModel extends GeneralModel{
         return $user;
     }
 
+    public function generateSecurePassword($length = 12):string
+    {
+        if ($length < 8)
+            $length         = 8;
+
+        $lowercase          = 'abcdefghijklmnopqrstuvwxyz';
+        $uppercase          = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $numbers            = '0123456789';
+        $specialChars       = '!@#$%^&*';
+
+        $allChars           = $lowercase . $uppercase . $numbers . $specialChars;
+
+        $password           = $lowercase[rand(0, strlen($lowercase) - 1)]
+                            . $uppercase[rand(0, strlen($uppercase) - 1)];
+
+        for ($i = 4; $i < $length; $i++)
+            $password .= $allChars[rand(0, strlen($allChars) - 1)];
+
+        $password           .= $numbers[rand(0, strlen($numbers) - 1)]
+                            . $specialChars[rand(0, strlen($specialChars) - 1)];
+
+        return str_shuffle($password);
+    }// Пример использования
 
 }
