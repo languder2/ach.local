@@ -97,6 +97,40 @@ class Test extends BaseController
         }
 
     }
+    public function moodle2(): void
+    {
+        $MoodleRest = new MoodleRest(
+            'https://do.mgu-mlt.ru/webservice/rest/server.php',
+            '680c53cb221f50a12c4da7af6128af15'
+        );
+
+        $users = $this->db
+            ->table('users')
+            ->join("moodle", "moodle.email = users.email", "left")
+            ->select("users.tmp,moodle.muid")
+            ->where("users.role","teacher")
+            ->get()
+            ->getResult();
+
+        foreach ($users as $user) {
+            if(is_null($user->muid)) continue;
+
+            $func           = "core_user_update_users";
+
+            $params         = [
+                "users"     => [
+                    [
+                        "id"                => $user->muid,
+                        "password"          => $user->tmp,
+                    ],
+                ]
+            ];
+
+            /**/
+            $response       = $MoodleRest->request($func, $params);
+        }
+
+    }
 
 
     public function SITeachers()

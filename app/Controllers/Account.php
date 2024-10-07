@@ -251,13 +251,22 @@ class Account extends BaseController
         ;
 
         /**/
+        $forms   = $this->db
+            ->table("edForms")
+            ->orderBy("sort")
+            ->orderBy("name")
+            ->get()
+            ->getResult()
+        ;
+
+        /**/
         $pageContent = view("Public/Account/Forms/Education",[
             "student"                   => &$student,
             "faculties"                 => $faculties,
             "departments"               => $departments,
             "levels"                    => $levels,
             "specialities"              => $specialities,
-
+            "forms"                     => $forms,
         ]);
 
         return view('Public/Page',[
@@ -338,6 +347,8 @@ class Account extends BaseController
                 "content"                   => "Данные о обучении сохранены",
             ]);
         }
+
+        $this->users->updateRoles(session()->get("isLoggedIn")->id,"student");
 
         return redirect()->to("account");
     }

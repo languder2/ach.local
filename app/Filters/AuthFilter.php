@@ -9,26 +9,18 @@ use CodeIgniter\HTTP\ResponseInterface;
 
 class AuthFilter implements FilterInterface
 {
-    public function before(RequestInterface $request, $arguments = null):bool|RedirectResponse
+    public function before(RequestInterface $request, $arguments = null)
     {
-        if (!session()->has('isLoggedIn')) {
+        if (!defined("HAS_LOGGED")) {
             return redirect()->to('/');
         }
 
-        define("HAS_LOGGED",true);
-
-        $user= session()->get('isLoggedIn');
-
-        if($user->role === "admin")
-            define("HAS_LOGGED_ADMIN",true);
 
         $uri = $request->getUri();        // Получаем сегменты URL
         $segments = $uri->getSegments();        // Проверяем, есть ли сегмент 'account'
 
         if (in_array('account', $segments))
             define("HAS_ACCOUNT",true);
-
-        return true;
     }
 
    public function after(RequestInterface $request, ResponseInterface $response, $arguments = null)

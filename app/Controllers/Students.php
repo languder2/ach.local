@@ -4,13 +4,23 @@ namespace App\Controllers;
 
 class Students extends BaseController
 {
+    protected int $countOnPage = 100;
+
     public function adminStudents(): string
     {
 
-        $list= $this->db
+        $cntAll     = $this->db
             ->table('users')
-            ->where("role","student")
-            ->limit()
+            ->where("JSON_CONTAINS(roles, '\"student\"', '$')")
+            ->countAllResults();
+
+        dd($cntAll);
+
+        $list       = $this->db
+            ->table('users')
+            ->where("JSON_CONTAINS(roles, '\"student\"', '$')")
+            ->orderBy("regdate","DESC")
+            ->limit($this->countOnPage,0)
             ->get()
             ->getResult();
 

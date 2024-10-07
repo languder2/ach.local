@@ -47,6 +47,10 @@
 .w-30rem{
     width:                          30rem;
 }
+/* max-width */
+.mw-30rem{
+    max-width:                      30rem;
+}
 /**/
 @media (min-width: 992px) {
     .mw-md-50rem{

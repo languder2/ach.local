@@ -102,6 +102,22 @@
             </label>
         <?php endif;?>
 
+        <?php if(isset($forms)):?>
+            <label class="s-select-box">
+                <select name="form[form]" class="form-select" required>
+                    <option selected disabled value=''>Форма обучения</option>
+                    <?php foreach ($forms as $item):?>
+                        <option
+                                value               ="<?=$item->id?>"
+                            <?=(!empty($student) && $student->form === $item->id)?"selected":""?>
+                        >
+                            <?=$item->name?>
+                        </option>
+                    <?php endforeach;?>
+                </select>
+            </label>
+        <?php endif;?>
+
         <div class="s-input-box">
             <input
                     type="number"

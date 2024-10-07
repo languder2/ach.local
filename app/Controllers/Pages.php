@@ -101,12 +101,14 @@ class Pages extends BaseController
             ->join("departments","departments.id=students.department","left")
             ->join("levels","levels.id=students.level","left")
             ->join("specialities","specialities.id=students.speciality","left")
+            ->join("edForms","edForms.id=students.form","left")
             ->select(
                 "students.id,
                 faculties.name as faculty,
                 departments.name as department,
                 levels.name as level,
                 specialities.name as speciality,
+                edForms.name as form,
                 specialities.code as code,
                 students.course, students.grp, students.status,
                 students.years_from, students.years_to
@@ -228,6 +230,11 @@ class Pages extends BaseController
 
         /**/
         return $this->response->setJSON($answer);
+    }
+
+    public function redirect2main():RedirectResponse
+    {
+        return redirect()->to("/");
     }
 
 }

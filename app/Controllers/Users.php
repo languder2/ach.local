@@ -251,6 +251,7 @@ class Users extends BaseController
     public function test():string
     {
 
+        dd(123);
         $form= (object)[
             "name"      => "tets",
             "email"     => "languder2@gmail.com",
@@ -258,9 +259,7 @@ class Users extends BaseController
 
         $email          = service('email');
 
-        dd($email);
-
-        return "123";
+        return "";
         //return  $this->model->translatarate("Проверка Султан С.В., Шевченко, Трищук.? asd");
     }
 

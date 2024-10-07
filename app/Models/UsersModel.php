@@ -223,4 +223,44 @@ class UsersModel extends GeneralModel{
         return str_shuffle($password);
     }// Пример использования
 
+
+    public function updateRoles($uid,$role):bool
+    {
+        $roles = $this->db
+            ->table("users")
+            ->where("id",$uid)
+            ->get()
+            ->getFirstRow()
+            ->roles
+        ;
+
+        $roles= json_decode($roles);
+
+        if(is_null($roles))
+            $roles      = [];
+
+        if(in_array($role,$roles))
+            return false;
+
+        $roles[]        = $role;
+
+        $roles= json_encode(
+            $roles,
+            JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_NUMERIC_CHECK|JSON_PRETTY_PRINT
+        );
+
+        $this->db
+            ->table("users")
+            ->update(
+                [
+                    "roles"         => $roles
+                ],
+                [
+                    "id"            =>$uid
+                ]
+            );
+
+        return true;
+    }
+
 }

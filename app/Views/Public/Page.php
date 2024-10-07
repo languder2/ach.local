@@ -11,6 +11,8 @@
     <link href="<?=base_url("node_modules/bootstrap-icons/font/bootstrap-icons.min.css")?>" rel="stylesheet">
     <link rel="stylesheet" href="<?=base_url("css/style.css")?>?<?=microtime(true)?>">
     <link rel="stylesheet" href="<?=base_url("css/forms.css")?>?<?=microtime(true)?>">
+    <link rel="stylesheet" href="<?=base_url("css/modal.css")?>?<?=microtime(true)?>">
+    <link rel="stylesheet" href="<?=base_url("css/bs-addon.css")?>?<?=microtime(true)?>">
 
     <script defer src="<?=base_url("node_modules/bootstrap/dist/js/bootstrap.bundle.min.js")?>"></script>
     <!--

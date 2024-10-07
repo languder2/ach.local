@@ -70,7 +70,6 @@ function hidePanels(modalContent){
 
 function setModalHeight(modalContent){
 
-    modalContent.style.bottom           = "auto";
 
     let rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
 
@@ -79,13 +78,13 @@ function setModalHeight(modalContent){
     let offsetPX = offset*window.screen.height/100;
 
     let top         = 6.5*rem;
-    let bottom      = 3*rem;
+    let height      = window.screen.height - 17*rem;
+
 
     modalContent.style.top              = offset + "vh";
 
-    if(offset === 0)
-        modalContent.style.bottom       = bottom + "px";
-
-    if(offsetPX < top)
+    if(offsetPX < top){
         modalContent.style.top          = top + "px";
+        modalContent.style.maxHeight    = height + "px";
+    }
 }

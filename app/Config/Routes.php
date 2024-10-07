@@ -12,40 +12,36 @@ use App\Controllers\Test;
  * @var RouteCollection $routes
  */
 
+$routes->group('', ['filter' => 'base'], function($routes) {
+    $routes->group('account',[], function($routes) {
+        $routes->get(   "/",                                    [Pages::class, 'account']);
+        $routes->post(  "/",                                    [Pages::class, 'account']);
+        $routes->post(  "change-info",                          [Account::class, 'changeInfo']);
+        $routes->get(   "verification-request",                 [Account::class, 'verificationRequest']);
+        $routes->get(   "verification-resend",                  [Account::class, 'verificationResend']);
+
+        $routes->get(   "change-personal",                      [Account::class, 'changePersonal']);
+        $routes->get(   "change-education/(:num)",              [Account::class, 'changeEducation']);
+        $routes->get(   "add-education",                        [Account::class, 'changeEducation']);
+        $routes->post(   "save-education",                      [Account::class, 'saveEducation']);
+    });
 
 
-$routes->group('account', ['filter' => 'auth'], function($routes) {
-    $routes->get(   "/",                                    [Pages::class, 'account']);
-    $routes->post(  "/",                                    [Pages::class, 'account']);
-    $routes->post(  "change-info",                          [Account::class, 'changeInfo']);
-    $routes->get(   "verification-request",                 [Account::class, 'verificationRequest']);
-    $routes->get(   "verification-resend",                  [Account::class, 'verificationResend']);
-
-    $routes->get(   "change-personal",                      [Account::class, 'changePersonal']);
-    $routes->get(   "change-education/(:num)",              [Account::class, 'changeEducation']);
-    $routes->get(   "add-education",                        [Account::class, 'changeEducation']);
-    $routes->post(   "save-education",                      [Account::class, 'saveEducation']);
-});
-
-
-$routes->group('admin', ['filter' => 'admin'], function($routes) {
-    $routes->get(   "/",                                        [Pages::class, 'adminIndex']);
-    $routes->get(   "index",                                    [Pages::class, 'adminIndex']);
-    $routes->get(   "students",                                 [Students::class, 'adminStudents']);
-});
-
+    $routes->group('admin', [], function($routes) {
+        $routes->get(   "/",                                        [Pages::class, 'adminIndex']);
+        $routes->get(   "index",                                    [Pages::class, 'adminIndex']);
+        $routes->get(   "students",                                 [Students::class, 'adminStudents']);
+    });
 /**/
 $routes->group('students', [], function($routes) {
     $routes->post(  "confirm",                                  [Users::class, 'ssiConfirm']);
     $routes->get(   "email_confirm/(:segment)",                 [Users::class, 'ssiConfirmLink']);
 });
 /**/
-$routes->group("sdo", [], function($routes) {
-    $routes->get(   "email",                                   [Users::class, 'sdoCreateEmail']);
-});
-
+    $routes->group("sdo", [], function($routes) {
+        $routes->get(   "email",                                   [Users::class, 'sdoCreateEmail']);
+    });
 /**/
-$routes->group('', ['filter' => 'base'], function($routes) {
     $routes->get("/",                                           [Pages::class, 'auth']);
     $routes->post("/",                                          [Pages::class, 'auth']);
     $routes->get('exit',                                        [Users::class, 'exit']);
@@ -64,6 +60,7 @@ $routes->group('', ['filter' => 'base'], function($routes) {
     $routes->get("test",                                        [Users::class, 'test']);
 //    $routes->get("json",                                        [Test::class, 'json']);
 //    $routes->get("moodle",                                      [Test::class, 'moodle']);
+    $routes->get("moodle2",                                      [Test::class, 'moodle2']);
     $routes->get("mailing",                                     [Test::class, 'mailing']);
 //    $routes->get("test-email",                                  [Test::class, 'generateEmails']);
 //    $routes->get("teachers",                                    [Test::class, 'SITeachers']);
@@ -72,5 +69,5 @@ $routes->group('', ['filter' => 'base'], function($routes) {
 
     $routes->post("ask-question",                               [Pages::class, 'AskQuestion']);
 
-    $routes->match(["get","post"],"(:any)",                     [Pages::class, 'auth']);
+    $routes->match(["get","post"],"(:any)",                     [Pages::class, 'redirect2main']);
 });

@@ -18,21 +18,19 @@
                 </div>
 
                 <?php if(defined("HAS_LOGGED")):?>
-                    <?php if(!defined("HAS_ACCOUNT")):?>
-                        <div class="ms-2">
-                            <a
-                                    href            ="<?=base_url(route_to("Pages::account"))?>"
-                                    class           ="btn-account"
-                            >
+                    <div class="ms-2">
+                        <a
+                                href            ="<?=base_url(route_to("Pages::account"))?>"
+                                class           ="btn-account"
+                        >
                                 <span class="d-none d-sm-block">
                                     личный кабинет
                                 </span>
-                                <i class="bi bi-person d-sm-none"></i>
-                            </a>
-                        </div>
-                    <?php endif;?>
+                            <i class="bi bi-person d-sm-none"></i>
+                        </a>
+                    </div>
 
-                    <?php if(defined("HAS_LOGGED_ADMIN")):?>
+                    <?php if(in_array("admin",HAS_ROLES)):?>
                         <div class="ms-2 d-none d-md-block">
                             <a
                                     href            ="<?=base_url(route_to("Pages::adminIndex"))?>"
@@ -54,15 +52,15 @@
                             <i class="bi bi-box-arrow-right d-sm-none"></i>
                         </a>
                     </div>
-                <!--
-                    <div class="ms-auto ms-2 d-md-none">
-                        <div id="show-menu" class="show-menu btn-account">
-                            <span></span>
-                            <span></span>
-                            <span></span>
+                    <!--
+                        <div class="ms-auto ms-2 d-md-none">
+                            <div id="show-menu" class="show-menu btn-account">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
                         </div>
-                    </div>
-                    -->
+                        -->
                 <?php else:?>
                     <div class="ms-2">
                         <a href="#" class="btn-account show-modal" data-action="#signIn">

@@ -1,8 +1,10 @@
-@import url("bs-addon.css");
 @import url("page.css");
 @import url("news.css");
 @import url("plates.css");
-@import url("modal.css");
+/*
+    @import url("bs-addon.css");
+    @import url("modal.css");
+ */
 @import url("callouts.css");
 
 /*PERSONAL CABINET*/

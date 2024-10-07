@@ -34,6 +34,13 @@
                     </div>
 
                     <div class="col-12 col-sm-4 mb-sm-3 fw-semibold">
+                        Форма обучения:
+                    </div>
+                    <div class="col-12 col-sm-8 mb-3">
+                        <?php echo $student->form?>
+                    </div>
+
+                    <div class="col-12 col-sm-4 mb-sm-3 fw-semibold">
                         Курс:
                     </div>
                     <div class="col-12 col-sm-8 mb-3">

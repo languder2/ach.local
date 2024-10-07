@@ -50,9 +50,9 @@
             Нет аккаунта?
         </span>
         <a
-            href="#"
-            class="link show-modal"
-            data-action="#signUp"
+                href="#"
+                class="link show-modal"
+                data-action="#signUp"
         >
             Зарегистрироваться
         </a>
