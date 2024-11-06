@@ -251,7 +251,23 @@ class Users extends BaseController
     public function test():string
     {
 
-        dd(123);
+        $list= $this->db
+            ->table("students")
+            ->select("students.*,COUNT(id) as num,id")
+            ->groupBy(
+                "uid,faculty,department,level,speciality,grp"
+            )
+            ->orderBy("id","DESC")
+            ->get()
+            ->getResult();
+
+        foreach($list as $item){
+            if($item->num>1) {
+                $this->db->table("students")->delete(["id"=>$item->id]);
+            }
+        }
+
+        dd($list);
         $form= (object)[
             "name"      => "tets",
             "email"     => "languder2@gmail.com",
@@ -284,12 +300,22 @@ class Users extends BaseController
                 ->getFirstRow()
             ;
 
+
             if(is_null($q)){
                 session()->set("view","Messages/RecoverPassword/LinkOutdated");
                 return redirect()->to(route_to("Pages::Message"));
             }
 
+
             session()->set("rp-email",$q->op);
+
+            $user = $this->db
+                ->table("users")
+                ->where("email",$q->op)
+                ->get()
+                ->getFirstRow();
+
+            $this->session->set("isLoggedIn",$user);
 
             return redirect()->to(route_to("Account::ChangePassword"));
 

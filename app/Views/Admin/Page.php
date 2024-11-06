@@ -19,6 +19,9 @@
     <script defer src="<?=base_url("js/script.js")?>?<?=microtime(true)?>"></script>
     <script defer src="<?=base_url("js/modal.js")?>?<?=microtime(true)?>"></script>
     <script defer src="<?=base_url("js/user.js")?>?<?=microtime(true)?>"></script>
+
+    <script defer src="<?=base_url("js/admin/students.js")?>?<?=microtime(true)?>"></script>
+
 </head>
 <body>
 <?php

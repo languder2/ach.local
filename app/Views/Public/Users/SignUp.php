@@ -118,6 +118,21 @@
         </label>
     </div>
 
+    <div class="s-input-box text-center btn-grp">
+        <a
+                href                ="#"
+                class               ="btn-main w-20 show-modal"
+                data-action         ="#signIn"
+        >
+            <i class="bi bi-arrow-left"></i>
+        </a>
+        <input
+                type                ="submit"
+                class               ="btn-main w-80"
+                value               ="Продолжить"
+        >
+    </div>
+
     <div class="form-check ps-3 pe-2 mx-4 my-2">
         <input
                 type                ="checkbox"
@@ -133,20 +148,6 @@
         </label>
     </div>
 
-    <div class="s-input-box text-center btn-grp">
-        <a
-                href                ="#"
-                class               ="btn-main w-20 show-modal"
-                data-action         ="#signIn"
-        >
-            <i class="bi bi-arrow-left"></i>
-        </a>
-        <input
-                type                ="submit"
-                class               ="btn-main w-80"
-                value               ="Продолжить"
-        >
-    </div>
 
 
 

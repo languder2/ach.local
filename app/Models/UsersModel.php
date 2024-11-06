@@ -4,24 +4,21 @@ use CodeIgniter\Database\ConnectionInterface;
 use CodeIgniter\Validation\ValidationInterface;
 
 class UsersModel extends GeneralModel{
+
+    protected $table = 'users';
+    protected $primaryKey = 'id';
+    protected $returnType = 'object';
+    protected $allowedFields = ['id', 'login', 'email'];
+    protected $useTimestamps = false;
+    protected $validationRules = [];
+    protected $validationMessages = [];
+    protected $skipValidation = false;
+
     public function __construct(?ConnectionInterface $db = null, ?ValidationInterface $validation = null)
     {
         parent::__construct($db, $validation);
     }
 
-    /*
-    public function saveCurrentPage():bool
-    {
-        $router         = service('router');
-        $controller     = $router->controllerName();
-        $method         = $router->methodName();
-
-        $url            = route_to("$controller::$method",implode("/",$router->params()));
-
-        $this->session->set("lastPage",$url);
-        return true;
-    }
-*/
     public function checkUser($filed,$value,$return= false):bool|object
     {
         $q              = $this->db

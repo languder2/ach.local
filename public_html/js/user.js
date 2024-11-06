@@ -62,12 +62,14 @@ document.addEventListener("DOMContentLoaded",()=> {
                     if(data.status && data.status === "error"){
                         switch (data.code){
                             case "emailOccupied":
+
                                 signUp.querySelector("#suEmail").classList.add("is-invalid");
 
-                                document.querySelector("#modal .callout-error").innerHTML= data.message;
+                                signUp.querySelector(".callout-error").innerHTML= data.message;
+                                signUp.querySelector(".callout-wrapper").classList.remove("hide");
 
                                 setHeight(
-                                    document.querySelector(".callout-wrapper"),
+                                    signUp.querySelector(".callout-error"),
                                     "show"
                                 );
 

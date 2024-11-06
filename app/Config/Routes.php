@@ -5,6 +5,7 @@ use App\Controllers\Pages;
 use App\Controllers\Users;
 use App\Controllers\Account;
 use App\Controllers\Students;
+use App\Controllers\Teachers;
 use App\Controllers\Test;
 
 
@@ -28,10 +29,20 @@ $routes->group('', ['filter' => 'base'], function($routes) {
 
 
     $routes->group('admin', [], function($routes) {
-        $routes->get(   "/",                                        [Pages::class, 'adminIndex']);
-        $routes->get(   "index",                                    [Pages::class, 'adminIndex']);
-        $routes->get(   "students",                                 [Students::class, 'adminStudents']);
+        $routes->get(   "/",                                    [Pages::class, 'adminIndex']);
+        $routes->get(   "index",                                [Pages::class, 'adminIndex']);
     });
+
+    $routes->group('admin/students', [], function($routes) {
+        $routes->get(   "/",                                    [Students::class, 'adminStudents']);
+        $routes->post(  "set-filter",                           [Students::class, 'setFilter']);
+    });
+
+    $routes->group('admin/teachers', [], function($routes) {
+        $routes->get(   "/",                                    [Teachers::class, 'adminTeachers']);
+        $routes->post(  "set-filter",                           [Teachers::class, 'setFilter']);
+    });
+
 /**/
 $routes->group('students', [], function($routes) {
     $routes->post(  "confirm",                                  [Users::class, 'ssiConfirm']);
@@ -42,8 +53,7 @@ $routes->group('students', [], function($routes) {
         $routes->get(   "email",                                   [Users::class, 'sdoCreateEmail']);
     });
 /**/
-    $routes->get("/",                                           [Pages::class, 'auth']);
-    $routes->post("/",                                          [Pages::class, 'auth']);
+    $routes->match(["get","post"],"/",                          [Pages::class, 'auth']);
     $routes->get('exit',                                        [Users::class, 'exit']);
     $routes->post('signUp',                                     [Users::class, 'signUp']);
     $routes->get('pass',                                        [Users::class, 'pass']);
@@ -60,7 +70,7 @@ $routes->group('students', [], function($routes) {
     $routes->get("test",                                        [Users::class, 'test']);
 //    $routes->get("json",                                        [Test::class, 'json']);
 //    $routes->get("moodle",                                      [Test::class, 'moodle']);
-    $routes->get("moodle2",                                      [Test::class, 'moodle2']);
+//    $routes->get("moodle2",                                      [Test::class, 'moodle2']);
     $routes->get("mailing",                                     [Test::class, 'mailing']);
 //    $routes->get("test-email",                                  [Test::class, 'generateEmails']);
 //    $routes->get("teachers",                                    [Test::class, 'SITeachers']);

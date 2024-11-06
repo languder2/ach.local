@@ -33,8 +33,12 @@ class Test extends BaseController
             ->get()
             ->getResult();
 
+
+        dd($users);
+
         echo "<pre>";
         foreach ($users as $user) {
+
 
             $c              = $this->db
                                 ->table('moodle')
@@ -42,11 +46,14 @@ class Test extends BaseController
                                 ->orWhere("login",$user->login)
                                 ->countAllResults();
 
+
             if($c)
                 continue;
 
             $user->login    = trim(strtolower($user->login));
             $user->email    = trim(strtolower($user->email));
+
+            $pass= $this->users->generateSecurePassword();
 
             /**/
             $func           = "core_user_create_users";
@@ -57,7 +64,7 @@ class Test extends BaseController
                         "username"          => $user->login,
                         "firstname"         => $user->name,
                         "lastname"          => $user->surname,
-                        "password"          => $user->tmp,
+                        "password"          => $pass,
                         "email"             => trim($user->email),
                     ],
                 ]
@@ -86,7 +93,23 @@ class Test extends BaseController
                             "login"             => $user->login,
                             "role"              => "teacher",
                             "muid"              => $arr['id'],
+                            "pass"              => $pass,
                         ]);
+
+                    $sql = [
+                        "emailTo"               => $user->email,
+                        "theme"                 => "Регистрация в системе дистанционного обучения",
+                        "message"               => view("Emails/MoodleSignIn",[
+                            "name"              => "$user->name $user->patronymic",
+                            "login"             => $user->login,
+                            "pass"              => $pass,
+                        ]),
+                    ];
+
+                    $this->db
+                        ->table('emails')
+                        ->insert($sql);
+
                 }
             }
             else{
@@ -107,13 +130,19 @@ class Test extends BaseController
         $users = $this->db
             ->table('users')
             ->join("moodle", "moodle.email = users.email", "left")
-            ->select("users.tmp,moodle.muid")
-            ->where("users.role","teacher")
+            ->select("users.tmp,moodle.muid,users.*")
             ->get()
             ->getResult();
 
+
+
         foreach ($users as $user) {
             if(is_null($user->muid)) continue;
+
+            /**
+            $pass= $this->users->generateSecurePassword();
+
+            dd($pass);
 
             $func           = "core_user_update_users";
 
@@ -126,8 +155,26 @@ class Test extends BaseController
                 ]
             ];
 
-            /**/
+            /**
             $response       = $MoodleRest->request($func, $params);
+
+            dd($response);
+            /**/
+
+            $sql = [
+                "emailTo"               => $user->email,
+                "theme"                 => "Регистрация в системе дистанционного обучения",
+                "message"               => view("Emails/MoodleSignIn",[
+                    "name"              => "$user->name $user->patronymic",
+                    "login"             => $user->login,
+                    "pass"              => $user->tmp,
+                ]),
+            ];
+
+            $this->db
+                ->table('emails')
+                ->insert($sql);
+
         }
 
     }

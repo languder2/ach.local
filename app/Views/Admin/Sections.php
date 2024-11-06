@@ -4,4 +4,9 @@
             Студенты
         </a>
     </li>
+    <li>
+        <a href="/admin/teachers/">
+            Преподаватели
+        </a>
+    </li>
 </ul>
