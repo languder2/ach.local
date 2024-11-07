@@ -80,6 +80,12 @@
 .color\:red{
     color:                          #dd0000;
 }
+.color\:darkred{
+    color:                          darkred;
+}
 .color\:green{
     color:                          #006600;
+}
+.color\:darkgreen{
+    color:                          darkgreen;
 }

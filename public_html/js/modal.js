@@ -81,10 +81,54 @@ function setModalHeight(modalContent){
     let height      = window.screen.height - 17*rem;
 
 
-    modalContent.style.top              = offset + "vh";
+    modalContent.style.top              = offset    + "vh";
 
     if(offsetPX < top){
-        modalContent.style.top          = top + "px";
-        modalContent.style.maxHeight    = height + "px";
+        modalContent.style.top          = top       + "px";
+        modalContent.style.maxHeight    = height    + "px";
     }
+}
+
+function showModal(panel){
+    let modal       = document.getElementById("modal");
+    if (modal === null) return false;
+
+    let modalContent    = modal.querySelector("#modalContent");
+    if (modalContent === null) return false;
+
+    if(panel === null || modalContent.querySelector(panel) === null)
+        return false;
+
+    if(modal.classList.contains("active"))
+        showModalAction(modalContent,panel)
+    else{
+        hidePanels(modalContent);
+        modalContent.querySelector(panel).classList.remove("d-none");
+        setModalHeight(modalContent);
+        modal.classList.add("active");
+    }
+}
+
+function closeModal()
+{
+    document.getElementById("modal").classList.remove("active");
+    return false;
+}
+
+function modalAction(el)
+{
+    let action = el.getAttribute("data-action");
+
+    console.log(action);
+
+    fetch(action,{
+        method:             "GET",
+    })
+        .then(response => {return response.text();})
+        .then(data => {
+            data= JSON.parse(data);
+            console.log(data);
+        });
+
+    return false;
 }

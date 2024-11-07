@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded",()=> {
                 .then(data => {
                     console.clear();
 
-                    let inputs= signUp.querySelectorAll("input.is-invalid");
+                    let inputs= signUp.querySelectorAll("in put.is-invalid");
                     inputs.forEach(el=>{
                         el.classList.remove("is-invalid");
                     });

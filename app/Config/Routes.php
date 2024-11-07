@@ -6,6 +6,7 @@ use App\Controllers\Users;
 use App\Controllers\Account;
 use App\Controllers\Students;
 use App\Controllers\Teachers;
+use App\Controllers\Modal;
 use App\Controllers\Test;
 
 
@@ -28,9 +29,13 @@ $routes->group('', ['filter' => 'base'], function($routes) {
     });
 
 
+    $routes->group('modal', [], function($routes) {
+        $routes->get(   "admin-verification-resend/(:num)",     [Modal::class, 'VerificationResendAdmin']);
+
+    });
     $routes->group('admin', [], function($routes) {
         $routes->get(   "/",                                    [Pages::class, 'adminIndex']);
-        $routes->get(   "index",                                [Pages::class, 'adminIndex']);
+        $routes->get(   "resend-verification/(:num)",                  [Users::class, 'ResendVerification']);
     });
 
     $routes->group('admin/students', [], function($routes) {
@@ -41,6 +46,7 @@ $routes->group('', ['filter' => 'base'], function($routes) {
     $routes->group('admin/teachers', [], function($routes) {
         $routes->get(   "/",                                    [Teachers::class, 'adminTeachers']);
         $routes->post(  "set-filter",                           [Teachers::class, 'setFilter']);
+        $routes->get(   "correct",                              [Teachers::class, 'correct']);
     });
 
 /**/

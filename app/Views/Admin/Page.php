@@ -21,6 +21,7 @@
     <script defer src="<?=base_url("js/user.js")?>?<?=microtime(true)?>"></script>
 
     <script defer src="<?=base_url("js/admin/students.js")?>?<?=microtime(true)?>"></script>
+    <script defer src="<?=base_url("js/admin/user-actions.js")?>?<?=microtime(true)?>"></script>
 
 </head>
 <body>

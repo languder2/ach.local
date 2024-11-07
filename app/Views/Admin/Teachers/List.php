@@ -28,25 +28,33 @@
                 </th>
             </thead>
             <tbody>
-                <?php foreach($list as $student):?>
+                <?php foreach($list as $user):?>
                         <tr>
                             <td class="text-center">
-                                <?=$student->id?>
+                                <?=$user->id?>
                             </td>
                             <td>
-                                <?=$student->surname?>
-                                <?=$student->name?>
-                                <?=$student->patronymic?>
+                                <?=$user->surname?>
+                                <?=$user->name?>
+                                <?=$user->patronymic?>
                             </td>
                             <td>
-                                <?=$student->email?>
+                                <?=$user->email?>
                             </td>
                             <td>
-                                <?=$student->phone?>
+                                <?=$user->phone?>
                             </td>
                             <td>
-                                <?php if($student->verified):?>
-                                    <i class="bi bi-envelope-check-fill"></i>
+                                <?php if($user->verified):?>
+                                    <i class="bi bi-envelope-check color:green"></i>
+                                <?php else:?>
+                                    <a
+                                        href        = "<?=base_url("/modal/admin-verification-resend/$user->id")?>"
+                                        class       = "modal-action"
+                                        data-action = "#message"
+                                    >
+                                        <i class="bi bi-envelope-x color:red"></i>
+                                    </a>
                                 <?php endif;?>
                             </td>
                         </tr>
@@ -67,26 +75,6 @@
     table caption{
         font-size:                  1.5rem;
         background-color:           yellow;
-    }
-
-    .bi-chevron-bar-contract{
-        display:                    none;
-    }
-    .show-education-detail .bi-chevron-bar-contract{
-        display:                    inline-block;
-    }
-    .show-education-detail .bi-chevron-bar-expand{
-        display:                    none;
-    }
-    .show-education-detail td{
-        background-color:           #0d6efd;
-        color:                      white;
-    }
-    .bi-envelope-check-fill{
-        color:                      green;
-    }
-    .show-education-detail .bi-envelope-check-fill{
-        color:                      white;
     }
 
 </style>

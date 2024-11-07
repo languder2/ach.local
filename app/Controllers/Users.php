@@ -376,6 +376,28 @@ class Users extends BaseController
         return  $this->response->setJSON($answer);
     }
 
+    public function ResendVerification($uid):ResponseInterface
+    {
+
+        $user= $this->users->where("id",$uid)->first();
+
+        if(!$user)
+            return response()->setJSON([
+                "code"  => 400,
+            ]);
+
+
+        $this->users->verifiedGenerateCron($user);
+
+        $response   = [
+                "code"      => 200,
+                "uid"       => $uid,
+                "user"      => $user
+        ];
+
+        return response()->setJSON($response);
+    }
+
 
 }
 

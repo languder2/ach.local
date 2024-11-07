@@ -2,9 +2,7 @@
 namespace App\Controllers;
 
 use CodeIgniter\HTTP\RedirectResponse;
-use CodeIgniter\HTTP\ResponseInterface;
 use App\Models\UsersModel;
-use App\Models\StudentModel;
 
 class Teachers extends BaseController
 {
@@ -19,7 +17,7 @@ class Teachers extends BaseController
     public function adminTeachers(): string
     {
 
-        $page= $this->request->getGet("page_students")??1;
+        $page= $this->request->getGet("page_teachers")??1;
 
         $users= $this->users
             ->where("JSON_CONTAINS(users.roles, '\"teacher\"', '$')")
@@ -28,20 +26,21 @@ class Teachers extends BaseController
 
 
         if(session()->has("AdminTeacherSearch")){
-            $search = session()->get("AdminTeacherSearch");
+            $search             = session()->get("AdminTeacherSearch");
 
-            $str    = str_replace(" ","%",$search);
+            $str                = str_replace(" ","%",$search);
+            $searchPhone        = str_replace([" ","(",")","-","_","+"],"",$search);
 
-            $users->like("surname", $str)
-                    ->orLike("name", $str)
-                    ->orLike("patronymic", $str)
-                    ->orLike("email", $str)
-                    ->orLike("CONCAT(surname, ' ', name, ' ', patronymic)",$str)
-                    ->orLike("CONCAT(name, ' ', patronymic, ' ', surname)",$str)
+            $users->groupStart()
+                    ->like("users.email", $str)
+                    ->orLike("CONCAT(users.surname, ' ', users.name, ' ', users.patronymic)",$str)
+                    ->orLike("CONCAT(users.name, ' ', users.patronymic, ' ', users.surname)",$str)
+                    ->orlike("users.phone",$searchPhone)
+                ->groupEnd()
             ;
         }
 
-        $list = $users->paginate($this->perPage, "students", $page);
+        $list = $users->paginate($this->perPage, "teachers", $page);
 
 
         $pageContent= view(
@@ -72,4 +71,14 @@ class Teachers extends BaseController
 
         return redirect()->to("admin/teachers");
     }
+
+    public function correct():void
+    {
+        $users= $this->users
+            ->join("moodle","moodle.email=users.email","right")
+            ->where("JSON_CONTAINS(users.roles, '\"teacher\"', '$')")
+            ->select("users.*")
+            ->findAll();
+    }
+
 }

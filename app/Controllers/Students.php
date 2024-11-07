@@ -55,13 +55,11 @@ class Students extends BaseController
             $search         = session()->get("AdminStudentsSearch");
 
             $str            = str_replace(" ","%",$search);
-            $users->like("users.surname", $str)
-                    ->orLike("users.name", $str)
-                    ->orLike("users.patronymic", $str)
-                    ->orLike("users.email", $str)
+            $users->groupStart()
+                    ->Like("users.email", $str)
                     ->orLike("CONCAT(users.surname, ' ', users.name, ' ', users.patronymic)",$str)
                     ->orLike("CONCAT(users.name, ' ', users.patronymic, ' ', users.surname)",$str)
-
+                ->groupEnd()
             ;
         }
 
