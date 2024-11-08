@@ -16,9 +16,9 @@ class App extends BaseConfig
      *
      * E.g., http://example.com/
      */
-    public string $baseURL = 'https://ach.mgu-mlt.ru/';
+    //public string $baseURL = 'https://ach.mgu-mlt.ru/';
 
-    public string $localURL = 'https://ach.local/';
+    public string $baseURL = 'https://ach.local/';
 
     /**
      * Allowed Hostnames in the Site URL other than the hostname in the baseURL.
@@ -205,7 +205,5 @@ class App extends BaseConfig
     public function __construct()
     {
         parent::__construct();
-        if($_SERVER["REMOTE_ADDR"] == "127.0.0.1" || $_SERVER["REMOTE_ADDR"] == "::1")
-            $this->baseURL = $this->localURL;
     }
 }

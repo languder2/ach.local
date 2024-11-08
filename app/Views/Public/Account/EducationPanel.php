@@ -2,7 +2,7 @@
     <h5 class="pe-4 ps-5 pb-2 border-bottom border-1">
         Учебные данные
     </h5>
-        <?php foreach ($user->students as $key=>$student):?>
+        <?php if(isset($user->students)) foreach ($user->students as $key=>$student):?>
             <div class="px-4 px-md-5 border-bottom border-1">
                 <div class="row">
                     <div class="col-12 col-sm-4 mb-sm-3 fw-semibold">

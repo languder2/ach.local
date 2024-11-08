@@ -9,36 +9,49 @@
         </div>
     <?php endif;?>
 
-    <div class="row row-cols-1 row-cols-sm-1 row-cols-md-1 row-cols-lg-1 g-0">
-        <div class="col">
-            <?php if(isset($user) && $user->verified === "0"):?>
-                <div class="bg-white py-3 rounded-4 shadow-box-st mb-4">
-                    <?php
-                    if(isset($verification))
-                        echo view("Public/Account/VerificationPass",[
-                            "user"      => &$user
-                        ]);
-                    else
-                        echo view("Public/Account/VerificationRequest",[
-                            "user"      => &$user
-                        ]);
+    <?php if(isset($user) && $user->verified === "0"):?>
+        <div class="bg-white py-3 rounded-4 shadow-box-st mb-4">
+            <?php
+            if(isset($verification))
+                echo view("Public/Account/VerificationPass",[
+                    "user"      => &$user
+                ]);
+            else
+                echo view("Public/Account/VerificationRequest",[
+                    "user"      => &$user
+                ]);
 
-                    ?>
-                </div>
+            ?>
+        </div>
+    <?php endif;?>
+
+    <div class="bg-white py-3 rounded-4 mb-4 shadow-box-st">
+        <?php echo view("Public/Account/PersonalPanel",[
+            "user"      => &$user
+        ])?>
+    </div>
+
+    <?php if(in_array("teacher",$user->roles)):?>
+        <div class="bg-white py-3 rounded-4 mb-4 shadow-box-st">
+            <h5 class="px-4 px-md-5 pb-2 border-bottom border-1">
+                Данные СДО
+            </h5>
+            <?php if(empty($user->moodle)):?>
+                <?php echo view("Public/Account/SDORequestPanel",[
+                    "user"      => &$user
+                ])?>
+            <?php else:?>
+                <?php echo view("Public/Account/SDOPanel",[
+                    "user"      => &$user
+                ])?>
             <?php endif;?>
-            <div class="bg-white py-3 rounded-4 mb-4 shadow-box-st">
-                <?php echo view("Public/Account/PersonalPanel",[
-                    "user"      => &$user
-                ])?>
-            </div>
         </div>
+    <?php endif;?>
 
-        <div class="col">
-            <div class="bg-white py-3 rounded-4 shadow-box-st mb-4">
-                <?php echo view("Public/Account/EducationPanel",[
-                    "user"      => &$user
-                ])?>
-            </div>
-        </div>
+
+    <div class="bg-white py-3 rounded-4 shadow-box-st mb-4">
+        <?php echo view("Public/Account/EducationPanel",[
+            "user"      => &$user
+        ])?>
     </div>
 </div>

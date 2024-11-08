@@ -138,7 +138,7 @@ class UsersModel extends GeneralModel{
         /**/
         return true;
     }
-    public function verifiedGenerateCron($user):bool
+    public function verifiedGenerateCron($user):object
     {
         /* generate verified */
         $hash       = self::verificationAdd("verificationByLink",$user->email,null,true);
@@ -146,22 +146,11 @@ class UsersModel extends GeneralModel{
         $code = rand(100000, 999999);
         self::verificationAdd("verificationByCode",$user->email,$code,true);
 
-        /* mail */
-
-        $message           = view(
-            "Public/Emails/EmailVerification",
-            [
-            "name"                          => $user->name,
-            "patronymic"                    => $user->patronymic,
-            "email"                         => $user->email,
-            "code"                          => &$code,
-            "link"                          => base_url("students/email_confirm/$hash"),
-        ]);
-
-
-
         /**/
-        return true;
+        return (object)[
+            "code"              => $code,
+            "hash"              => $hash,
+        ];
     }
 
     public function setAction($code,$op,$value):int

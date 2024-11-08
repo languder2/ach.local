@@ -117,9 +117,11 @@ function closeModal()
 
 function modalAction(el)
 {
-    let action = el.getAttribute("data-action");
+    let modalContent    = document.querySelector("#modal #modalContent");
+    if(modalContent === null) return false;
 
-    console.log(action);
+    let panel = modalContent.querySelector("#message");
+    let action  = el.getAttribute("data-action");
 
     fetch(action,{
         method:             "GET",
@@ -127,7 +129,28 @@ function modalAction(el)
         .then(response => {return response.text();})
         .then(data => {
             data= JSON.parse(data);
-            console.log(data);
+            if(data.code === 200){
+                switch (data.action){
+                    case "ShowMessage":
+
+                        let time= 1250;
+
+                        modalContent.classList.add("hide");
+
+                        let timer1= setTimeout(()=>{
+                            hidePanels(modalContent);
+                            panel.innerHTML = data.message;
+                            panel.classList.remove("d-none");
+                            setModalHeight(modalContent);
+                        },time/2);
+
+                        let timer2= setTimeout(()=>{
+                            modalContent.classList.remove("hide");
+                        },time);
+
+                    break;
+                }
+            }
         });
 
     return false;

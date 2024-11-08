@@ -5,6 +5,7 @@ namespace App\Controllers;
 use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\HTTP\ResponseInterface;
 use App\Models\UsersModel;
+use App\Models\EmailModel;
 use http\Message;
 
 class Users extends BaseController
@@ -198,15 +199,17 @@ class Users extends BaseController
 
 
 
-    public function sdoCreateEmail():string
+    public function sdoCreateEmail():void
     {
 
+        /**
         dd(3);
         $email              = $this->request->getPost("email");
         $user               = "";
 
         $this->users->sdoCreateEmailCURL();
         return  "123";
+        /**/
     }
 
     public function authSI():ResponseInterface
@@ -248,9 +251,9 @@ class Users extends BaseController
 
         return $this->response->setJSON($answer);
     }
-    public function test():string
+    public function test():void
     {
-
+        /**
         $list= $this->db
             ->table("students")
             ->select("students.*,COUNT(id) as num,id")
@@ -269,14 +272,15 @@ class Users extends BaseController
 
         dd($list);
         $form= (object)[
-            "name"      => "tets",
+            "name"      => "test",
             "email"     => "languder2@gmail.com",
         ];
 
         $email          = service('email');
 
         return "";
-        //return  $this->model->translatarate("Проверка Султан С.В., Шевченко, Трищук.? asd");
+        //return  $this->model->translatarate("Проверка Султан С.В.");
+        /**/
     }
 
     public function exit():RedirectResponse
@@ -295,7 +299,7 @@ class Users extends BaseController
                     "value"     => $code,
                     "code"      => "RecoverPassword"
                 ])
-                ->orderBy("time","desc")
+                ->orderBy("id","desc")
                 ->get()
                 ->getFirstRow()
             ;
@@ -387,13 +391,68 @@ class Users extends BaseController
             ]);
 
 
-        $this->users->verifiedGenerateCron($user);
+        $codes          = $this->users->verifiedGenerateCron($user);
+
+        $emailModel     = model(EmailModel::class);
+
+        $emailModel->where([
+                        "emailTo"           => $user->email,
+                        "theme"             => 'Подтверждение E-mail',
+                ])
+                ->delete()
+        ;
+
+        $emailModel->insert([
+                "emailTo"           => $user->email,
+                "theme"             => 'Подтверждение E-mail',
+                "message"           => view(
+                    "Public/Emails/EmailVerification",
+                    [
+                        "name"                          => $user->name,
+                        "patronymic"                    => $user->patronymic,
+                        "email"                         => $user->email,
+                        "code"                          => $codes->code,
+                        "link"                          => base_url("account/verification/$codes->hash"),
+                    ])
+        ]);
 
         $response   = [
-                "code"      => 200,
-                "uid"       => $uid,
-                "user"      => $user
+            "code"      => 200,
+            "action"    => "ShowMessage",
+            "message"   => view(
+                "Modal/Admin/ResendEmailVerificationSuccess",
+                [
+                    "user"      => $user,
+                ]
+            )
         ];
+
+        /**
+        $this->db
+            ->table('moodle')
+            ->insert([
+                "email"             => $user->email,
+                "login"             => $user->login,
+                "role"              => "teacher",
+                "muid"              => $arr['id'],
+                "pass"              => $pass,
+            ]);
+
+        $sql = [
+            "emailTo"               => $user->email,
+            "theme"                 => "Регистрация в системе дистанционного обучения",
+            "message"               => view("Emails/MoodleSignIn",[
+                "name"              => "$user->name $user->patronymic",
+                "login"             => $user->login,
+                "pass"              => $pass,
+            ]),
+        ];
+
+        $this->db
+            ->table('emails')
+            ->insert($sql);
+/**/
+
 
         return response()->setJSON($response);
     }

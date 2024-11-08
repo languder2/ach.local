@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\MoodleModel;
 use App\Models\UsersModel;
 use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\HTTP\ResponseInterface;
@@ -88,50 +89,40 @@ class Pages extends BaseController
         if(session()->has("account-message"))
             $message            = session()->getFlashdata("account-message");
 
-        $user= $this->db
-            ->table("users")
-            ->where("id",session()->get("isLoggedIn")->id)
-            ->get()
-            ->getFirstRow();
+        $user           = $this->users->find(session()->get("isLoggedIn")->id);
 
+        $user->roles    = json_decode($user->roles);
 
-        $user->students = $this->db
-            ->table("students")
-            ->join("faculties","faculties.id=students.faculty","left")
-            ->join("departments","departments.id=students.department","left")
-            ->join("levels","levels.id=students.level","left")
-            ->join("specialities","specialities.id=students.speciality","left")
-            ->join("edForms","edForms.id=students.form","left")
-            ->select(
-                "students.id,
-                faculties.name as faculty,
-                departments.name as department,
-                levels.name as level,
-                specialities.name as speciality,
-                edForms.name as form,
-                specialities.code as code,
-                students.course, students.grp, students.status,
-                students.years_from, students.years_to
-                ",
-            )
-            ->where("uid",$user->id)
-            ->get()
-            ->getResult();
+        if(in_array("student",$user->roles)){
+            $user->students = $this->db
+                ->table("students")
+                ->join("faculties","faculties.id=students.faculty","left")
+                ->join("departments","departments.id=students.department","left")
+                ->join("levels","levels.id=students.level","left")
+                ->join("specialities","specialities.id=students.speciality","left")
+                ->join("edForms","edForms.id=students.form","left")
+                ->select(
+                    "students.id,
+                    faculties.name as faculty,
+                    departments.name as department,
+                    levels.name as level,
+                    specialities.name as speciality,
+                    edForms.name as form,
+                    specialities.code as code,
+                    students.course, students.grp, students.status,
+                    students.years_from, students.years_to
+                    ",
+                )
+                ->where("uid",$user->id)
+                ->get()
+                ->getResult();
+        }
 
+        $moodle= model(MoodleModel::class);
+        $user->moodle   = $moodle->where("uid", $user->id)->first();
 
         if($user->verified === "0")
             $verification = $this->users->getAction("verificationByLink",$this->user->email);
-
-        /*
-        $pageContent    = view("Public/Account/Base",[
-            "user"              => $this->user,
-            "message"           => &$message,
-            "faculties"         => &$faculties,
-            "departments"       => &$departments,
-            "levels"            => &$levels,
-            "specialities"      => &$specialities,
-            "verification"      => &$verification,
-        ]);
 
         /**/
         $pageContent    = view("Public/Account/Account",[

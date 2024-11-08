@@ -7,6 +7,7 @@ use App\Controllers\Account;
 use App\Controllers\Students;
 use App\Controllers\Teachers;
 use App\Controllers\Modal;
+use App\Controllers\Moodle;
 use App\Controllers\Test;
 
 
@@ -15,22 +16,28 @@ use App\Controllers\Test;
  */
 
 $routes->group('', ['filter' => 'base'], function($routes) {
+    $routes->group('api/moodle',[], function($routes) {
+        $routes->post(  "UserCreate",                           [Moodle::class, 'UserCreate']);
+    });
+
     $routes->group('account',[], function($routes) {
         $routes->get(   "/",                                    [Pages::class, 'account']);
         $routes->post(  "/",                                    [Pages::class, 'account']);
         $routes->post(  "change-info",                          [Account::class, 'changeInfo']);
         $routes->get(   "verification-request",                 [Account::class, 'verificationRequest']);
         $routes->get(   "verification-resend",                  [Account::class, 'verificationResend']);
+        $routes->get(   "verification/(:segment)",              [Users::class, 'ssiConfirmLink']);
 
         $routes->get(   "change-personal",                      [Account::class, 'changePersonal']);
         $routes->get(   "change-education/(:num)",              [Account::class, 'changeEducation']);
         $routes->get(   "add-education",                        [Account::class, 'changeEducation']);
-        $routes->post(   "save-education",                      [Account::class, 'saveEducation']);
+        $routes->post(  "save-education",                       [Account::class, 'saveEducation']);
     });
 
 
     $routes->group('modal', [], function($routes) {
         $routes->get(   "admin-verification-resend/(:num)",     [Modal::class, 'VerificationResendAdmin']);
+        $routes->get(   "admin-change-moodle-pass/(:num)",      [Modal::class, 'MoodleChangePassRequest']);
 
     });
     $routes->group('admin', [], function($routes) {
@@ -73,7 +80,7 @@ $routes->group('students', [], function($routes) {
     $routes->post('account/change-password',                    [Account::class, 'cpProcessing']);
 
     $routes->get('message',                                     [Pages::class, 'Message']);
-    $routes->get("test",                                        [Users::class, 'test']);
+    $routes->get("test",                                        [Test::class, 'test']);
 //    $routes->get("json",                                        [Test::class, 'json']);
 //    $routes->get("moodle",                                      [Test::class, 'moodle']);
 //    $routes->get("moodle2",                                      [Test::class, 'moodle2']);

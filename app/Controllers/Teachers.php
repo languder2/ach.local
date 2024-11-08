@@ -20,6 +20,9 @@ class Teachers extends BaseController
         $page= $this->request->getGet("page_teachers")??1;
 
         $users= $this->users
+            ->join("moodle","users.id=moodle.uid","left")
+            ->select("users.*")
+            ->select("moodle.login as moodle, moodle.muid")
             ->where("JSON_CONTAINS(users.roles, '\"teacher\"', '$')")
             ->orderBy("users.id")
         ;

@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use App\Models\ActionModel;
+use App\Models\EmailModel;
 use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\HTTP\ResponseInterface;
 use App\Models\UsersModel;
@@ -479,6 +481,23 @@ class Test extends BaseController
         $writer->save($fileName);
 
     }
+
+    public function test()
+    {
+        $action = model(ActionModel::class);
+
+        $action
+            ->where("time<","2024-11-06")
+            ->delete();
+            /**
+
+        [
+            "emailTo"       => "test@ya.ru"
+        ]);
+            /**/
+
+    }
+
     
 }
 

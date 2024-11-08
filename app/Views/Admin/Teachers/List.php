@@ -19,12 +19,12 @@
                     ФИО
                 </th>
                 <th>
-                    E-mail
+                    E-mail / Phones
                 </th>
                 <th>
-                    Телефон
+                    moodle
                 </th>
-                <th>
+                <th colspan="4">
                 </th>
             </thead>
             <tbody>
@@ -40,20 +40,59 @@
                             </td>
                             <td>
                                 <?=$user->email?>
-                            </td>
-                            <td>
+                                <br>
                                 <?=$user->phone?>
                             </td>
                             <td>
+                                <?=$user->moodle?>
+                            </td>
+
+                            <td>
+                                <a
+                                        href        = "<?=base_url("/modal/admin-verification-resend/$user->id")?>"
+                                        class       = "modal-action fs-4"
+                                        data-action = "#message"
+                                >
+                                    <i class="bi bi-person-vcard"></i>
+                                </a>
+                            </td>
+
+                            <td>
                                 <?php if($user->verified):?>
-                                    <i class="bi bi-envelope-check color:green"></i>
+                                    <i class="bi bi-envelope-check fs-4 color:green"></i>
                                 <?php else:?>
                                     <a
                                         href        = "<?=base_url("/modal/admin-verification-resend/$user->id")?>"
-                                        class       = "modal-action"
+                                        class       = "modal-action fs-4"
                                         data-action = "#message"
                                     >
-                                        <i class="bi bi-envelope-x color:red"></i>
+                                        <i class="bi bi-envelope-x fs-4 color:red"></i>
+                                    </a>
+                                <?php endif;?>
+                            </td>
+
+                            <td>
+                                <?php if($user->muid):?>
+                                    <i class="bi bi-person-check fs-4 color:green"></i>
+                                <?php else:?>
+                                    <a
+                                        href        = "<?=base_url("/modal/admin-verification-resend/$user->id")?>"
+                                        class       = "modal-action fs-4"
+                                        data-action = "#message"
+                                    >
+                                        <i class="bi bi-person-plus color:red"></i>
+                                    </a>
+                                <?php endif;?>
+                            </td>
+
+                            <td>
+                                <?php if($user->muid):?>
+                                    <a
+                                        href        = "<?=base_url("/modal/admin-change-moodle-pass/$user->id")?>"
+                                        class       = "modal-action fs-4"
+                                        data-action = "#message"
+                                    >
+                                        <i class="bi bi-key"></i>
                                     </a>
                                 <?php endif;?>
                             </td>
