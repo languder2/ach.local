@@ -8,7 +8,18 @@ class UsersModel extends GeneralModel{
     protected $table = 'users';
     protected $primaryKey = 'id';
     protected $returnType = 'object';
-    protected $allowedFields = ['id', 'login', 'email'];
+    protected $allowedFields = [
+        'id',
+        'login',
+        'email',
+        "roles",
+        "surname",
+        "name",
+        "patronymic",
+        "messenger",
+        "phone",
+        "verified"
+    ];
     protected $useTimestamps = false;
     protected $validationRules = [];
     protected $validationMessages = [];
@@ -272,6 +283,14 @@ class UsersModel extends GeneralModel{
             );
 
         return true;
+    }
+
+    public function listPreparing($list):array
+    {
+        return array_map(function($item) {
+            $item->roles = json_decode($item->roles);
+            return $item;
+        }, $list);
     }
 
 }

@@ -1,34 +1,27 @@
-<?php d($user->moodle??"")?>
-<!----
-<form class="px-4 pt-2" method="POST" action="<?=base_url("api/moodle/UserCreate")?>">
-    <p class="px-3">
-        Укажите желаемый логин для регистрации в системе.<br>
-    </p>
+<?php if(isset($user->moodle)):?>
+    <div class="px-4 px-md-5">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12 col-sm-4 mb-sm-3 fw-semibold">
+                    Login:
+                </div>
+                <div class="col-12 col-sm-8 mb-3">
+                    <?=$user->moodle->login?>
+                </div>
 
-    <div class="s-input-box">
-        <input
-                type="text"
-                name="form[login]"
-                id="moodleLogin"
-                class="form-control"
-                placeholder=""
-                value="<?=$user->moodle->login??""?>"
-                required
-        >
-        <label for="ssiPatronymic">
-            Логин в СДО
-        </label>
+                <div class="col-12 col-sm-4 mb-sm-3 fw-semibold">
+                    E-mail:
+                </div>
+                <div class="col-12 col-sm-8 mb-3">
+                    <?=$user->moodle->email?>
+                </div>
+
+                <p class="text-center text-md-end">
+                    <a href="<?=base_url("account/moodle-get-new-pass")?>" class="link d-inline-block">
+                        Запросить новый пароль в СДО
+                    </a>
+                </p>
+            </div>
+        </div>
     </div>
-
-    <div class="s-input-box text-center">
-        <button class="d-inline-block btn-main w-50">
-            Зарегистрировать с СДО
-        </button>
-    </div>
-
-    <p class="px-3 text-center">
-        По результатам проверки не занятости аккаунта на указанную Вами почту
-        <b><?=$user->email??""?></b> будет выслано письмо с формированным паролем
-    </p>
-</form>
--->
+<?php endif;?>

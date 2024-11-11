@@ -93,6 +93,9 @@ class Pages extends BaseController
 
         $user->roles    = json_decode($user->roles);
 
+        if(empty($user->roles))
+            $user->roles = [];
+
         if(in_array("student",$user->roles)){
             $user->students = $this->db
                 ->table("students")
@@ -168,6 +171,8 @@ class Pages extends BaseController
         if(session()->has("message"))
             $message = session()->get("message");
 
+        if(is_object($message))
+            $message = $message->content;
 
         if(is_null($message))
             return redirect()->to("/");

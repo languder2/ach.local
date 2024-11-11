@@ -12,7 +12,7 @@ use MoodleRest;
 
 class Moodle extends BaseController
 {
-    public function UserCreate(): RedirectResponse|string
+    public function MoodleCreate(): RedirectResponse|string
     {
 
         $userModel      = model(UsersModel::class);
@@ -23,32 +23,11 @@ class Moodle extends BaseController
         $user           = $userModel->find(session()->get("isLoggedIn")->id);
 
         $login          = $this->request->getPost("form")['login'];
-        $login          = trim(strtolower($login));
+        $user->login    = trim(strtolower($login));
+        $user->email    = trim(strtolower($user->email));
+        $user->pass     = $userModel->generateSecurePassword();
 
-        $email          = trim(strtolower($user->email));
-
-        $MoodleRest     = new MoodleRest(
-            'https://do.mgu-mlt.ru/webservice/rest/server.php',
-            'b6ec48e0a26f33c7dce5418139990d51'
-        );
-
-        $pass           = $userModel->generateSecurePassword();
-
-        $func           = "core_user_create_users";
-
-        $params         = [
-            "users"     => [
-                [
-                    "username"          => $login,
-                    "firstname"         => $user->name,
-                    "lastname"          => $user->surname,
-                    "password"          => $pass,
-                    "email"             => $email,
-                ],
-            ]
-        ];
-
-        $response       = $MoodleRest->request($func, $params);
+        $response       = $moodleModel->CreateUser($user);
 
         if(isset($response['errorcode']) and $response['errorcode'] === "invalidparameter"){
 
@@ -72,16 +51,27 @@ class Moodle extends BaseController
             return redirect()->to(base_url("account"));
         }
 
-        $moodleModel->insert(
-            [
-                "muid"      => $response[0]['id'],
-                "uid"       => $user->id,
-                "login"     => $response[0]['username'],
-                "email"     => $user->email,
-                "role"      => "teacher",
-                "pass"      => $pass,
-            ]
-        );
+        $moodleSQL  = [
+            "muid"      => $response[0]['id'],
+            "uid"       => $user->id,
+            "login"     => $user->login,
+            "email"     => $user->email,
+            "role"      => "teacher",
+            "pass"      => $user->pass,
+        ];
+
+        $cnt     = $moodleModel->where("uid", $user->id)->countAllResults();
+
+        if($cnt)
+            $moodleModel->where("uid", $user->id)->update($moodleSQL);
+        else
+            $moodleModel->insert($moodleSQL);
+
+        $emailModel->where([
+                    "emailTo"           => $user->email,
+                    "theme"             => "Регистрация в системе дистанционного обучения",
+                ])
+            ->delete();
 
         $emailModel->insert([
             "emailTo"           => $user->email,
@@ -90,15 +80,194 @@ class Moodle extends BaseController
                 "Emails/MoodleSignIn",
                 [
                     "name"              => "$user->name $user->patronymic",
-                    "login"             => $login,
+                    "login"             => $user->login,
+                    "pass"              => $user->pass,
+                ])
+        ]);
+
+        session()->setFlashdata("account-message",(object)[
+            "status"                    => "success",
+            "content"                   => "Аккаунт создан. Параметры входа отправлены на почту: $user->email",
+        ]);
+
+        return redirect()->back();
+
+    }
+    public function AdminMoodleCreate(): ResponseInterface
+    {
+        $form           = (object)$this->request->getPost("form");
+
+        $userModel      = model(UsersModel::class);
+        $moodleModel    = model(MoodleModel::class);
+        $emailModel     = model(EmailModel::class);
+
+        $user           = $userModel->find($form->uid);
+
+        $user->login    = trim(strtolower($form->login));
+        $user->email    = trim(strtolower($user->email));
+        $user->pass     = $userModel->generateSecurePassword();
+
+        $response       = $moodleModel->CreateUser($user);
+
+        if(isset($response['errorcode']) and $response['errorcode'] === "invalidparameter"){
+
+            $message = str_replace(
+                "Email address already exists",
+                "Email уже занят",
+                $response['debuginfo']
+            );
+
+            $message = str_replace(
+                "Username already exists",
+                "Логин уже занят",
+                $response['debuginfo']
+            );
+
+            return response()->setJSON([
+                "code"          => 400,
+                "message"      => $message
+            ]);
+        }
+
+        $moodleSQL  = [
+            "muid"      => $response[0]['id'],
+            "uid"       => $user->id,
+            "login"     => $user->login,
+            "email"     => $user->email,
+            "role"      => "teacher",
+            "pass"      => $user->pass,
+        ];
+
+        $cnt     = $moodleModel->where("uid", $user->id)->countAllResults();
+
+        if($cnt)
+            $moodleModel->where("uid", $user->id)->update($moodleSQL);
+        else
+            $moodleModel->insert($moodleSQL);
+
+        $emailModel->where([
+                    "emailTo"           => $user->email,
+                    "theme"             => "Регистрация в системе дистанционного обучения",
+                ])
+            ->delete();
+
+        $emailModel->insert([
+            "emailTo"           => $user->email,
+            "theme"             => "Регистрация в системе дистанционного обучения",
+            "message"           => view(
+                "Emails/MoodleSignIn",
+                [
+                    "name"              => "$user->name $user->patronymic",
+                    "login"             => $user->login,
+                    "pass"              => $user->pass,
+                ])
+        ]);
+
+        return response()->setJSON([
+                "code"          => 200,
+                "message"          => view('Modal/Admin/MoodleCreateUserSuccess',[
+                    "user"      => $user,
+                ]),
+        ]);
+    }
+
+
+
+    function moodleNewPass():RedirectResponse|string
+    {
+        $userModel      = model(UsersModel::class);
+        $moodleModel    = model(MoodleModel::class);
+        $emailModel     = model(EmailModel::class);
+
+        $user           = $userModel->find(session()->get("isLoggedIn")->id);
+        if(empty($user))
+            return redirect()->back();
+
+        $moodle         = $moodleModel->where("uid",$user->id)->first();
+        if(empty($moodle))
+            return redirect()->back();
+
+        $pass           = $userModel->generateSecurePassword();
+
+        $response       = $moodleModel->changePass($moodle->muid,$pass);
+
+        if(isset($response['warnings'][0]['message'])){
+            session()->setFlashdata("account-message",(object)[
+                "status"                    => "error",
+                "content"                   => $response['warnings'][0]['message'],
+            ]);
+
+            return redirect()->to(base_url("account"));
+        }
+
+        $emailModel->insert([
+            "emailTo"           => $user->email,
+            "theme"             => "СДО: смена пароля",
+            "message"           => view(
+                "Emails/MoodleChangePass",
+                [
+                    "name"              => "$user->name $user->patronymic",
+                    "login"             => $moodle->login,
                     "pass"              => $pass,
                 ])
         ]);
 
-        dd($response);
+        session()->setFlashdata("account-message",(object)[
+            "status"                    => "success",
+            "content"                   => "Пароль сменен и выслан на email: $user->email",
+        ]);
 
-
-        return " 1";
-
+        return  redirect()->to(base_url("account"));
     }
+    function adminMoodleNewPass($uid):RedirectResponse|string
+    {
+
+        $userModel      = model(UsersModel::class);
+        $moodleModel    = model(MoodleModel::class);
+        $emailModel     = model(EmailModel::class);
+
+        $user           = $userModel->find($uid);
+        if(empty($user))
+            return redirect()->to(base_url("admin/users"));
+
+
+        $moodle         = $moodleModel->where("uid",$user->id)->first();
+        if(empty($moodle))
+            return redirect()->to(base_url("admin/users"));
+
+        $pass           = $userModel->generateSecurePassword();
+
+        $response       = $moodleModel->changePass($moodle->muid,$pass);
+
+        if(isset($response['warnings'][0]['message'])){
+            session()->setFlashdata("message",(object)[
+                "status"                    => "error",
+                "message"                   => $response['warnings'][0]['message'],
+            ]);
+
+            return redirect()->to(base_url("admin/users"));
+        }
+
+        $emailModel->insert([
+            "emailTo"           => $user->email,
+            "theme"             => "СДО: смена пароля",
+            "message"           => view(
+                "Emails/MoodleChangePass",
+                [
+                    "name"              => "$user->name $user->patronymic",
+                    "login"             => $moodle->login,
+                    "pass"              => $pass,
+                ])
+        ]);
+
+        session()->setFlashdata("message",(object)[
+            "status"                    => "success",
+            "message"                   => "Пароль сменен и выслан на email: $user->email",
+        ]);
+
+        return  redirect()->to(base_url("admin/users"));
+    }
+
+
+
 }

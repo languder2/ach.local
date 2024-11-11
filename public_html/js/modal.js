@@ -115,6 +115,7 @@ function closeModal()
     return false;
 }
 
+
 function modalAction(el)
 {
     let modalContent    = document.querySelector("#modal #modalContent");
@@ -148,8 +149,53 @@ function modalAction(el)
                             modalContent.classList.remove("hide");
                         },time);
 
-                    break;
+                        break;
                 }
+            }
+        });
+
+    return false;
+}
+
+function modalFormSubmit(form)
+{
+    let modalContent    = document.querySelector("#modal #modalContent");
+    if(modalContent === null) return false;
+
+    let panel = modalContent.querySelector("#message");
+
+    let data= new FormData(form);
+
+    fetch(form.action,{
+        method:             "POST",
+        body:               data
+    })
+        .then(response => {return response.text();})
+        .then(data => {
+            data= JSON.parse(data);
+            switch (data.code){
+                case 200:
+                    let time= 1250;
+
+                    modalContent.classList.add("hide");
+
+                    let timer1= setTimeout(()=>{
+                        hidePanels(modalContent);
+                        panel.innerHTML = data.message;
+                        panel.classList.remove("d-none");
+                        setModalHeight(modalContent);
+                    },time/2);
+
+                    let timer2= setTimeout(()=>{
+                        modalContent.classList.remove("hide");
+                    },time);
+
+                break;
+                case 400:
+                    let errorBlock = panel.querySelector(".callout");
+                    errorBlock.innerHTML = data.message;
+                    errorBlock.classList.remove("d-none");
+                break;
             }
         });
 

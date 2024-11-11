@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\MoodleModel;
 use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\HTTP\ResponseInterface;
 use App\Models\UsersModel;
@@ -11,6 +12,9 @@ use http\Message;
 class Users extends BaseController
 {
     protected object $users;
+
+    protected int $perPage = 20;
+
     public function __construct()
     {
         $this->users        = model(UsersModel::class);
@@ -187,14 +191,20 @@ class Users extends BaseController
             ->table("users")
             ->update(["verified"=>"1"],["email"=>$action->op]);
 
-        $this->users->updateLogged();
+        if($this->session->has("isLoggedIn")){
+            session()->setFlashdata("account-message",(object)[
+                "status"                    => "success",
+                "content"                   => "Почта удачно верифицирована",
+            ]);
+            return redirect()->to(base_url("account"));
+        }
 
-        session()->setFlashdata("account-message",(object)[
+        session()->setFlashdata("message",(object)[
             "status"                    => "success",
-            "content"                   => "Почта удачно верифицирована",
+            "content"                   => "Почта удачно верифицирована. Можете войти в личный кабинет.",
         ]);
+        return redirect()->to(base_url("message"));
 
-        return redirect()->to("account");
     }
 
 
@@ -412,7 +422,7 @@ class Users extends BaseController
                         "patronymic"                    => $user->patronymic,
                         "email"                         => $user->email,
                         "code"                          => $codes->code,
-                        "link"                          => base_url("account/verification/$codes->hash"),
+                        "link"                          => base_url("verification/$codes->hash"),
                     ])
         ]);
 
@@ -457,6 +467,197 @@ class Users extends BaseController
         return response()->setJSON($response);
     }
 
+    public function adminList():string
+    {
+
+        $page= $this->request->getGet("page_users")??1;
+
+        $users= $this->users
+            ->join("moodle","users.id=moodle.uid","left")
+            ->join("students", "students.uid = users.id","left")
+            ->select("
+                users.*,
+                moodle.muid,
+                COUNT(students.id) as students
+            ")
+            ->groupBy("users.id")
+        ;
+        /**
+        GROUP_CONCAT(
+            JSON_OBJECT(
+                'faculty', faculties.name,
+                'department', departments.name,
+                'level', levels.name,
+                'form', edForms.name,
+                'code', specialities.code,
+                'speciality', specialities.name,
+                'course', students.course,
+                'group', students.grp
+            )
+        ) AS list
+
+        /**/
+        if(session()->has("AdminUsersFilter")){
+            $filter         = session()->get("AdminUsersFilter");
+            $filter         = json_decode($filter);
+
+            $str            = str_replace(" ","%",$filter->search);
+            $users->groupStart()
+                ->Like("users.email", $str)
+                ->orLike("CONCAT(users.surname, ' ', users.name, ' ', users.patronymic)",$str)
+                ->orLike("CONCAT(users.name, ' ', users.patronymic, ' ', users.surname)",$str)
+                ->groupEnd()
+            ;
+        }
+/**/
+        $list       = $users->paginate($this->perPage, "users", $page);
+        $list       = $this->users->listPreparing($list);
+
+        if(session()->has("message"))
+            $message = session()->get("message");
+
+        $pageContent= view(
+            "Admin/Users/List",
+            [
+                "list"          => $list,
+                "pager"         => $users->pager->links("users","admin"),
+                "count"         => $users->countAllResults(),
+                "filter"        => &$filter,
+                "message"       => &$message,
+            ]
+        );
+
+        return view('Admin/Page',[
+            "user"              => $this->user??null,
+            "pageContent"       => &$pageContent
+        ]);
+
+    }
+
+    public function setFilterAdmin():RedirectResponse
+    {
+        $filter         = (object)[
+            "search"    => $this->request->getPost("search")??null
+        ];
+
+
+        if(empty($filter->search))
+            session()->remove("AdminUsersFilter");
+
+        else{
+            $filter         = json_encode(
+                $filter,
+                JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_NUMERIC_CHECK|JSON_PRETTY_PRINT
+            );
+            session()->set("AdminUsersFilter",$filter);
+        }
+
+        return redirect()->to("admin/users");
+    }
+
+    public function adminPersonalCard($uid):string|RedirectResponse
+    {
+        $user                   = $this->users->find($uid);
+
+        $user->roles            = json_decode($user->roles);
+
+        if(!is_array($user->roles))
+            $user->roles        = [];
+
+        if(empty($user))
+            return redirect()->to(base_url("admin/users"));
+
+        if(session()->has("message"))
+            $message = session()->get("message");
+
+        $pageContent = view("Admin/Users/PersonalCard",[
+            "user"              => $user,
+            "roles"             => [
+                "user",
+                "student",
+                "teacher",
+            ],
+            "message"           => &$message
+        ]);
+
+        return view('Admin/Page',[
+            "user"              => $this->user??null,
+            "pageContent"       => &$pageContent
+        ]);
+    }
+
+    public function save():RedirectResponse
+    {
+        $uid                = $this->request->getPost("uid");
+
+        $user               = $this->users->find($uid);
+
+        if(empty($user))
+            return redirect()->to(base_url("admin/users"));
+
+        $form               = (object)$this->request->getPost("form");
+
+
+
+        $form->roles        = json_encode(
+            $form->roles,
+            JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_NUMERIC_CHECK|JSON_PRETTY_PRINT
+        );
+
+        if($user->email !== $form->email){
+            $cnt = $this->users
+                ->where(
+                    [
+                        "email" => $form->email,
+                        "id!="  => $uid,
+                    ]
+                )->countAllResults();
+
+            if($cnt){
+                session()->setFlashdata("message",(object)[
+                    "status"                    => "error",
+                    "message"                   => "Email занят: $form->email",
+                ]);
+                return redirect()->back();
+            }
+
+            $form->verified     = 0;
+
+            $message            = "<br>Письмо верификации отправлено: $form->email";
+
+            self::ResendVerification($uid);
+        }
+
+        $this->users->update(
+            $uid,
+            $form
+        );
+
+        session()->setFlashdata("message",(object)[
+            "status"                    => "success",
+            "message"                   => "Анкета сохранена: #$uid ".($message??""),
+        ]);
+
+        return redirect()->to(base_url("admin/users"));
+   }
+
+   public function delete($uid):RedirectResponse
+   {
+       $userModel       = model(UsersModel::class);
+       $moodleModel     = model(MoodleModel::class);
+
+       $user            = $userModel->find($uid);
+
+       $userModel->where("id",$uid)->delete();
+       $moodleModel->where("uid",$uid)->delete();
+
+       session()->setFlashdata("message",(object)[
+           "status"                    => "success",
+           "message"                   => "Пользователь удален #$uid $user->surname $user->name ($user->email)",
+       ]);
+
+       return redirect()->to(base_url("admin/users"));
+   }
 
 }
 

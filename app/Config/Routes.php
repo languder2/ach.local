@@ -17,7 +17,8 @@ use App\Controllers\Test;
 
 $routes->group('', ['filter' => 'base'], function($routes) {
     $routes->group('api/moodle',[], function($routes) {
-        $routes->post(  "UserCreate",                           [Moodle::class, 'UserCreate']);
+        $routes->post(  "UserCreate",                           [Moodle::class, 'MoodleCreate']);
+        $routes->post(  "AdminMoodleCreate",                    [Moodle::class, 'AdminMoodleCreate']);
     });
 
     $routes->group('account',[], function($routes) {
@@ -26,23 +27,36 @@ $routes->group('', ['filter' => 'base'], function($routes) {
         $routes->post(  "change-info",                          [Account::class, 'changeInfo']);
         $routes->get(   "verification-request",                 [Account::class, 'verificationRequest']);
         $routes->get(   "verification-resend",                  [Account::class, 'verificationResend']);
-        $routes->get(   "verification/(:segment)",              [Users::class, 'ssiConfirmLink']);
 
         $routes->get(   "change-personal",                      [Account::class, 'changePersonal']);
         $routes->get(   "change-education/(:num)",              [Account::class, 'changeEducation']);
         $routes->get(   "add-education",                        [Account::class, 'changeEducation']);
         $routes->post(  "save-education",                       [Account::class, 'saveEducation']);
+
+        $routes->get(  "moodle-get-new-pass",                   [Moodle::class, 'moodleNewPass']);
     });
 
+    $routes->get(   "verification/(:segment)",                  [Users::class, 'ssiConfirmLink']);
 
     $routes->group('modal', [], function($routes) {
         $routes->get(   "admin-verification-resend/(:num)",     [Modal::class, 'VerificationResendAdmin']);
-        $routes->get(   "admin-change-moodle-pass/(:num)",      [Modal::class, 'MoodleChangePassRequest']);
+        $routes->get(   "admin-moodle-change-pass/(:num)",      [Modal::class, 'MoodleChangePassRequest']);
+        $routes->get(   "admin-moodle-create-user/(:num)",      [Modal::class, 'MoodleCreateUserRequest']);
+        $routes->get(   "admin-delete-user/(:num)",             [Modal::class, 'DeleteUserRequest']);
 
     });
     $routes->group('admin', [], function($routes) {
         $routes->get(   "/",                                    [Pages::class, 'adminIndex']);
-        $routes->get(   "resend-verification/(:num)",                  [Users::class, 'ResendVerification']);
+        $routes->get(   "resend-verification/(:num)",           [Users::class, 'ResendVerification']);
+        $routes->get(  "moodle/new-pass/(:num)",                [Moodle::class, 'adminMoodleNewPass']);
+    });
+
+    $routes->group('admin/users', [], function($routes) {
+        $routes->get(   "/",                                    [Users::class, 'adminList']);
+        $routes->post(  "set-filter",                           [Users::class, 'setFilterAdmin']);
+        $routes->get(  "(:num)",                                [Users::class, 'adminPersonalCard']);
+        $routes->post(  "save-user",                            [Users::class, 'save']);
+        $routes->get(  "delete/(:num)",                         [Users::class, 'delete']);
     });
 
     $routes->group('admin/students', [], function($routes) {
@@ -89,8 +103,10 @@ $routes->group('students', [], function($routes) {
 //    $routes->get("teachers",                                    [Test::class, 'SITeachers']);
 //    $routes->get("students",                                    [Test::class, 'students']);
     $routes->get("report",                                      [Test::class, 'saveXLS']);
+    $routes->get("getUser",                                     [Moodle::class, 'getUser']);
 
     $routes->post("ask-question",                               [Pages::class, 'AskQuestion']);
 
     $routes->match(["get","post"],"(:any)",                     [Pages::class, 'redirect2main']);
+
 });
