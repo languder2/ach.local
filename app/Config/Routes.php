@@ -16,6 +16,11 @@ use App\Controllers\Test;
  */
 
 $routes->group('', ['filter' => 'base'], function($routes) {
+
+    $routes->get(   "change-email",                             [Moodle::class, 'changeEmail']);
+
+
+
     $routes->group('api/moodle',[], function($routes) {
         $routes->post(  "UserCreate",                           [Moodle::class, 'MoodleCreate']);
         $routes->post(  "AdminMoodleCreate",                    [Moodle::class, 'AdminMoodleCreate']);

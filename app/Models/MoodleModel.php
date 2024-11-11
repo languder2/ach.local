@@ -122,5 +122,27 @@ class MoodleModel extends Model
 
     }
 
+    public function changeEmail(int $id, string $email):array
+    {
+        $MoodleRest     = new MoodleRest(
+            $this->apiLink,
+            $this->token
+        );
+
+        $func           = "core_user_update_users";
+
+        $params         = [
+            "users"     => [
+                [
+                    "id"                => $id,
+                    "email"             => $email,
+                ],
+            ]
+        ];
+
+        return $MoodleRest->request($func, $params);
+
+    }
+
 
 }

@@ -268,6 +268,12 @@ class Moodle extends BaseController
         return  redirect()->to(base_url("admin/users"));
     }
 
+    public function changeEmail()
+    {
+        $moodleModel    = model(MoodleModel::class);
+        $moodleModel->changeEmail(421,"languder6@ya.ru");
+
+    }
 
 
 }
