@@ -51,6 +51,7 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/psr/simple-cache" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/phpoffice/phpspreadsheet_compare" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-php80_compare" />
+      <excludeFolder url="file://$MODULE_DIR$/writable/debugbar" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
