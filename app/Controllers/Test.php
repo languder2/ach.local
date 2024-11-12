@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\ActionModel;
 use App\Models\EmailModel;
+use App\Models\LogModule;
 use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\HTTP\ResponseInterface;
 use App\Models\UsersModel;
@@ -496,6 +497,18 @@ class Test extends BaseController
         ]);
             /**/
 
+    }
+
+    public function logTest()
+    {
+        model(LogModule::class)->insert(
+            [
+                "subject"       => 6,
+                "object"        => 6,
+                "action"        => "send email",
+                "type"          => "test",
+            ]
+        );
     }
 
     

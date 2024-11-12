@@ -146,6 +146,7 @@ class MoodleModel extends Model
 
     public function deleteUser(int $id):void
     {
+
         $MoodleRest     = new MoodleRest(
             $this->apiLink,
             $this->token
@@ -158,7 +159,7 @@ class MoodleModel extends Model
                 $id
             ]
         ];
+
+        $MoodleRest->request($func, $params);
     }
-
-
 }

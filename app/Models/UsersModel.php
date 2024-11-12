@@ -285,12 +285,17 @@ class UsersModel extends GeneralModel{
         return true;
     }
 
-    public function listPreparing($list):array
+    public static function listPreparing($list):array
     {
         return array_map(function($item) {
             $item->roles = json_decode($item->roles);
             return $item;
         }, $list);
+    }
+
+    public static function prepareLoginFromEmail($email):string
+    {
+        return substr($email,0,strpos($email,"@"));
     }
 
 }

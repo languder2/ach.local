@@ -60,7 +60,9 @@ $routes->group('', ['filter' => 'base'], function($routes) {
         $routes->get(   "/",                                    [Users::class, 'adminList']);
         $routes->post(  "set-filter",                           [Users::class, 'setFilterAdmin']);
         $routes->get(  "(:num)",                                [Users::class, 'adminPersonalCard']);
-        $routes->post(  "save-user",                            [Users::class, 'save']);
+        $routes->get(  "new",                                   [Users::class, 'adminPersonalCard']);
+        $routes->post(  "save",                                 [Users::class, 'save']);
+        $routes->post(  "create",                               [Users::class, 'create']);
         $routes->get(  "delete/(:num)",                         [Users::class, 'delete']);
     });
 
@@ -112,6 +114,7 @@ $routes->group('students', [], function($routes) {
 
     $routes->post("ask-question",                               [Pages::class, 'AskQuestion']);
 
+    $routes->get("log",                                         [Test::class, 'logTest']);
     $routes->match(["get","post"],"(:any)",                     [Pages::class, 'redirect2main']);
-
 });
+

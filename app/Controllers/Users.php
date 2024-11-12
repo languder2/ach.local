@@ -2,12 +2,11 @@
 
 namespace App\Controllers;
 
+use App\Models\UsersModel;
 use App\Models\MoodleModel;
+use App\Models\EmailModel;
 use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\HTTP\ResponseInterface;
-use App\Models\UsersModel;
-use App\Models\EmailModel;
-use http\Message;
 
 class Users extends BaseController
 {
@@ -233,11 +232,11 @@ class Users extends BaseController
             ]);
 
         $user       = $this->db
-                        ->table("users")
-                        ->where("email",$form->login)
-                        ->orWhere("login",$form->login)
-                        ->get()
-                        ->getFirstRow();
+            ->table("users")
+            ->where("email",$form->login)
+            ->orWhere("login",$form->login)
+            ->get()
+            ->getFirstRow();
 
         if(is_null($user))
             return $this->response->setJSON([
@@ -265,25 +264,25 @@ class Users extends BaseController
     {
         /**
         $list= $this->db
-            ->table("students")
-            ->select("students.*,COUNT(id) as num,id")
-            ->groupBy(
-                "uid,faculty,department,level,speciality,grp"
-            )
-            ->orderBy("id","DESC")
-            ->get()
-            ->getResult();
+        ->table("students")
+        ->select("students.*,COUNT(id) as num,id")
+        ->groupBy(
+        "uid,faculty,department,level,speciality,grp"
+        )
+        ->orderBy("id","DESC")
+        ->get()
+        ->getResult();
 
         foreach($list as $item){
-            if($item->num>1) {
-                $this->db->table("students")->delete(["id"=>$item->id]);
-            }
+        if($item->num>1) {
+        $this->db->table("students")->delete(["id"=>$item->id]);
+        }
         }
 
         dd($list);
         $form= (object)[
-            "name"      => "test",
-            "email"     => "languder2@gmail.com",
+        "name"      => "test",
+        "email"     => "languder2@gmail.com",
         ];
 
         $email          = service('email');
@@ -406,13 +405,14 @@ class Users extends BaseController
         $emailModel     = model(EmailModel::class);
 
         $emailModel->where([
-                        "emailTo"           => $user->email,
-                        "theme"             => 'Подтверждение E-mail',
-                ])
-                ->delete()
+            "emailTo"           => $user->email,
+            "theme"             => 'Подтверждение E-mail',
+        ])
+            ->delete()
         ;
 
-        $emailModel->insert([
+        model(EmailModel::class)->insert(
+            row:[
                 "emailTo"           => $user->email,
                 "theme"             => 'Подтверждение E-mail',
                 "message"           => view(
@@ -424,7 +424,8 @@ class Users extends BaseController
                         "code"                          => $codes->code,
                         "link"                          => base_url("verification/$codes->hash"),
                     ])
-        ]);
+            ]
+        );
 
         $response   = [
             "code"      => 200,
@@ -436,33 +437,6 @@ class Users extends BaseController
                 ]
             )
         ];
-
-        /**
-        $this->db
-            ->table('moodle')
-            ->insert([
-                "email"             => $user->email,
-                "login"             => $user->login,
-                "role"              => "teacher",
-                "muid"              => $arr['id'],
-                "pass"              => $pass,
-            ]);
-
-        $sql = [
-            "emailTo"               => $user->email,
-            "theme"                 => "Регистрация в системе дистанционного обучения",
-            "message"               => view("Emails/MoodleSignIn",[
-                "name"              => "$user->name $user->patronymic",
-                "login"             => $user->login,
-                "pass"              => $pass,
-            ]),
-        ];
-
-        $this->db
-            ->table('emails')
-            ->insert($sql);
-/**/
-
 
         return response()->setJSON($response);
     }
@@ -482,46 +456,69 @@ class Users extends BaseController
             ")
             ->groupBy("users.id")
         ;
-        /**
-        GROUP_CONCAT(
-            JSON_OBJECT(
-                'faculty', faculties.name,
-                'department', departments.name,
-                'level', levels.name,
-                'form', edForms.name,
-                'code', specialities.code,
-                'speciality', specialities.name,
-                'course', students.course,
-                'group', students.grp
-            )
-        ) AS list
 
         /**/
-        if(session()->has("AdminUsersFilter")){
-            $filter         = session()->get("AdminUsersFilter");
-            $filter         = json_decode($filter);
+        $filter = (object)[
+            "references"    => (object)[
+                "roles"     => [
+                    "user"      => "user",
+                    "teacher"   => "teacher",
+                    "student"   => "student",
+                ],
+                "verification"  => [
+                    "0"         => "не верифицированные",
+                    "1"         => "верифицированные",
+                ],
+                "sdo"           => [
+                    "NULL"      => "нет аккаунта в СДО",
+                    "NOT NULL"  => "есть аккаунт в СДО",
+                ],
+            ],
+            "current"       => null,
+        ];
 
-            $str            = str_replace(" ","%",$filter->search);
-            $users->groupStart()
-                ->Like("users.email", $str)
-                ->orLike("CONCAT(users.surname, ' ', users.name, ' ', users.patronymic)",$str)
-                ->orLike("CONCAT(users.name, ' ', users.patronymic, ' ', users.surname)",$str)
-                ->groupEnd()
-            ;
+        if(session()->has("AdminUsersFilter")){
+            $filter->current    = json_decode(session()->get("AdminUsersFilter"));
+
+            /**/
+            if(isset($filter->current->role))
+                $users->where("JSON_CONTAINS(users.roles, '\"".$filter->current->role."\"', '$')");
+
+            /**/
+            if(isset($filter->current->verification))
+                $users->where("users.verified", (string)$filter->current->verification);
+
+            /**/
+            if(isset($filter->current->sdo))
+                $users->where("moodle.muid IS ".$filter->current->sdo);
+
+            /**/
+            if(isset($filter->current->search)){
+                $search             = str_replace(" ","%",$filter->current->search);
+
+                $users->groupStart()
+                    ->Like("users.email", $search)
+                    ->orLike("CONCAT(users.surname, ' ', users.name, ' ', users.patronymic)",$search)
+                    ->orLike("CONCAT(users.name, ' ', users.patronymic, ' ', users.surname)",$search)
+                    ->groupEnd()
+                ;
+            }
         }
-/**/
+
+        /**/
         $list       = $users->paginate($this->perPage, "users", $page);
-        $list       = $this->users->listPreparing($list);
+        $list       = model(UsersModel::class)::listPreparing($list);
 
         if(session()->has("message"))
             $message = session()->get("message");
+
 
         $pageContent= view(
             "Admin/Users/List",
             [
                 "list"          => $list,
                 "pager"         => $users->pager->links("users","admin"),
-                "count"         => $users->countAllResults(),
+                "total"         => $users->pager->getTotal("users"),
                 "filter"        => &$filter,
                 "message"       => &$message,
             ]
@@ -536,12 +533,14 @@ class Users extends BaseController
 
     public function setFilterAdmin():RedirectResponse
     {
-        $filter         = (object)[
-            "search"    => $this->request->getPost("search")??null
-        ];
 
+        $filter = $this->request->getPost("filter");
 
-        if(empty($filter->search))
+        $filter = array_filter($filter, function($value) {
+            return (trim($value) !== '');
+        });
+
+        if(empty($filter))
             session()->remove("AdminUsersFilter");
 
         else{
@@ -555,20 +554,25 @@ class Users extends BaseController
         return redirect()->to("admin/users");
     }
 
-    public function adminPersonalCard($uid):string|RedirectResponse
+    public function adminPersonalCard($uid = 0):string|RedirectResponse
     {
+
         $user                   = $this->users->find($uid);
 
-        $user->roles            = json_decode($user->roles);
+        if(!is_null($user)){
+            $user->roles            = json_decode($user->roles);
 
-        if(!is_array($user->roles))
-            $user->roles        = [];
-
-        if(empty($user))
-            return redirect()->to(base_url("admin/users"));
+            if(!is_array($user->roles))
+                $user->roles        = [];
+        }
 
         if(session()->has("message"))
-            $message = session()->get("message");
+            $message            = session()->get("message");
+
+        if(session()->has("form")){
+            $user               = json_decode(session()->get("form"));
+            $user->roles        = json_decode($user->roles);
+        }
 
         $pageContent = view("Admin/Users/PersonalCard",[
             "user"              => $user,
@@ -645,14 +649,9 @@ class Users extends BaseController
             $message            = "<br>Письмо верификации отправлено: $form->email";
 
             self::ResendVerification($uid);
-
-
         }
 
-        $this->users->update(
-            $uid,
-            $form
-        );
+        model(UsersModel::class)->update($uid,$form);
 
         session()->setFlashdata("message",(object)[
             "status"                    => "success",
@@ -660,34 +659,128 @@ class Users extends BaseController
         ]);
 
         return redirect()->to(base_url("admin/users"));
-   }
+    }
+    public function create():RedirectResponse
+    {
+        $form               = (object)$this->request->getPost("form");
 
-   public function delete($uid):RedirectResponse
-   {
-       $userModel       = model(UsersModel::class);
-       $moodleModel     = model(MoodleModel::class);
+        $form->roles        = json_encode(
+            $form->roles,
+            JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_NUMERIC_CHECK|JSON_PRETTY_PRINT
+        );
 
-       $user            = $userModel->find($uid);
+        $cnt = model(UsersModel::class)->where('email',$form->email)->countAllResults();
 
-       if(is_null($user))
-           return redirect()->to(base_url("admin/users"));
+        if($cnt){
+            session()->setFlashdata("form",json_encode($form));
 
-       $moodle          = $moodleModel->where("uid",$uid)->first();
+            session()->setFlashdata("message",(object)[
+                "status"                    => "error",
+                "message"                   => "Email занят: $form->email",
+            ]);
 
-       if(!is_null($moodle)){
-           $moodleModel->deleteUser($moodle->muid);
-           $moodleModel->where("uid",$uid)->delete();
-       }
+            return redirect()->back();
+        }
 
-       $userModel->where("id",$uid)->delete();
+        $pass               = model(UsersModel::class)->generateSecurePassword();
 
-       session()->setFlashdata("message",(object)[
-           "status"                    => "success",
-           "message"                   => "Пользователь удален #$uid $user->surname $user->name ($user->email)",
-       ]);
+        $form->passwored    = password_hash($pass,PASSWORD_BCRYPT);
 
-       return redirect()->to(base_url("admin/users"));
-   }
+        $uid                = model(UsersModel::class)->insert($form);
+
+        $user               = model(UsersModel::class)->find($uid);
+        $user->login        = model(UsersModel::class)::prepareLoginFromEmail($user->email);
+        $user->pass         = $pass;
+
+        $codes              = model(UsersModel::class)->verifiedGenerateCron($user);
+
+
+        if(!empty($form->sdo)){
+            $response   = model(MoodleModel::class)->CreateUser($user);
+
+            if(isset($response['errorcode']) and $response['errorcode'] === "invalidparameter"){
+
+                $errorMessage = str_replace(
+                    "Email address already exists",
+                    "Email уже занят",
+                    $response['debuginfo']
+                );
+
+                $errorMessage = str_replace(
+                    "Username already exists",
+                    "Логин уже занят",
+                    $response['debuginfo']
+                );
+            }
+            else{
+                $mid    = model(MoodleModel::class)->insert(
+                    [
+                        "muid"      => $response[0]['id'],
+                        "uid"       => $user->id,
+                        "login"     => $user->login,
+                        "email"     => $user->email,
+                        "pass"      => $user->pass,
+                    ]
+                );
+            }
+        }
+
+        $template   = isset($mid)?"Emails/AccountCreatedWithSDO":"Emails/AccountCreated";
+
+        model(EmailModel::class)->insert(
+            row:[
+                "emailTo"           => $user->email,
+                "theme"             => 'Аккаунт создан',
+                "message"           => view(
+                    $template,
+                    [
+                        "user"                          => $user,
+                        "pass"                          => $pass,
+                        "code"                          => $codes->code,
+                        "link"                          => base_url("verification/$codes->hash"),
+                    ])
+            ]
+        );
+
+        $message = "Аккаунт создан: $uid. Параметры входа отправлены на почту: $user->email";
+
+        if(isset($errorMessage))
+            $message.= "<br>При создании аккаунта в СДО Moodle возникла ошибка:<br>$errorMessage";
+
+        session()->setFlashdata("message",(object)[
+            "status"                    => "success",
+            "message"                   => $message,
+        ]);
+
+        return redirect()->to(base_url("admin/users"));
+    }
+
+    public function delete($uid):RedirectResponse
+    {
+        $userModel       = model(UsersModel::class);
+        $moodleModel     = model(MoodleModel::class);
+
+        $user            = $userModel->find($uid);
+
+        if(is_null($user))
+            return redirect()->to(base_url("admin/users"));
+
+        $moodle          = $moodleModel->where("uid",$uid)->first();
+
+        if(!is_null($moodle)){
+            $moodleModel->deleteUser($moodle->muid);
+            $moodleModel->where("uid",$uid)->delete();
+        }
+
+        $userModel->where("id",$uid)->delete();
+
+        session()->setFlashdata("message",(object)[
+            "status"                    => "success",
+            "message"                   => "Пользователь удален #$uid $user->surname $user->name ($user->email)",
+        ]);
+
+        return redirect()->to(base_url("admin/users"));
+    }
 
 }
 

@@ -1,11 +1,13 @@
 <?php
     echo view("Admin/Users/Filter",[
-            "filter"    => &$filter,
+            "filter"        => &$filter,
     ])
 ?>
+
+<?php echo view("Admin/Users/Actions",[]);?>
 <?php if(isset($message)):?>
-    <div class="callout callout-<?=$message->status?> my-3 bg-white">
-        <?php echo $message->message;?>
+    <div class="callout callout-<?=$message->status??""?> my-3 bg-white">
+        <?php echo $message->message??"";?>
     </div>
 <?php endif;?>
 
@@ -13,7 +15,7 @@
 
         <table class="table ">
             <caption class="px-4 py-2 bg-light">
-                Преподаватели
+                Пользователи: <?=$total??""?>
             </caption>
             <thead>
                 <th class="text-center">
@@ -25,7 +27,7 @@
                 <th>
                     Роли
                 </th>
-                <th colspan="4">
+                <th colspan="5">
                 </th>
             </thead>
             <tbody>

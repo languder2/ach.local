@@ -4,23 +4,21 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class EmailModel extends Model
+class LogModule extends Model
 {
-    protected $table            = 'emails';
+    protected $table            = 'logs';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'object';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
-        "id",
-        "emailTo",
-        "emailFrom",
-        "name",
-        "protocol",
-        "theme",
-        "message",
-        "replyTo",
+        "action",
+        "type",
+        "operand",
+        "object",
+        "subject",
+-        "detail",
         "created_at",
     ];
 
@@ -53,4 +51,5 @@ class EmailModel extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+
 }
