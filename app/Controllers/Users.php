@@ -684,7 +684,7 @@ class Users extends BaseController
 
         $pass               = model(UsersModel::class)->generateSecurePassword();
 
-        $form->passwored    = password_hash($pass,PASSWORD_BCRYPT);
+        $form->password     = password_hash($pass,PASSWORD_BCRYPT);
 
         $uid                = model(UsersModel::class)->insert($form);
 

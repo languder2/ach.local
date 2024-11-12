@@ -18,7 +18,8 @@ class UsersModel extends GeneralModel{
         "patronymic",
         "messenger",
         "phone",
-        "verified"
+        "verified",
+        "password"
     ];
     protected $useTimestamps = false;
     protected $validationRules = [];
