@@ -271,7 +271,9 @@ class Moodle extends BaseController
     public function changeEmail()
     {
         $moodleModel    = model(MoodleModel::class);
-        $moodleModel->changeEmail(421,"languder6@ya.ru");
+        $response = $moodleModel->changeEmail(421,"languder6@ya.ru");
+
+        dd($response);
 
     }
 

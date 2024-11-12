@@ -16,7 +16,7 @@
 
             <label class="s-input-box w-100">
 
-                    <select name="form[roles][]" class="form-select" multiple size="3">
+                    <select name="form[roles][]" class="form-select" multiple size="3" required>
                         <?php foreach ($roles??[] as $role):?>
                             <option
                                 <?=in_array($role,$user->roles)?"selected":""?>

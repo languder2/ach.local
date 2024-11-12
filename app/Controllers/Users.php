@@ -605,6 +605,8 @@ class Users extends BaseController
         );
 
         if($user->email !== $form->email){
+
+
             $cnt = $this->users
                 ->where(
                     [
@@ -621,11 +623,30 @@ class Users extends BaseController
                 return redirect()->back();
             }
 
+            $moodleModel    = model(MoodleModel::class);
+            $moodle         = $moodleModel->where("uid",$uid)->first();
+
+            if($moodle !== null){
+                $response = $moodleModel->changeEmail($moodle->muid,$form->email);
+
+                if(isset($response['warnings'][0]['message'])){
+                    session()->setFlashdata("message",(object)[
+                        "status"                    => "error",
+                        "message"                   => "Конфликт в Moodle: Email занят: $form->email",
+                    ]);
+
+                    return redirect()->back();
+                }
+            }
+
+
             $form->verified     = 0;
 
             $message            = "<br>Письмо верификации отправлено: $form->email";
 
             self::ResendVerification($uid);
+
+
         }
 
         $this->users->update(
@@ -648,8 +669,17 @@ class Users extends BaseController
 
        $user            = $userModel->find($uid);
 
+       if(is_null($user))
+           return redirect()->to(base_url("admin/users"));
+
+       $moodle          = $moodleModel->where("uid",$uid)->first();
+
+       if(!is_null($moodle)){
+           $moodleModel->deleteUser($moodle->muid);
+           $moodleModel->where("uid",$uid)->delete();
+       }
+
        $userModel->where("id",$uid)->delete();
-       $moodleModel->where("uid",$uid)->delete();
 
        session()->setFlashdata("message",(object)[
            "status"                    => "success",
@@ -660,6 +690,7 @@ class Users extends BaseController
    }
 
 }
+
 
 
 
