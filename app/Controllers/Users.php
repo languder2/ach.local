@@ -722,6 +722,8 @@ class Users extends BaseController
                         "pass"      => $user->pass,
                     ]
                 );
+
+                model(MoodleModel::class)->AssigningRole($mid);
             }
         }
 
@@ -781,6 +783,174 @@ class Users extends BaseController
 
         return redirect()->to(base_url("admin/users"));
     }
+
+    public function CheckOrCreate():string
+    {
+        $users = [];
+
+        /**/
+        $file       = file_get_contents(WRITEPATH."uploads/moodle8.csv");
+        $file       = explode("\n",$file);
+
+        /**/
+        foreach ($file as $key=>$line){
+            /* метки */
+            $marks      = (object)[
+                "user"      => false,
+                "moodle"    => false,
+            ];
+
+
+            $pass       = model(UsersModel::class)->generateSecurePassword();
+
+            $line       = explode(";",$line);
+
+            if(!is_array($line))    continue;
+            if(count($line) < 3)    continue;
+
+            /**/
+            $email      = trim($line[1]);
+            if(empty($email)) continue;
+
+            /* проверка существования пользователя */
+            $check = model(UsersModel::class)->checkIsset($email);
+
+            /* создание если не существует*/
+            if($check === false){
+                $fio        = trim($line[0]);
+                $fio        = explode(" ",$fio);
+                $phone      = trim($line[2]);
+
+                model(UsersModel::class)->create([
+                    "surname"       => $fio[0],
+                    "name"          => $fio[1],
+                    "patronymic"    => $fio[2],
+                    "email"         => $email,
+                    "phone"         => $phone,
+                    "password"      => password_hash($pass, PASSWORD_BCRYPT),
+                ]);
+
+                $marks->user        = true;
+            }
+
+            /**/
+            $user       = model(UsersModel::class)->where("email",$email)->first();
+
+            /**/
+            $moodle     = model(MoodleModel::class)->where('uid',$user->id)->first();
+
+            /**/
+            $sdo        = model(MoodleModel::class)->getUserByField($email);
+
+            /**/
+            $m_uid      = null;
+
+            if(count($sdo))
+                $m_uid          = $sdo[0]['id'];
+            else{
+                $user->login    = model(UsersModel::class)::prepareLoginFromEmail($user->email);
+                $response       = model(MoodleModel::class)->CreateUser((object)[
+                    "login"         => $user->login,
+                    "name"          => $user->name,
+                    "surname"       => $user->surname,
+                    "pass"          => $pass,
+                    "email"         => $user->email,
+                ]);
+
+                if(isset($response[0]['id'])){
+                    $m_uid          = $response[0]['id'];
+
+                    $marks->moodle  = true;
+                }
+            }
+
+            if(!is_null($m_uid))
+                if(is_null($moodle)){
+                    model(MoodleModel::class)->insert(
+                        [
+                            "muid"      => $m_uid,
+                            "uid"       => $user->id,
+                            "login"     => $user->login,
+                            "email"     => $user->email,
+                            "pass"      => $pass,
+                        ]
+                    );
+                }
+                else{
+                    $result= model(MoodleModel::class)
+                        ->update(
+                            $moodle->id,
+                            [
+                                "muid"      => $m_uid,
+                            ]
+                        );
+                }
+
+            /* установить роль преподавателя */
+            model(UsersModel::class)->setRoles($user->id,"teacher");
+
+            /* установить роль в СДО: создатель курса */
+            model(MoodleModel::class)->AssigningRole($m_uid);
+
+            /* параметры письма*/
+            $emailParam     = [
+                "user"                          => $user,
+                "pass"                          => $pass,
+            ];
+
+            /* если не верифицирован - сгенерировать */
+            if($user->verified === 0){
+                $codes      = model(UsersModel::class)->verifiedGenerateCron($user);
+
+                $emailParam["code"] = $codes->code;
+                $emailParam["link"] = base_url("verification/$codes->hash");
+            }
+
+
+            $theme      = 'Аккаунт создан';
+            $template   = null;
+
+            if($marks->user && $marks->moodle){
+                $template   = "Emails/AccountCreatedWithSDO";
+            }
+
+            if(!$marks->user && $marks->moodle){
+                $template   = "Emails/NewPassword2SDO";
+            }
+
+            if($marks->user && !$marks->moodle && $user->verified === 0){
+                $template   = "Emails/AccountCreated";
+            }
+
+            if(!$marks->user && !$marks->moodle && $user->verified === 0){
+                $template   = "Public/Emails/EmailVerification";
+                $theme      = 'Подтверждение E-mail';
+            }
+
+            $user->user_created         = $marks->user;
+            $user->sdo_created          = $marks->moodle;
+            $user->pass                 = "no change";
+
+            if($marks->moodle)
+                $user->pass             = $pass;
+
+            if(!is_null($template))
+                model(EmailModel::class)->insert(
+                    row:[
+                        "emailTo"           => $user->email,
+                        "theme"             => $theme,
+                        "message"           => view($template,$emailParam)
+                    ]
+                );
+
+            $users[]    = $user;
+        }
+        return  view("Admin/ShowList",[
+            "list"  => $users
+        ]);
+    }
+
+
 
 }
 

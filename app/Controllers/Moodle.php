@@ -2,13 +2,11 @@
 
 namespace App\Controllers;
 
-use App\Controllers\BaseController;
 use App\Models\EmailModel;
 use App\Models\MoodleModel;
 use App\Models\UsersModel;
 use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\HTTP\ResponseInterface;
-use MoodleRest;
 
 class Moodle extends BaseController
 {
@@ -277,5 +275,60 @@ class Moodle extends BaseController
 
     }
 
+    public function getLastAccess()
+    {
+        $users          = model(MoodleModel::class)->findAll();
 
+        foreach ($users as $user){
+            $response   = model(MoodleModel::class)->getUser($user->muid);
+
+            if(isset($response['users'][0]['lastaccess']))
+                model(MoodleModel::class)->update($user->id,[
+                    'lastAccess' => $response['users'][0]['lastaccess']
+                ]);
+        }
+
+        echo 123;
+    }
+
+    public function NotActiveGetNewPass():string
+    {
+        $users      = model(MoodleModel::class)
+                        ->join('users', 'users.id = moodle.uid',"left")
+                        ->where("moodle.lastAccess",0)
+                        ->select("moodle.muid")
+                        ->select("users.surname,users.name,users.patronymic,users.email")
+                        ->findAll()
+        ;
+
+        foreach ($users as $user) {
+            $user->pass = model(UsersModel::class)->generateSecurePassword();
+
+            model(EmailModel::class)->insert(
+                row:[
+                    "emailTo"           => $user->email,
+                    "theme"             => "Аккаунт в СДО Moodle",
+                    "message"           => view(
+                        "Emails/NewPassword2SDO",
+                        [
+                            "user"      => $user
+                        ]
+                    )
+                ]
+            );
+            model(MoodleModel::class)->changePass($user->muid,$user->pass);
+        }
+
+        return view("Admin/ShowList",[
+            "list" => $users,
+        ]);
+    }
+
+    public function gets()
+    {
+        for ($m_uid = 550; $m_uid < 630; $m_uid++) {
+            model(MoodleModel::class)->deleteUser($m_uid);
+        }
+
+    }
 }

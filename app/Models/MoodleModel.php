@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use CodeIgniter\Database\ConnectionInterface;
 use CodeIgniter\Model;
+use CodeIgniter\Validation\ValidationInterface;
 use MoodleRest;
 
 class MoodleModel extends Model
@@ -19,6 +21,7 @@ class MoodleModel extends Model
         "email",
         "login",
         "role",
+        "lastAccess"
     ];
 
     protected bool $allowEmptyInserts = false;
@@ -54,6 +57,17 @@ class MoodleModel extends Model
     protected string $token     = 'b6ec48e0a26f33c7dce5418139990d51';
     protected string $apiLink   = 'https://do.mgu-mlt.ru/webservice/rest/server.php';
 
+    protected object $MoodleRest;
+
+   public function __construct(?ConnectionInterface $db = null, ?ValidationInterface $validation = null)
+   {
+       parent::__construct($db, $validation);
+
+       $this->MoodleRest    = new MoodleRest(
+           $this->apiLink,
+           $this->token
+       );
+   }
 
     public function CreateUser(object $user)
     {
@@ -81,11 +95,6 @@ class MoodleModel extends Model
 
     public function getUser(int $id):array
     {
-        $MoodleRest     = new MoodleRest(
-            $this->apiLink,
-            $this->token
-        );
-
         $func           = "core_user_get_users";
 
         $params         = [
@@ -97,7 +106,22 @@ class MoodleModel extends Model
             ]
         ];
 
-        return $MoodleRest->request($func, $params);
+        return $this->MoodleRest->request($func, $params);
+    }
+
+    public function getUserByField(string|array $values,string $field = "email"):array
+    {
+        $func           = "core_user_get_users_by_field";
+
+        if(!is_array($values))
+            $values = [$values];
+
+        $params = [
+            'field' => $field,
+            'values' => $values
+        ];
+
+        return $this->MoodleRest->request($func, $params);
     }
 
     public function changePass(int $id, string $pass):array
@@ -157,6 +181,28 @@ class MoodleModel extends Model
         $params         = [
             "userids"   => [
                 $id
+            ]
+        ];
+
+        $MoodleRest->request($func, $params);
+    }
+
+    public function AssigningRole($uid,$roleID = 2,$contextID = 1):void
+    {
+        $MoodleRest     = new MoodleRest(
+            $this->apiLink,
+            $this->token
+        );
+
+        $func           = "core_role_assign_roles";
+
+        $params         = [
+            "assignments"   => [
+                [
+                    "roleid"        => $roleID,
+                    "userid"        => $uid,
+                    "contextid"     => $contextID,
+                ],
             ]
         ];
 

@@ -3,26 +3,26 @@
 namespace App\Models;
 
 use CodeIgniter\Model;
-
-class EmailModel extends Model
+class EventModel extends Model
 {
-    protected $table            = 'emails';
+    protected $table            = 'events';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
-    protected $returnType       = 'object';
+    protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
         "id",
-        "emailTo",
-        "emailFrom",
-        "name",
-        "protocol",
-        "theme",
+        "uid",
+        "surname",
+        "username",
+        "email",
+        "phone",
+        "faculty",
+        "speciality",
         "message",
-        "replyTo",
         "created_at",
-        "in_process",
+        "updated_at",
     ];
 
     protected bool $allowEmptyInserts = false;

@@ -9,6 +9,9 @@ use App\Controllers\Teachers;
 use App\Controllers\Modal;
 use App\Controllers\Moodle;
 use App\Controllers\Test;
+use App\Controllers\Correct;
+use App\Controllers\Event;
+use App\Controllers\Email;
 
 
 /**
@@ -16,10 +19,13 @@ use App\Controllers\Test;
  */
 
 $routes->group('', ['filter' => 'base'], function($routes) {
+    $routes->GET('events/results',                         [Event::class, 'showResults']);
+});
+
+$routes->group('', ['filter' => 'base'], function($routes) {
 
     $routes->get(   "change-email",                             [Moodle::class, 'changeEmail']);
-
-
+    $routes->get(   "correct",                                  [Correct::class, 'moodleRoles']);
 
     $routes->group('api/moodle',[], function($routes) {
         $routes->post(  "UserCreate",                           [Moodle::class, 'MoodleCreate']);
@@ -56,6 +62,12 @@ $routes->group('', ['filter' => 'base'], function($routes) {
         $routes->get(  "moodle/new-pass/(:num)",                [Moodle::class, 'adminMoodleNewPass']);
     });
 
+    $routes->group('admin/sdo', [], function($routes) {
+        $routes->get("get-last-access",                         [Moodle::class, 'getLastAccess']);
+//        $routes->get("nagnp",                                   [Moodle::class, 'NotActiveGetNewPass']);
+        $routes->get("gets",                                    [Moodle::class, 'gets']);
+    });
+
     $routes->group('admin/users', [], function($routes) {
         $routes->get(   "/",                                    [Users::class, 'adminList']);
         $routes->post(  "set-filter",                           [Users::class, 'setFilterAdmin']);
@@ -64,6 +76,8 @@ $routes->group('', ['filter' => 'base'], function($routes) {
         $routes->post(  "save",                                 [Users::class, 'save']);
         $routes->post(  "create",                               [Users::class, 'create']);
         $routes->get(  "delete/(:num)",                         [Users::class, 'delete']);
+
+//        $routes->GET("check-or-create",                         [Users::class, 'CheckOrCreate']);
     });
 
     $routes->group('admin/students', [], function($routes) {
@@ -74,11 +88,10 @@ $routes->group('', ['filter' => 'base'], function($routes) {
     $routes->group('admin/teachers', [], function($routes) {
         $routes->get(   "/",                                    [Teachers::class, 'adminTeachers']);
         $routes->post(  "set-filter",                           [Teachers::class, 'setFilter']);
-        $routes->get(   "correct",                              [Teachers::class, 'correct']);
     });
 
 /**/
-$routes->group('students', [], function($routes) {
+    $routes->group('students', [], function($routes) {
     $routes->post(  "confirm",                                  [Users::class, 'ssiConfirm']);
     $routes->get(   "email_confirm/(:segment)",                 [Users::class, 'ssiConfirmLink']);
 });
@@ -102,19 +115,20 @@ $routes->group('students', [], function($routes) {
 
     $routes->get('message',                                     [Pages::class, 'Message']);
     $routes->get("test",                                        [Test::class, 'test']);
-//    $routes->get("json",                                        [Test::class, 'json']);
-//    $routes->get("moodle",                                      [Test::class, 'moodle']);
-//    $routes->get("moodle2",                                      [Test::class, 'moodle2']);
-    $routes->get("mailing",                                     [Test::class, 'mailing']);
-//    $routes->get("test-email",                                  [Test::class, 'generateEmails']);
-//    $routes->get("teachers",                                    [Test::class, 'SITeachers']);
-//    $routes->get("students",                                    [Test::class, 'students']);
     $routes->get("report",                                      [Test::class, 'saveXLS']);
     $routes->get("getUser",                                     [Moodle::class, 'getUser']);
 
     $routes->post("ask-question",                               [Pages::class, 'AskQuestion']);
 
     $routes->get("log",                                         [Test::class, 'logTest']);
+
+    $routes->get("event/signup",                                [Event::class, 'eventSignupForm']);
+    $routes->post("event/signup",                               [Event::class, 'eventSignupSave']);
+    $routes->get("event/signup/success",                        [Event::class, 'eventSignupSuccess']);
+
+
+    $routes->GET("emails/send",                                 [Email::class, 'send']);
+
     $routes->match(["get","post"],"(:any)",                     [Pages::class, 'redirect2main']);
 });
 

@@ -1,0 +1,22 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center; /* Центрирование по горизонтали */
+    align-items: center;    /* Центрирование по вертикали */
+}
+
+
+.formBlock {
+    background-color: lightblue;
+    border-radius: 8px;
+    max-width: 700px;
+    width: 500px;
+    /* Высота блока может быть динамической */
+}
+@media (max-width: 500px) {
+    .formBlock {
+        width: 100%;
+    }
+
+}
