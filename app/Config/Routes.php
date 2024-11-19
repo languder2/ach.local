@@ -66,6 +66,11 @@ $routes->group('', ['filter' => 'base'], function($routes) {
         $routes->get("get-last-access",                         [Moodle::class, 'getLastAccess']);
 //        $routes->get("nagnp",                                   [Moodle::class, 'NotActiveGetNewPass']);
         $routes->get("gets",                                    [Moodle::class, 'gets']);
+        $routes->get("get-la0",                                 [Users::class, 'gla0']);
+
+        $routes->get("sync",                                [Moodle::class, 'syncSDO']);
+
+
     });
 
     $routes->group('admin/users', [], function($routes) {
@@ -114,7 +119,7 @@ $routes->group('', ['filter' => 'base'], function($routes) {
     $routes->post('account/change-password',                    [Account::class, 'cpProcessing']);
 
     $routes->get('message',                                     [Pages::class, 'Message']);
-    $routes->get("test",                                        [Test::class, 'test']);
+    //$routes->get("test",                                        [Test::class, 'test']);
     $routes->get("report",                                      [Test::class, 'saveXLS']);
     $routes->get("getUser",                                     [Moodle::class, 'getUser']);
 
@@ -128,6 +133,7 @@ $routes->group('', ['filter' => 'base'], function($routes) {
 
 
     $routes->GET("emails/send",                                 [Email::class, 'send']);
+    $routes->GET("test",                                        [Test::class, 'show']);
 
     $routes->match(["get","post"],"(:any)",                     [Pages::class, 'redirect2main']);
 });

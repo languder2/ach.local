@@ -331,4 +331,20 @@ class Moodle extends BaseController
         }
 
     }
+
+    public function syncSDO()
+    {
+        $base       = 0;
+        $range      = range(3,3);
+
+        $sdo        = model(MoodleModel::class)->getUser([8,1]);
+        dd($sdo);
+
+        $sdo        = model(MoodleModel::class)->getUserByField([
+            "languder2@gmail.com",
+            "languder1988@ya.ru",
+        ]);
+
+        dd($sdo);
+    }
 }

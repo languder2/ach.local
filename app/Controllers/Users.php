@@ -951,6 +951,36 @@ class Users extends BaseController
     }
 
 
+    public function gla0():string
+    {
+
+        $users = model(MoodleModel::class)->select("email")->findAll();
+
+        $users = array_map(function($user){
+            return trim($user->email);
+        },$users);
+
+        $blocks = array_chunk($users,100);
+
+        $results = [];
+
+        foreach ($blocks as $block) {
+            $moodle[] = model(MoodleModel::class)->getUserByField(
+                $block
+            );
+        }
+        $moodle = array_merge(...$moodle);
+
+        $moodle = array_filter($moodle,function($item){
+            return $item['lastaccess'] === 0;
+        });
+
+        dd($moodle);
+        /**/
+        return view("Admin/ShowList",[
+            "list"  => $users
+        ]);
+    }
 
 }
 

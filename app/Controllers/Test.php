@@ -440,6 +440,16 @@ class Test extends BaseController
         );
     }
 
+    public function show()
+    {
+        $list = $this->db->table("specialities")->get()->getResult();
+
+        return view("Temp/Show",[
+            "list" => $list
+        ]);
+
+
+    }
     
 }
 

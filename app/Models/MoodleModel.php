@@ -93,17 +93,36 @@ class MoodleModel extends Model
         return $MoodleRest->request($func, $params);
     }
 
-    public function getUser(int $id):array
+    public function getUser(string|array $ids):array
     {
+        if(!is_array($ids))
+            $ids = [$ids];
+
+
         $func           = "core_user_get_users";
 
-        $params         = [
-            "criteria"     => [
-                [
-                    "key"               => "id",
-                    "value"             => $id,
-                ],
-            ]
+        $criteria = array_map(function($id) {
+            return [
+                "key" => "id",
+                "value" => $id,
+            ];
+        }, $ids);
+
+        $params = [
+            "criteria" => $criteria
+        ];
+
+        $userIds = [1, 2];
+
+        $criteria = array_map(function($id) {
+            return [
+                "key" => "id",
+                "value" => $id,
+            ];
+        }, $userIds);
+
+        $params = [
+            "criteria" => $criteria
         ];
 
         return $this->MoodleRest->request($func, $params);

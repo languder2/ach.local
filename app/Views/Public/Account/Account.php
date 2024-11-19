@@ -9,6 +9,16 @@
         </div>
     <?php endif;?>
 
+    <?php if(!empty($eventList)):?>
+        <div class="bg-white py-3 rounded-4 shadow-box-st mb-4">
+            <?php
+                echo view("Public/Account/EventList",[
+                    "list"      => &$eventList
+                ]);
+            ?>
+        </div>
+    <?php endif;?>
+
     <?php if(isset($user) && $user->verified === "0"):?>
         <div class="bg-white py-3 rounded-4 shadow-box-st mb-4">
             <?php

@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\EventModel;
 use App\Models\MoodleModel;
 use App\Models\UsersModel;
 use CodeIgniter\HTTP\RedirectResponse;
@@ -127,6 +128,18 @@ class Pages extends BaseController
         if($user->verified === "0")
             $verification = $this->users->getAction("verificationByLink",$this->user->email);
 
+        /* event list */
+        if(in_array("eventManager",$user->roles))
+            $eventList = model(EventModel::class)
+                ->join("faculties","faculties.id=events.faculty","left")
+                ->join("specialities","specialities.id=events.speciality","left")
+                ->select("events.created_at,events.surname,events.username,events.phone,events.id")
+                ->select("faculties.name as faculty")
+                ->select("specialities.name as speciality")
+                ->orderBy("ID DESC")
+                ->findAll();
+
+
         /**/
         $pageContent    = view("Public/Account/Account",[
             "user"              => $user,
@@ -136,6 +149,7 @@ class Pages extends BaseController
             "levels"            => &$levels,
             "specialities"      => &$specialities,
             "verification"      => &$verification,
+            "eventList"         => &$eventList,
         ]);
 
         /**/
